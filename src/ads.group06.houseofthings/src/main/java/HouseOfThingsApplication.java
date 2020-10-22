@@ -8,7 +8,7 @@ public class HouseOfThingsApplication {
 
 
 	public static void main(String[] args) {
-
+		System.out.println("Hello");
 
 	}
 
