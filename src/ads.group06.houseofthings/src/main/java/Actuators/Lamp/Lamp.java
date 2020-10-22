@@ -1,9 +1,9 @@
-package Lamp;
-
-
+package Actuators.Lamp;
 import Interface.Actuators;
+import Actuators.ActuatorsClass;
 
-public abstract class Lamp implements Actuators {
+
+public abstract class Lamp extends ActuatorsClass {
     private boolean isOn;
 
 
@@ -17,7 +17,7 @@ public abstract class Lamp implements Actuators {
         return isOn;
     };
 
-    public abstract Integer getIlumination();
+    //public abstract Integer getIlumination();
 
     /*
     @Override
@@ -33,5 +33,10 @@ public abstract class Lamp implements Actuators {
         isOn = on;
     }
 
-
+    @Override
+    public String toString() {
+        return "Lamp{" +
+                "isOn=" + isOn +
+                '}';
+    }
 }
