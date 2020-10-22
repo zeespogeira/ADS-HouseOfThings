@@ -2,15 +2,17 @@ plugins {
     id 'java'
 }
 
-group 'org.example'
+group 'ads.group06'
 version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     implementation 'junit:junit:4.12'
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.28.2'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
+
 }
