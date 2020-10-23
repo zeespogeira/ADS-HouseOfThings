@@ -17,8 +17,7 @@ public class Condition {
     }
 
     public boolean isMet(int sensorId, double value){
-        if(this.sensorId == sensorId){
-            //TODO: check condition
+             if(this.sensorId == sensorId){
             checkCondition(value);
         }
 
