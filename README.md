@@ -56,5 +56,15 @@ resorted to a Factory Method. This pattern was chosen
 because ...
  
 
-### 3.2. Actions and Triggers 
+### 3.2. Sensor Infrastructure
+
+#### 3.2.1. Sensor Infrastructure
+![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/infra-diagrams-infra-sensors.png?raw=true)
+
+We built a model to support the "sensor domain". This domain represents the real world interactions of sensors within the systems. In theis model we ideintified a problem related to how would the sensors communicate to the "rest of the world" 
+that a new reading was produced. In order to tackle the problem, we chose to include a component that would be responsible to aggregate all sensor readings. Once a reading is produced by the sensor, it should be stored in a single common "place". This
+place would then be responsible for notifying all the interested entities.
+
+#### 3.2.2 Actuator Infrastructure
+![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/infra-diagrams-infra-actuators.png?raw=true)
 
