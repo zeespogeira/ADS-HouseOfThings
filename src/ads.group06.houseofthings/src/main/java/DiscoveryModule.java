@@ -100,7 +100,6 @@ public class DiscoveryModule {
                 //Is a CSV file. Need to instantiate class
                 //System.out.format("Instantiate Class from file %s%n", filename);
 
-
                 //using threads
                 synchronized(DiscoveryModule.class){
                     ExecutorService service = Executors.newFixedThreadPool(4);
@@ -128,7 +127,6 @@ public class DiscoveryModule {
             }
         }
     }
-
 
 
     /**
@@ -202,4 +200,11 @@ public class DiscoveryModule {
         return actuatorList.size();
     }
 
+   /* public void getActuatorsList(){
+        //List <ActuatorsClass> list=new ArrayList<>();
+        Iterator it =actuatorList.iterator();
+        while (it.hasNext()){
+            System.out.println(it.next());
+        }
+    }*/
 }

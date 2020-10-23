@@ -28,6 +28,9 @@ public class HouseOfThingsApplication {
 		//new CheckNewDevice().processEvents();
 		discoveryModule.processEvents();
 
+
+
+		//discoveryModule.getActuatorsList();
 		//System.out.println("Hello");
 	}
 
