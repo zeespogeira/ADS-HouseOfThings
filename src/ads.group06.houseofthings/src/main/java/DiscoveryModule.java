@@ -1,6 +1,8 @@
 import Actuators.ActuatorsFactory;
 import Actuators.Lamp.LampBosch;
 import Models.AbstractActuator;
+import Models.AbstractSensor;
+import Sensors.Humidity.HumidityBosch;
 
 import java.io.*;
 import java.nio.file.*;
@@ -22,6 +24,7 @@ public class DiscoveryModule {
     private final Path dir;
 
     List<AbstractActuator> actuatorList;
+    List<AbstractSensor> sensorList;
 
     /**
      * Creates a WatchService and registers the given directory
@@ -30,13 +33,14 @@ public class DiscoveryModule {
 
         //this.actuatorList = actuatorList;
         File directory = new File("./"); //  ./../../../Devices
-        directory.getParent();directory.getParent();directory.getParent();
-        currentPath=directory.getCanonicalPath() + "\\Devices";
-        //currentPath="\\Devices";
+        //directory.getParent();directory.getParent();directory.getParent();
+        //currentPath=directory.getCanonicalPath() + "\\Devices";
+        currentPath=directory.getCanonicalPath() + "\\src\\main\\java\\Devices";
 
         actuatorList=new ArrayList<>();
+        sensorList=new ArrayList<>();
 
-        String currentFolder= directory + "/Devices";
+        String currentFolder= directory + "/src/main/java/Devices";
         dir = Path.of(currentFolder);
 
         this.watcher = FileSystems.getDefault().newWatchService();
@@ -146,7 +150,7 @@ public class DiscoveryModule {
            /* Aquecedor aquecedor=new AquecerdorBosch();
             aquecedor.setTemperatura(20);*/
         // inicializar as classes adicionadas ao ficheiro
-            //Aquecedor aquecedor=new AquecerdorBosch(temperatura);
+        //Aquecedor aquecedor=new AquecerdorBosch(temperatura);
 
         BufferedReader br = new BufferedReader(new FileReader(String.valueOf(filename)));
         String line;
@@ -154,15 +158,20 @@ public class DiscoveryModule {
         while ((line = br.readLine()) != null) {
             // use comma as separator
             String[] cols = line.split(",");
-            if(cols[0].equalsIgnoreCase("Actuators")){
+            //System.out.println(cols[0] + " " + cols[1]);
+            if(cols[0].equalsIgnoreCase("Actuator")){
+                //System.out.println("Entrou");
                 this.instantiateModuleActuators(cols);
+            }
+            else if(cols[0].equalsIgnoreCase("Sensor")){
+                this.instantiateModuleSensor(cols);
             }
             else System.out.println("File has a wrong structure. Try \"Actuator/Sensor, Type, Brand\"");
         }
         br.close();
 
         // CSV Format:
-            // Actuator/Sensor, Brand
+        // Actuator/Sensor, Brand
     }
     public void instantiateModuleActuators(String[] cols){
         String classe=cols[1].concat(cols[2]);
@@ -180,12 +189,39 @@ public class DiscoveryModule {
         /*System.out.println("classe: " + classe);
         System.out.println(newAct.toString());*/
 
-        System.out.format("Device %s already instantiate%n", classe);
+        System.out.format("Actuator %s was instantiate%n", classe);
         System.out.println("Number of Actuators: " + getNumberOfActuators());
+    }
+
+    public void instantiateModuleSensor(String[] cols){
+        String classe=cols[1].concat(cols[2]);
+        //ActuatorsFactory actuatorsFactory=new ActuatorsFactory();
+
+
+        HumidityBosch newSensor;
+        // Irá vir das regras. For now is the only option
+        if(cols[3]!=null){
+            newSensor = new HumidityBosch();
+        }
+        else{
+            newSensor = new HumidityBosch(cols[3]);
+        }
+        //actuatorList.add()
+        sensorList.add(newSensor);
+
+        /*System.out.println("classe: " + classe);
+        System.out.println(newAct.toString());*/
+
+        System.out.format("Sensor %s was instantiate%n", classe);
+        System.out.println("Number of Sensors: " + getNumberOfSensors());
     }
 
     public Integer getNumberOfActuators(){
         return actuatorList.size();
+    }
+
+    public Integer getNumberOfSensors(){
+        return sensorList.size();
     }
 
     public void getActuatorsList(){
