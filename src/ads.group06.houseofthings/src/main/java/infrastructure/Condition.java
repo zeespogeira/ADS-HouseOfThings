@@ -16,9 +16,9 @@ public class Condition {
         return sensorId;
     }
 
-    public boolean isMet(int sensorId, double value){
-         if(this.sensorId == sensorId){
-            checkCondition(value);
+    public boolean isMet(SensorReading sensorReading){
+         if(this.sensorId == sensorReading.getSensorId()){
+            checkCondition(sensorReading.getValue());
         }
 
         return  isMet;

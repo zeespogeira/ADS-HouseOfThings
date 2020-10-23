@@ -12,14 +12,19 @@ public class Action implements IAction {
         this.conditions = conditions;
     }
 
-    public void notifyExecution(int sensorId, double value) {
+    public void execute(SensorReading sensorReading) {
         //check if all the conditions are met
-        boolean allConditionsMet = conditions.stream().allMatch(c->c.isMet(sensorId, value));
+        boolean allConditionsMet = conditions.stream().allMatch(c->c.isMet(sensorReading));
 
         //notify actuators to act
         for(var actuator : actuators){
             actuator.act(allConditionsMet);
         }
+    }
+
+    @Override
+    public boolean hasConditionWithSensor(int sensorId) {
+        return conditions.stream().anyMatch(c->c.getSensorId() == sensorId);
     }
 
     @Override
