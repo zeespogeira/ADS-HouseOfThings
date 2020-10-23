@@ -22,17 +22,11 @@ public class Action implements IAction {
                 .filter(condition -> condition.getSensorId() == sensorId)
                 .collect(Collectors.toList());
 
-        for(Condition condition : conditionsToCheck){
-            if(!condition.isMet(value)){
-                continue;
-            }
-            controlFlag = true;
-        }
+        //check if all the conditions are met
+        boolean allConditionsMet = conditions.stream().allMatch(c->c.isMet(sensorId, value));
 
-        if(controlFlag){
-            for(var actuator : actuators){
-                actuator.act();
-            }
+        for(var actuator : actuators){
+            actuator.act(allConditionsMet);
         }
     }
 
@@ -54,9 +48,9 @@ public class Action implements IAction {
     }
 
     @Override
-    public void execute() {
+    public void execute(boolean flag) {
         for(AbstractActuator actuator : actuators){
-            actuator.act();
+            actuator.act(flag);
         }
     }
 }

@@ -4,6 +4,7 @@ public class Condition {
     private int sensorId;
     private double referenceValue;
     private Operator operator;
+    private boolean isMet;
 
     public Condition(int sensorId , double referenceValue, Operator operator){
         this.sensorId = sensorId;
@@ -15,7 +16,16 @@ public class Condition {
         return sensorId;
     }
 
-    public boolean isMet(double value){
-        return Comparer.compare(referenceValue, operator, value);
+    public boolean isMet(int sensorId, double value){
+        if(this.sensorId == sensorId){
+            //TODO: check condition
+            checkCondition(value);
+        }
+
+        return  isMet;
+    }
+
+    private void checkCondition(double value){
+        this.isMet = Comparer.compare(referenceValue, operator, value);
     }
 }

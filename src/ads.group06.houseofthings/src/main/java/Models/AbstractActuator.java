@@ -5,7 +5,7 @@ public abstract class AbstractActuator {
         this.id = id;
     }
 
-    public abstract void act();
+    public abstract void act(boolean flag);
     protected int id;
 
     public int getId(){

@@ -13,9 +13,4 @@ public class LampPhilips extends Lamp {
          this.turnOff();
         return ilumination;
     }
-
-    @Override
-    public void act() {
-
-    }
 }
