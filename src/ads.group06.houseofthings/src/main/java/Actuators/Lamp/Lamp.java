@@ -1,15 +1,16 @@
-package Lamp;
-
-
+package Actuators.Lamp;
 import Models.AbstractActuator;
+
 
 public abstract class Lamp extends AbstractActuator {
     private boolean isOn;
 
-    public Lamp(int id) {
-        super(id);
+    public Lamp() {
     }
 
+    public Lamp(boolean isOn) {
+        this.isOn = isOn;
+    }
 
     protected boolean turnOn(){
         isOn=true;
@@ -21,7 +22,7 @@ public abstract class Lamp extends AbstractActuator {
         return isOn;
     }
 
-    public abstract Integer getIlumination();
+    //public abstract Integer getIlumination();
 
     @Override
     public void act(boolean state) {
@@ -44,5 +45,10 @@ public abstract class Lamp extends AbstractActuator {
         return isOn;
     }
 
-
+    @Override
+    public String toString() {
+        return "Lamp{" +
+                "isOn=" + isOn +
+                '}';
+    }
 }

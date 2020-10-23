@@ -1,8 +1,10 @@
 package Models;
 
 public abstract class AbstractActuator {
-    public AbstractActuator(int id){
-        this.id = id;
+    private static int count = 0;
+
+    public AbstractActuator(){
+        this.id = ++count;
     }
 
     public abstract void act(boolean flag);
