@@ -24,6 +24,7 @@ public class Condition {
         return  isMet;
     }
 
+    //TODO: implement state pattern
     private void checkCondition(double value){
         this.isMet = Comparer.compare(referenceValue, operator, value);
     }
