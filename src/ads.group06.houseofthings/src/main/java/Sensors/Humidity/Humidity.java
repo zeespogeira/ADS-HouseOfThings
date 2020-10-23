@@ -1,7 +1,9 @@
 package Sensors.Humidity;
 
-import Sensors.SensorClass;
+import Models.AbstractSensor;
 
-public abstract class Humidity extends SensorClass {
+public abstract class Humidity extends AbstractSensor {
 
+    public Humidity() {
+    }
 }
