@@ -14,7 +14,7 @@ public class Action implements IAction {
         this.conditions = conditions;
     }
 
-    public void notifyActionExecution(int sensorId, double value) {
+    private void notifyActionExecution(int sensorId, double value) {
         boolean controlFlag = false;
 
         //get list of conditions associated with the sensorId
@@ -48,9 +48,7 @@ public class Action implements IAction {
     }
 
     @Override
-    public void execute(boolean flag) {
-        for(AbstractActuator actuator : actuators){
-            actuator.act(flag);
-        }
+    public void execute(int sensorId, double value) {
+        notifyActionExecution(sensorId, value);
     }
 }
