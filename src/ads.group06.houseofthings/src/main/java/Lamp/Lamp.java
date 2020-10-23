@@ -1,21 +1,25 @@
 package Lamp;
 
 
-import Interface.Actuators;
+import Models.AbstractActuator;
 
-public abstract class Lamp implements Actuators {
+public abstract class Lamp extends AbstractActuator {
     private boolean isOn;
+
+    public Lamp(int id) {
+        super(id);
+    }
 
 
     protected boolean turnOn(){
         isOn=true;
         return isOn;
-    };
+    }
 
     public boolean turnOff(){
         isOn=false;
         return isOn;
-    };
+    }
 
     public abstract Integer getIlumination();
 

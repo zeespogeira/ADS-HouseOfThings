@@ -1,18 +1,19 @@
 package infrastructure;
-
 import Interface.IAction;
+import Models.AbstractActuator;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Action implements IAction {
+    private List<AbstractActuator> actuators;
     private List<Condition> conditions;
 
-    //TODO: add List<IActutor> actuators
-    public Action( List<Condition> conditions){
-
+    public Action(List<AbstractActuator> actuators, List<Condition> conditions){
+        this.actuators = actuators;
         this.conditions = conditions;
     }
+
     public void notifyActionExecution(int sensorId, double value) {
         boolean controlFlag = false;
 
@@ -29,26 +30,33 @@ public class Action implements IAction {
         }
 
         if(controlFlag){
-            /* TODO: act actuators
-            for(var actuator in Actuators){
+            for(var actuator : actuators){
                 actuator.act();
             }
-            */
         }
     }
 
     @Override
-    public void addActuator() {
-        
+    public void addActuator(AbstractActuator actuator) {
+        this.actuators.add(actuator);
     }
 
     @Override
-    public void removeActuator() {
+    public void removeActuator(int actuatorId) {
+        AbstractActuator actuator = this.actuators.stream()
+                .filter(a->a.getId() == actuatorId)
+                .findFirst()
+                .orElse(null);
 
+        if(actuator != null){
+            this.actuators.remove(actuator);
+        }
     }
 
     @Override
     public void execute() {
-
+        for(AbstractActuator actuator : actuators){
+            actuator.act();
+        }
     }
 }

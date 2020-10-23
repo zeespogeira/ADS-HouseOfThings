@@ -3,7 +3,8 @@ package Lamp;
 public class LampPhilips extends Lamp {
     Integer ilumination;
 
-    public LampPhilips(Integer ilumination) {
+    public LampPhilips(int id, Integer ilumination) {
+        super(id);
         this.ilumination = ilumination;
     }
 
@@ -15,11 +16,6 @@ public class LampPhilips extends Lamp {
 
     @Override
     public void act() {
-
-    }
-
-    @Override
-    public void act(boolean test) {
 
     }
 }
