@@ -63,7 +63,7 @@ because ...
 #### 3.2.1. Domain model
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/infra-diagrams-infra-sensors.png?raw=true)
 
-We built a model to support the "sensor domain". This domain represents the real world interactions of sensors within the systems. In theis model we ideintified a problem related to how would the sensors communicate to the "rest of the world" 
+We built a model to support the "sensor domain". This domain represents the real world interactions of sensors within the systems. In this model we identified a problem related to how would the sensors communicate to the "rest of the world"
 that a new reading was produced. To tackle the problem, we chose to include a component that would be responsible to aggregate all sensor readings. Once a reading is produced by the sensor, it should be stored in a single common "place". This
 place would then be responsible for notifying all the interested entities.
 
@@ -87,7 +87,7 @@ place would then be responsible for notifying all the interested entities.
 ### 3.3. Actuator Infrastructure
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/infra-diagrams-infra-actuators.png?raw=true)
 
-Actuators are entities that need to be triggered once a condition or set of conditions are met. Both actuators and conditions are independant entities that should not know each other. Following this principle we should create a mechanism that mediates the action of an actuator given some condition(s). We came up with the concept os an Action which is the entity responsible to check if a set of conditions are met and triggers (on/off) a set of actuator(s).
+Actuators are entities that need to be triggered once a condition or set of conditions are met. Both actuators and conditions are independant entities that should not know each other. Following this principle, we should create a mechanism that mediates the action of an actuator given some condition(s). We came up with the concept os an Action which is the entity responsible to check if a set of conditions are met and triggers (on/off) a set of actuator(s).
 
 #### 3.3.1. Used patterns
 #### 3.3.1.1. Mediator
@@ -104,4 +104,4 @@ Actuators are entities that need to be triggered once a condition or set of cond
 - Pattern
     - The patter provides an object responsible for deciding the instation of the correct implementation.
 - Usage
-    - We introduced the interface IComparer that is implemeted by any class responsible for performing comparissons.An ComparerFactory was added, with the responsability to decide which of of the IComparer impementation should be instaciated.
+    - We introduced the interface IComparer that is implemeted by any class responsible for performing comparissons.An ComparerFactory was added, with the responsability to decide which of of the IComparer impementation should be instaciated. 
