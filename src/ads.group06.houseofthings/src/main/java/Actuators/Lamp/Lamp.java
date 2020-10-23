@@ -1,5 +1,4 @@
 package Actuators.Lamp;
-import Interface.Actuators;
 import Actuators.ActuatorsClass;
 
 

@@ -1,6 +1,6 @@
 package Interface;
 
-public interface Sensor {
+public interface ISensor {
 
     void sense();
 }

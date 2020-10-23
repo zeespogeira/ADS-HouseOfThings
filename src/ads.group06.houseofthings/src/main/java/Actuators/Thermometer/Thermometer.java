@@ -2,7 +2,6 @@ package Actuators.Thermometer;
 
 
 import Actuators.ActuatorsClass;
-import Interface.Actuators;
 
 public abstract class Thermometer extends ActuatorsClass {
     public Integer temperature;

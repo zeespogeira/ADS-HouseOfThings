@@ -1,7 +1,7 @@
 import Actuators.ActuatorsClass;
 import Actuators.Lamp.LampBosch;
 
-import Interface.Sensor;
+import Interface.ISensor;
 
 import java.nio.file.*;
 import static java.nio.file.StandardWatchEventKinds.*;
@@ -20,7 +20,8 @@ public class CheckNewDevice {
     private final Path dir;
     private final String currentPath;
     public List<Object> actuatorList;
-    public List<Sensor> sensorList;
+    public List<ISensor> ISensorList;
+    DiscoveryModule discoveryModule;
 
 
     /**
@@ -35,7 +36,8 @@ public class CheckNewDevice {
         currentPath=directory.getCanonicalPath() + "\\Devices";
        // System.out.println("currentFolder: " + );
 
-        //actuatorList=new ArrayList<>();
+        actuatorList=new ArrayList<>();
+        discoveryModule=new DiscoveryModule();
 
         this.watcher = FileSystems.getDefault().newWatchService();
         dir.register(watcher, ENTRY_CREATE);
@@ -84,18 +86,23 @@ public class CheckNewDevice {
                 //Is a CSV file. Need to instantiate class
                 System.out.format("Instantiate Class from file %s%n", filename);
 
-                //Maybe use multiple threads
-                ExecutorService service = Executors.newFixedThreadPool(4);
-                service.submit(new Runnable() {
-                    public void run() {
-                        try {
-                            readCSV(filename);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+
+                //using threads
+                synchronized(CheckNewDevice.class){
+                    ExecutorService service = Executors.newFixedThreadPool(4);
+                    service.submit(new Runnable() {
+                        public void run() {
+                            try {
+                                //
+                                discoveryModule.readCSV(filename);
+                                //readCSV(filename);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                //discoveryModule.readCSV(filename);
+            }}
 
             //Reset the key -- this step is critical if you want to receive
             //further watch events. If the key is no longer valid, the directory
@@ -140,7 +147,7 @@ public class CheckNewDevice {
                     //creates a class
                     this.instantiateModuleActuators(cols);
             }
-            //else System.out.println("Nao entrou");
+            else System.out.println("File has a wrong structure. Try \"Actuator/Sensor, Type, Brand\"");
 
         }
 

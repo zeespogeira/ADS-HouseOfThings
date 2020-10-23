@@ -23,9 +23,10 @@ public class HouseOfThingsApplication {
 			}
 		});
 */
-		//DiscoveryModule discoveryModule=new DiscoveryModule();
-		//discoveryModule.loadFiles();
-		new CheckNewDevice().processEvents();
+		DiscoveryModule discoveryModule=new DiscoveryModule();
+		discoveryModule.loadFiles();
+		//new CheckNewDevice().processEvents();
+		discoveryModule.processEvents();
 
 		//System.out.println("Hello");
 	}
