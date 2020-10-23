@@ -17,13 +17,14 @@ public class Condition {
     }
 
     public boolean isMet(int sensorId, double value){
-             if(this.sensorId == sensorId){
+         if(this.sensorId == sensorId){
             checkCondition(value);
         }
 
         return  isMet;
     }
 
+    //TODO: implement state pattern
     private void checkCondition(double value){
         this.isMet = Comparer.compare(referenceValue, operator, value);
     }
