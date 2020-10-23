@@ -29,7 +29,7 @@ This section explains the design choices of the various
 
 To control sensors and actuators, we first need to have such
 devices available. This is achieved through a process we 
-nammed Discoverability, which enables the system to identify
+named Discoverability, which enables the system to identify
 sensors and actuators that it can use.
 
 
