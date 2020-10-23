@@ -54,7 +54,9 @@ and create the corresponding device object.
 For the creation of the devices, we
 resorted to a Factory Method. This pattern was chosen
 because ...
- 
+
+
+![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/Devices%20Discovery.png?raw=true)
 
 ### 3.2. Sensor Infrastructure
 
