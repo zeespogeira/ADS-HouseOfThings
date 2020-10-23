@@ -1,7 +1,9 @@
 package Interface;
 
+import Models.AbstractActuator;
+
 public interface IAction {
-    void addActuator();
-    void removeActuator();
-    void execute();
+    void addActuator(AbstractActuator actuator);
+    void removeActuator(int actuatorId);
+    void execute(int sensorId, double value);
 }

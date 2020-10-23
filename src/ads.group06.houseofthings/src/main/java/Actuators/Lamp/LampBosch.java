@@ -3,9 +3,14 @@ package Actuators.Lamp;
 public class LampBosch extends Lamp {
     String ilumination;
 
-    public LampBosch(boolean isOn, String ilumination) {
+
+    public LampBosch(String ilumination) {
         this.ilumination = ilumination;
-        this.setOn(isOn);
+    }
+
+    public LampBosch(boolean isOn, String ilumination) {
+        super(isOn);
+        this.ilumination = ilumination;
     }
 
     public LampBosch() {
@@ -20,10 +25,7 @@ public class LampBosch extends Lamp {
         this.ilumination = ilumination;
     }
 
-    @Override
-    public void act() {
-        //if(this.getOn()==true) this.turnOff();
-    }
+
 
     @Override
     public String toString() {

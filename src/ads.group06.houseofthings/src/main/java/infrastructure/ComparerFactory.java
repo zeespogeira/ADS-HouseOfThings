@@ -10,16 +10,16 @@ public class ComparerFactory {
                 comparer = new EqualComparer();
                 break;
             case LOWER:
-                comparer = new EqualComparer();
+                comparer = new LowerComparer();
                 break;
             case HIGHER:
-                comparer = new EqualComparer();
+                comparer = new HigherComparer();
                 break;
             case LOWER_OR_EQUAL:
-                comparer = new EqualComparer();
+                comparer = new LowerOrEqualComparer();
                 break;
             case HIGHER_OR_EQUAL:
-                comparer = new EqualComparer();
+                comparer = new HigherOrEqualComparer();
                 break;
             default:
                 throw new IllegalArgumentException("Unkown operator");

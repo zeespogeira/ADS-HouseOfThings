@@ -2,15 +2,15 @@ package Actuators.Thermometer;
 
 public class ThermometerBosch extends Thermometer {
 
+    public ThermometerBosch(Integer temperature) {
+        super(temperature);
+    }
+
     public ThermometerBosch() {
     }
 
-    public ThermometerBosch(Integer temperature) {
-        this.temperature=temperature;
-    }
-
     @Override
-    public void act() {
+    public void act(boolean flag) {
 
     }
 }

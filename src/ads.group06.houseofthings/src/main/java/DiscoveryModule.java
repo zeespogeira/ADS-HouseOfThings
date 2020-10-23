@@ -1,9 +1,7 @@
 import Actuators.ActuatorsClass;
 import Actuators.ActuatorsFactory;
-import Actuators.Lamp.Lamp;
 import Actuators.Lamp.LampBosch;
-import Actuators.Thermometer.Thermometer;
-import Interface.ISensor;
+import Models.AbstractActuator;
 
 import java.io.*;
 import java.nio.file.*;
@@ -11,7 +9,6 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
@@ -23,8 +20,8 @@ public class DiscoveryModule {
     private final Path dir;*/
     private final String currentPath;
 
-    private List<? extends Lamp> lampList;
-    private List<? extends Thermometer> thermometerList;
+    //private List<? extends GenericLamp> lampList;
+    //private List<? extends Thermometer> thermometerList;
     private List<Object> actuatorList;
 
     private final WatchService watcher;
@@ -178,7 +175,7 @@ public class DiscoveryModule {
     public void instantiateModuleActuators(String[] cols){
         String classe=cols[1].concat(cols[2]);
         ActuatorsFactory actuatorsFactory=new ActuatorsFactory();
-        ActuatorsClass newAct = actuatorsFactory.getActuator(classe);
+        AbstractActuator newAct = actuatorsFactory.getActuator(classe);
 
         // Irá vir das regras
         if(newAct instanceof LampBosch){

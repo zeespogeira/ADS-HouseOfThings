@@ -3,13 +3,14 @@ package Actuators;
 import Actuators.Lamp.LampBosch;
 import Actuators.Lamp.LampPhilips;
 import Actuators.Thermometer.ThermometerBosch;
+import Models.AbstractActuator;
 //import Interface.Actuators;
 
 
 public class ActuatorsFactory {
 
     //use getShape method to get object of type shape
-    public ActuatorsClass getActuator(String actType){ //<T extends Actuators>
+    public AbstractActuator getActuator(String actType){ //<T extends Actuators>
         if(actType == null){
             return null;
         }

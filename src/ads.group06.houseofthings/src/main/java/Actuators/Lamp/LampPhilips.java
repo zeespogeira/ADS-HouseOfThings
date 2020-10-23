@@ -1,20 +1,12 @@
 package Actuators.Lamp;
 
-import Actuators.Lamp.Lamp;
-
 public class LampPhilips extends Lamp {
 
-    public LampPhilips(boolean isOn) {
-        this.setOn(isOn);
+    public LampPhilips() {
     }
 
-    public LampPhilips() { }
-
-
-
-    @Override
-    public void act() {
-
+    public LampPhilips(boolean isOn) {
+        super(isOn);
     }
 
     @Override
