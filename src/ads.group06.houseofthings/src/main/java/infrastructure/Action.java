@@ -1,9 +1,7 @@
 package infrastructure;
 import Interface.IAction;
 import Models.AbstractActuator;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Action implements IAction {
     private List<AbstractActuator> actuators;
@@ -14,17 +12,11 @@ public class Action implements IAction {
         this.conditions = conditions;
     }
 
-    private void notifyActionExecution(int sensorId, double value) {
-        boolean controlFlag = false;
-
-        //get list of conditions associated with the sensorId
-        List<Condition> conditionsToCheck = conditions.stream()
-                .filter(condition -> condition.getSensorId() == sensorId)
-                .collect(Collectors.toList());
-
+    public void notifyExecution(int sensorId, double value) {
         //check if all the conditions are met
         boolean allConditionsMet = conditions.stream().allMatch(c->c.isMet(sensorId, value));
 
+        //notify actuators to act
         for(var actuator : actuators){
             actuator.act(allConditionsMet);
         }
@@ -45,10 +37,5 @@ public class Action implements IAction {
         if(actuator != null){
             this.actuators.remove(actuator);
         }
-    }
-
-    @Override
-    public void execute(int sensorId, double value) {
-        notifyActionExecution(sensorId, value);
     }
 }
