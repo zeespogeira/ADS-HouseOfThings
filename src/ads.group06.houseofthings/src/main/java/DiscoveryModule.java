@@ -1,4 +1,3 @@
-import Actuators.ActuatorsClass;
 import Actuators.ActuatorsFactory;
 import Actuators.Lamp.LampBosch;
 import Models.AbstractActuator;
@@ -16,24 +15,20 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 public class DiscoveryModule {
     Integer numberOfModulesConnected;
 
-    /*private final WatchService watcher;
-    private final Path dir;*/
     private final String currentPath;
 
-    //private List<? extends GenericLamp> lampList;
-    //private List<? extends Thermometer> thermometerList;
-    private List<Object> actuatorList;
 
     private final WatchService watcher;
     private final Path dir;
-    //DiscoveryModule discoveryModule;
 
+    List<AbstractActuator> actuatorList;
 
     /**
      * Creates a WatchService and registers the given directory
      */
     DiscoveryModule() throws IOException {
 
+        //this.actuatorList = actuatorList;
         File directory = new File("./"); //  ./../../../Devices
         directory.getParent();directory.getParent();directory.getParent();
         currentPath=directory.getCanonicalPath() + "\\Devices";
@@ -43,11 +38,6 @@ public class DiscoveryModule {
 
         String currentFolder= directory + "/Devices";
         dir = Path.of(currentFolder);
-        //currentPath=directory.getCanonicalPath() + "\\Devices";
-        // System.out.println("currentFolder: " + );
-
-        actuatorList=new ArrayList<>();
-        //discoveryModule=new DiscoveryModule();
 
         this.watcher = FileSystems.getDefault().newWatchService();
         dir.register(watcher, ENTRY_CREATE);
@@ -140,13 +130,14 @@ public class DiscoveryModule {
             //System.out.println(temp);
             //File file=File.
 
-            try {
-                readCSV((Path) temp);
-            } catch (IOException e) {
-                e.printStackTrace();
+            synchronized(DiscoveryModule.class){
+                try {
+                    readCSV((Path) temp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
-
     }
 
     public void readCSV(Path filename) throws IOException {
@@ -159,6 +150,7 @@ public class DiscoveryModule {
 
         BufferedReader br = new BufferedReader(new FileReader(String.valueOf(filename)));
         String line;
+        // Maybe just go to the first line. Don't check the other lines
         while ((line = br.readLine()) != null) {
             // use comma as separator
             String[] cols = line.split(",");
@@ -166,8 +158,8 @@ public class DiscoveryModule {
                 this.instantiateModuleActuators(cols);
             }
             else System.out.println("File has a wrong structure. Try \"Actuator/Sensor, Type, Brand\"");
-
         }
+        br.close();
 
         // CSV Format:
             // Actuator/Sensor, Brand
@@ -180,10 +172,9 @@ public class DiscoveryModule {
         // Irá vir das regras
         if(newAct instanceof LampBosch){
             ((LampBosch) newAct).setIlumination(String.valueOf(cols[3]));
-            // actuatorList.add(((LampBosch) newAct).getIlumination());
-            //actuatorList.add((LampBosch) newAct);
         }
 
+        //actuatorList.add()
         actuatorList.add(newAct);
 
         /*System.out.println("classe: " + classe);
@@ -197,11 +188,10 @@ public class DiscoveryModule {
         return actuatorList.size();
     }
 
-   /* public void getActuatorsList(){
-        //List <ActuatorsClass> list=new ArrayList<>();
+    public void getActuatorsList(){
         Iterator it =actuatorList.iterator();
         while (it.hasNext()){
             System.out.println(it.next());
         }
-    }*/
+    }
 }
