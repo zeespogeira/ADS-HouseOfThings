@@ -58,15 +58,50 @@ because ...
 
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/Devices%20Discovery.png?raw=true)
 
-### 3.2. Sensor Infrastructure
 
-#### 3.2.1. Sensor Infrastructure
+### 3.2. Sensor Infrastructure
+#### 3.2.1. Domain model
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/infra-diagrams-infra-sensors.png?raw=true)
 
 We built a model to support the "sensor domain". This domain represents the real world interactions of sensors within the systems. In theis model we ideintified a problem related to how would the sensors communicate to the "rest of the world" 
-that a new reading was produced. In order to tackle the problem, we chose to include a component that would be responsible to aggregate all sensor readings. Once a reading is produced by the sensor, it should be stored in a single common "place". This
+that a new reading was produced. To tackle the problem, we chose to include a component that would be responsible to aggregate all sensor readings. Once a reading is produced by the sensor, it should be stored in a single common "place". This
 place would then be responsible for notifying all the interested entities.
 
-#### 3.2.2 Actuator Infrastructure
+#### 3.2.1. Used patterns
+#### 3.2.1.1. Singleton
+- Problem
+    - How can we make sure that when a Sensor publishes a reading, the reading is stored in an common object to all sensors?
+- Pattern description
+    - The pattern enforces the existance of a single instance of a class.
+- Usage
+    - By using this pattern that all the readings are stored in a single object and we can react to the "new reading" by notifying all the "sensor reading dependants". The Hub class is a singleton class.
+
+#### 3.2.1.1. Observer
+- Problem
+    - How can we make sure that when a Sensor publishes a reading all the "sensor dependants" act accordingly?
+- Pattern description
+    - The pattern defines a mechanism to notify multiple objects about events that happen on the observed object.
+- Usage
+    - Using this pattern allowed us to implement a mechanism in a sinlge component that notifies all the objects that need to act after a sensor emits a reading. The pattern is implemented in the Hub class.
+
+### 3.3. Actuator Infrastructure
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/infra-diagrams-infra-actuators.png?raw=true)
 
+Actuators are entities that need to be triggered once a condition or set of conditions are met. Both actuators and conditions are independant entities that should not know each other. Following this principle we should create a mechanism that mediates the action of an actuator given some condition(s). We came up with the concept os an Action which is the entity responsible to check if a set of conditions are met and triggers (on/off) a set of actuator(s).
+
+#### 3.3.1. Used patterns
+#### 3.3.1.1. Mediator
+. Problem 
+    - How can an actuator be triggered when a set of conditions are met?
+- Pattern description
+    - The pattern reduces dependencies between objects. It restrics direct comunication of the objects and enforces the comunnication only via the mediator object. 
+- Usage
+    - The Action object serves as the mediator between Conditions and Actuators. When an Action is notified to execute, then checks the state of all of its conditions and signals the actuators to act.
+
+#### 3.3.1.1. Factory
+- Problem
+    - How can we remove the complex chainning of "if conditions" needed to compare the sensor value with the Condition value?
+- Pattern
+    - The patter provides an object responsible for deciding the instation of the correct implementation.
+- Usage
+    - We introduced the interface IComparer that is implemeted by any class responsible for performing comparissons.An ComparerFactory was added, with the responsability to decide which of of the IComparer impementation should be instaciated.
