@@ -12,6 +12,10 @@ public class Action implements IAction {
         this.conditions = conditions;
     }
 
+    public Action() {
+
+    }
+
     public void execute(SensorReading sensorReading) {
         //check if all the conditions are met
         boolean allConditionsMet = conditions.stream().allMatch(c->c.isMet(sensorReading));
@@ -20,6 +24,11 @@ public class Action implements IAction {
         for(var actuator : actuators){
             actuator.act(allConditionsMet);
         }
+    }
+
+    public List<AbstractActuator> getActuators() {
+        return actuators;
+        //s
     }
 
     @Override
