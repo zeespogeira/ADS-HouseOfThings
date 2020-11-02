@@ -14,7 +14,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class ActionTests {
     @Test
-    public void ActionTest_01() {
+    public void ActionTest_One() {
         int sensorId = 1;
         Condition condition01 = new Condition(sensorId, 123, Operator.EQUAL);
         Condition condition02 = new Condition(sensorId, 124, Operator.HIGHER);
