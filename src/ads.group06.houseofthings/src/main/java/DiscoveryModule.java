@@ -18,8 +18,6 @@ public class DiscoveryModule {
     Integer numberOfModulesConnected;
 
     private final String currentPath;
-
-
     private final WatchService watcher;
     private final Path dir;
 
@@ -48,7 +46,6 @@ public class DiscoveryModule {
         this.watcher = FileSystems.getDefault().newWatchService();
         dir.register(watcher, ENTRY_CREATE);
     }
-
 
     /**
      * Process all events for the key queued to the watcher.
@@ -121,7 +118,6 @@ public class DiscoveryModule {
         }
     }
 
-
     /**
      * Load files already in the directory
      * */
@@ -175,6 +171,7 @@ public class DiscoveryModule {
         // CSV Format:
         // Actuator/Sensor, Brand
     }
+
     public void instantiateModuleActuators(String[] cols){
         String classe=cols[1].concat(cols[2]);
         ActuatorsFactory actuatorsFactory=new ActuatorsFactory();
