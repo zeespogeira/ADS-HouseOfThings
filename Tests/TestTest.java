@@ -1,10 +1,8 @@
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.BDDMockito.*;
+//import static org.mockito.BDDMockito.*;
 
 
 public class TestTest {

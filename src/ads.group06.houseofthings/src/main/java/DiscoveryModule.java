@@ -35,14 +35,16 @@ public class DiscoveryModule {
         File directory = new File("./"); //  ./../../../Devices
         //directory.getParent();directory.getParent();directory.getParent();
         //currentPath=directory.getCanonicalPath() + "\\Devices";
-        currentPath=directory.getCanonicalPath() + "\\src\\main\\java\\Devices";
+        currentPath=directory.getCanonicalPath() + "\\src\\ads.group06.houseofthings\\src\\main\\java\\Devices";
 
         actuatorList=new ArrayList<>();
         sensorList=new ArrayList<>();
 
-        String currentFolder= directory + "/src/main/java/Devices";
-        dir = Path.of(currentFolder);
+        String currentFolder= directory + "/src/ads.group06.houseofthings/src/main/java/Devices";
+        System.out.println("currentFolder" + currentFolder);
 
+        dir = Path.of(currentFolder);
+        System.out.println("dir " + dir);
         this.watcher = FileSystems.getDefault().newWatchService();
         dir.register(watcher, ENTRY_CREATE);
     }
@@ -77,7 +79,7 @@ public class DiscoveryModule {
 
                 try {
                     Path child = dir.resolve(filename);
-                    //System.out.println(Files.probeContentType(child));
+                    System.out.println("child " + child);
                     //if(!child.endsWith(".csv")){
                     if (!Files.probeContentType(child).equals("application/vnd.ms-excel")) {
                         System.err.format("New file '%s' is not a csv text file.%n", filename);

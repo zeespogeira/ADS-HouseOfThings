@@ -1,5 +1,6 @@
 import infrastructure.Condition;
 import infrastructure.Operator;
+import infrastructure.SensorReading;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -15,7 +16,8 @@ public class ConditionTests {
         double sensorReading = 123;
 
         //then
-        assertEquals(true, condition.isMet(sensorId, sensorReading));
+        assertEquals(true, condition.isMet(new SensorReading(sensorId, sensorReading)));
+
     }
 
     @Test
@@ -28,7 +30,8 @@ public class ConditionTests {
         double sensorReading = 123456;
 
         //then
-        assertEquals(false, condition.isMet(sensorId, sensorReading));
+        //assertEquals(false, condition.isMet(sensorId, sensorReading));
+        assertEquals(true, condition.isMet(new SensorReading(sensorId, sensorReading)));
     }
 
     @Test
@@ -41,7 +44,8 @@ public class ConditionTests {
         double sensorReading = 12;
 
         //then
-        assertEquals(true, condition.isMet(sensorId, sensorReading));
+        //assertEquals(true, condition.isMet(sensorId, sensorReading));
+        assertEquals(true, condition.isMet(new SensorReading(sensorId, sensorReading)));
     }
 
     @Test
@@ -54,7 +58,8 @@ public class ConditionTests {
         double sensorReading = 123;
 
         //then
-        assertEquals(false, condition.isMet(sensorId, sensorReading));
+        //assertEquals(false, condition.isMet(sensorId, sensorReading));
+        assertEquals(false, condition.isMet(new SensorReading(sensorId, sensorReading)));
     }
 
     @Test
@@ -67,7 +72,8 @@ public class ConditionTests {
         double sensorReading = 123;
 
         //then
-        assertEquals(true, condition.isMet(sensorId, sensorReading));
+        //assertEquals(true, condition.isMet(sensorId, sensorReading));
+        assertEquals(true, condition.isMet(new SensorReading(sensorId, sensorReading)));
     }
 
     @Test
@@ -80,7 +86,8 @@ public class ConditionTests {
         double sensorReading = 1234;
 
         //then
-        assertEquals(false, condition.isMet(sensorId, sensorReading));
+        //assertEquals(false, condition.isMet(sensorId, sensorReading));
+        assertEquals(false, condition.isMet(new SensorReading(sensorId, sensorReading)));
     }
 
     @Test
@@ -93,7 +100,8 @@ public class ConditionTests {
         double sensorReading = 1234;
 
         //then
-        assertEquals(true, condition.isMet(sensorId, sensorReading));
+       // assertEquals(true, condition.isMet(sensorId, sensorReading));
+        assertEquals(true, condition.isMet(new SensorReading(sensorId, sensorReading)));
     }
 
     @Test
@@ -106,7 +114,8 @@ public class ConditionTests {
         double sensorReading = 123;
 
         //then
-        assertEquals(false, condition.isMet(sensorId, sensorReading));
+        //assertEquals(false, condition.isMet(sensorId, sensorReading));
+        assertEquals(true, condition.isMet(new SensorReading(sensorId, sensorReading)));
     }
 
     @Test
@@ -119,7 +128,8 @@ public class ConditionTests {
         double sensorReading = 123;
 
         //then
-        assertEquals(true, condition.isMet(sensorId, sensorReading));
+        //assertEquals(true, condition.isMet(sensorId, sensorReading));
+        assertEquals(true, condition.isMet(new SensorReading(sensorId, sensorReading)));
     }
 
     @Test
@@ -132,6 +142,7 @@ public class ConditionTests {
         double sensorReading = 123;
 
         //then
-        assertEquals(true, condition.isMet(sensorId, sensorReading));
+        //assertEquals(true, condition.isMet(sensorId, sensorReading));
+        assertEquals(true, condition.isMet(new SensorReading(sensorId, sensorReading)));
     }
 }
