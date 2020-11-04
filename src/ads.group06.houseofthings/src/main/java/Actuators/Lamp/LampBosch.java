@@ -29,8 +29,8 @@ public class LampBosch extends Lamp {
 
     @Override
     public String toString() {
-        return super.toString() + "LampBosch{" +
-                "ilumination='" + ilumination + '\'' +
+        return "LampBosch{" + super.toString() +
+                ", ilumination='" + ilumination + '\'' +
                 '}';
     }
 }

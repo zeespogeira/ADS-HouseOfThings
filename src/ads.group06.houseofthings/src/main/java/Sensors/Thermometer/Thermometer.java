@@ -1,9 +1,10 @@
-package Actuators.Thermometer;
+package Sensors.Thermometer;
 
 
 import Models.AbstractActuator;
+import Models.AbstractSensor;
 
-public abstract class Thermometer extends AbstractActuator {
+public abstract class Thermometer extends AbstractSensor {
     public Integer temperature;
 
     public Thermometer(Integer temperature) {

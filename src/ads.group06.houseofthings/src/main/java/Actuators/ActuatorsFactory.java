@@ -2,7 +2,7 @@ package Actuators;
 
 import Actuators.Lamp.LampBosch;
 import Actuators.Lamp.LampPhilips;
-import Actuators.Thermometer.ThermometerBosch;
+import Sensors.Thermometer.ThermometerBosch;
 import Models.AbstractActuator;
 //import Interface.Actuators;
 
@@ -20,8 +20,6 @@ public class ActuatorsFactory {
         } else if(actType.equalsIgnoreCase("LAMPPHILIPS")){
             return new LampPhilips();
 
-        } else if(actType.equalsIgnoreCase("THERMOMETERBOSCH")){
-            return  new ThermometerBosch();
         }
 
         return null;

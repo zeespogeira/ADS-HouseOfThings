@@ -13,10 +13,16 @@ public class HouseOfThingsApplication {
 		//List<Object> actuatorList;
 		//actuatorList=new ArrayList<>();
 
-		DiscoveryModule discoveryModule=new DiscoveryModule();
+		// Run this 3 lines
+		/*DiscoveryModule discoveryModule=new DiscoveryModule();
 		discoveryModule.loadFiles();
-		//new CheckNewDevice().processEvents();
+		discoveryModule.processEvents();*/
+
+		//DiscoveryModuleTestWithSupplier discoveryModule=new DiscoveryModuleTestWithSupplier();
+		DiscoveryModuleTestWithReflection discoveryModule=new DiscoveryModuleTestWithReflection();
+		discoveryModule.loadFiles();
 		discoveryModule.processEvents();
+
 
 		/*ExecutorService service = Executors.newFixedThreadPool(4);
 		service.submit(new Runnable() {
@@ -30,7 +36,7 @@ public class HouseOfThingsApplication {
 		});*/
 
 
-		//discoveryModule.getActuatorsList();
+		discoveryModule.getActuatorsList();
 		//System.out.println("Hello");
 	}
 

@@ -1,4 +1,4 @@
-package Actuators.Thermometer;
+package Sensors.Thermometer;
 
 public class ThermometerBosch extends Thermometer {
 
@@ -10,7 +10,9 @@ public class ThermometerBosch extends Thermometer {
     }
 
     @Override
-    public void act(boolean flag) {
+    public void sense(boolean flag) {
 
     }
+
+
 }

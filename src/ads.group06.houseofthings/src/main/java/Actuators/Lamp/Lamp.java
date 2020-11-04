@@ -47,8 +47,6 @@ public abstract class Lamp extends AbstractActuator {
 
     @Override
     public String toString() {
-        return "Lamp{" +
-                "isOn=" + isOn +
-                '}';
+        return "isOn=" + isOn;
     }
 }
