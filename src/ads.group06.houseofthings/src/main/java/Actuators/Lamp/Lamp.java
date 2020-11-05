@@ -1,14 +1,19 @@
 package Actuators.Lamp;
 import Models.AbstractActuator;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 public abstract class Lamp extends AbstractActuator {
     private boolean isOn;
+    static final AtomicInteger idGen = new AtomicInteger(1);
 
     public Lamp() {
+        super(idGen.getAndIncrement());
     }
 
-    public Lamp(boolean isOn) {
+    public Lamp(int id, boolean isOn) {
+        super(idGen.getAndIncrement());
         this.isOn = isOn;
     }
 

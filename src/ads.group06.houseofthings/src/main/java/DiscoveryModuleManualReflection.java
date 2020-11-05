@@ -1,8 +1,7 @@
-import Actuators.DynamicReflectionActuatorFactory;
+import Actuators.ActuatorsFactory;
 import Actuators.Lamp.LampBosch;
 import Models.AbstractActuator;
 import Models.AbstractSensor;
-import Sensors.DynamicReflectionSensorFactory;
 import Sensors.Humidity.HumidityBosch;
 
 import java.io.BufferedReader;
@@ -11,9 +10,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -23,33 +22,20 @@ import java.util.stream.Collectors;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
-public class DiscoveryModuleTestWithReflection {
-    /*static {
-        try { //ads.group06.houseofthings.
-            Class.forName("LampPhilips");
-            Class.forName("LampBosch");
-            Class.forName("ThermometerBosch");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }*/
-
+public class DiscoveryModuleManualReflection {
     Integer numberOfModulesConnected;
 
     private final String currentPath;
-
-
     private final WatchService watcher;
     private final Path dir;
 
     List<AbstractActuator> actuatorList;
     List<AbstractSensor> sensorList;
 
-
     /**
      * Creates a WatchService and registers the given directory
      */
-    DiscoveryModuleTestWithReflection() throws IOException {
+    DiscoveryModuleManualReflection() throws IOException {
 
         //this.actuatorList = actuatorList;
         File directory = new File("./"); //  ./../../../Devices
@@ -61,14 +47,13 @@ public class DiscoveryModuleTestWithReflection {
         sensorList=new ArrayList<>();
 
         String currentFolder= directory + "/src/ads.group06.houseofthings/src/main/java/Devices";
-        dir = Path.of(currentFolder);
+        //System.out.println("currentFolder" + currentFolder);
 
+        dir = Path.of(currentFolder);
+        //System.out.println("dir " + dir);
         this.watcher = FileSystems.getDefault().newWatchService();
         dir.register(watcher, ENTRY_CREATE);
-
-
     }
-
 
     /**
      * Process all events for the key queued to the watcher.
@@ -99,7 +84,6 @@ public class DiscoveryModuleTestWithReflection {
 
                 try {
                     Path child = dir.resolve(filename);
-                    //System.out.println(Files.probeContentType(child));
                     //if(!child.endsWith(".csv")){
                     if (!Files.probeContentType(child).equals("application/vnd.ms-excel")) {
                         System.err.format("New file '%s' is not a csv text file.%n", filename);
@@ -114,7 +98,7 @@ public class DiscoveryModuleTestWithReflection {
                 //System.out.format("Instantiate Class from file %s%n", filename);
 
                 //using threads
-                synchronized(DiscoveryModuleTestWithReflection.class){
+                synchronized(DiscoveryModuleManualReflection.class){
                     ExecutorService service = Executors.newFixedThreadPool(4);
                     service.submit(new Runnable() {
                         public void run() {
@@ -123,14 +107,12 @@ public class DiscoveryModuleTestWithReflection {
                                 //discoveryModule.readCSV(filename);
                                 //var filePath = currentPath + "\\" + filename;
                                 readCSV(Paths.get(currentPath + "\\" + filename));
-
-                            } catch (IOException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
+                            } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
                     });
                     //discoveryModule.readCSV(filename);
-
                 }}
 
             //Reset the key -- this step is critical if you want to receive
@@ -142,7 +124,6 @@ public class DiscoveryModuleTestWithReflection {
             }
         }
     }
-
 
     /**
      * Load files already in the directory
@@ -158,17 +139,17 @@ public class DiscoveryModuleTestWithReflection {
             //System.out.println(temp);
             //File file=File.
 
-            synchronized(DiscoveryModuleTestWithReflection.class){
+            synchronized(DiscoveryModuleManualReflection.class){
                 try {
                     readCSV((Path) temp);
-                } catch (IOException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
-                }             }
+                }
+            }
         });
-
     }
 
-    public void readCSV(Path filename) throws IOException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+    public void readCSV(Path filename) throws IOException {
         //ver os ficheiros
         // inicializar as classes adicionadas ao ficheiro
            /* Aquecedor aquecedor=new AquecerdorBosch();
@@ -185,6 +166,7 @@ public class DiscoveryModuleTestWithReflection {
             //System.out.println(cols[0] + " " + cols[1]);
             if(cols[0].equalsIgnoreCase("Actuator")){
                 //System.out.println("Entrou");
+                //System.out.println("********* Actuators *********");
                 this.instantiateModuleActuators(cols);
             }
             else if(cols[0].equalsIgnoreCase("Sensor")){
@@ -198,72 +180,127 @@ public class DiscoveryModuleTestWithReflection {
         // Actuator/Sensor, Brand
     }
 
-    public void instantiateModuleActuators(String[] cols) throws NoSuchMethodException, ClassNotFoundException {
+    public void instantiateModuleActuators(String[] cols){
         String classe=cols[1].concat(cols[2]);
         classe=classe.replaceAll("\\s+","");
 
-        AbstractActuator newAct = null;
+        Class<?> factoryClsImpl = null;
+        AbstractActuator obj = null;
         try {
-            newAct = DynamicReflectionActuatorFactory.getActuator(classe);
-            // Talvez ter 1 campo em que diga o tipo em AbstractActuator
-            // OU
-            // Talvez
-
-
-            //Get All public fields
-            /*Field[] publicFields = Class.forName("Actuators.Lamp.LampBosch").getFields();
-            //prints public fields of ConcreteClass, it's superclass and super interfaces
-            System.out.println(Arrays.toString(publicFields));*/
-
-            //Still misses the arguments part in constructor
-
-            actuatorList.add(newAct);
-
-            System.out.format("Actuator %s was instantiate%n", classe);
-            System.out.println("Number of Actuators: " + getNumberOfActuators() + "\n");
-
-            //getActuatorsList();
-
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NullPointerException e) {
+            //Tambem teria de por todos os actuators no mesmo package
+            factoryClsImpl = Class.forName("Actuators.Lamp." + classe);
+            obj = (AbstractActuator) factoryClsImpl.newInstance();
+            //System.out.println(obj);
+        } catch (ClassNotFoundException e) {
             System.err.format("This Actuator brand doesn't have a plugin\n");
-            // Are we suppose to instantiate a base class (like lamp)???
-            //Actuators.DynamicReflectionActuatorFactory.registerType(classe, className.class());
-        }
-
-        // Irá vir das regras
-        if(newAct instanceof LampBosch){
-            ((LampBosch) newAct).setIlumination(String.valueOf(cols[3]));
+            return;
+        } catch (IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
         }
 
 
+        // Desta forma tenho de por todos os sub-metodos especificos de uma classe aqui -> NAO E PERMANENTE
+        Class par=java.lang.String.class;
+        Method method2 = null;
+        try {
+            //Maybe a static value with all the specific values from the classes??
+            method2 = factoryClsImpl.getMethod("setIlumination",par);
+           // System.out.println(method2);
+        } catch (NoSuchMethodException e) {
+            //Poderia passar isto a frente (Just information to test)
+            System.err.format("This Actuator brand doesn't have this option\n");
+        }
 
+
+        try {
+            //Pode vir das regras
+            String input2=cols[3]; //if doesn't have the value, it's caught in the exception "ArrayIndexOutOfBoundsException"
+
+            // If it's different there is a actuator instantiated
+            if (obj != null) {
+
+                AbstractActuator es = (AbstractActuator)method2.invoke(obj,input2);
+                System.out.println(obj.toString());
+                actuatorList.add(es);
+            }
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        catch (ArrayIndexOutOfBoundsException ex){
+            // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
+            actuatorList.add(obj);
+            System.out.println(obj.toString());
+        }
+
+        //System.out.format("Actuator %s was instantiate%n", classe);
+        //System.out.println("Number of Actuators: " + getNumberOfActuators());
     }
 
     public void instantiateModuleSensor(String[] cols){
         String classe=cols[1].concat(cols[2]);
         classe=classe.replaceAll("\\s+","");
 
+        Class<?> factoryImpl = null;
+        AbstractSensor obj = null;
         try {
-            AbstractSensor newSensor= DynamicReflectionSensorFactory.getSensor(classe);
-
-            sensorList.add(newSensor);
-
-            System.out.format("Sensor %s was instantiate%n", classe);
-            System.out.println("Number of Sensors: " + getNumberOfSensors() + "\n");
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            //Tambem teria de por todos os sensors no mesmo package
+            factoryImpl = Class.forName("Sensors." + cols[1].replaceAll("\\s+","") + "." + classe);
+            obj = (AbstractSensor) factoryImpl.newInstance();
+            //System.out.println(factoryImpl);
+        } catch (ClassNotFoundException e) {
             System.err.format("This Sensor brand doesn't have a plugin\n");
-            // Are we suppose to instantiate a base class (like lamp)???
+            return;
+        } catch (IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
         }
 
 
-        // Irá vir das regras. For now is the only option
-        /*if(cols[3]!=null){
-            newSensor = new HumidityBosch();
-        }
-        else{
-            newSensor = new HumidityBosch(cols[3]);
-        }*/
+        // Desta forma tenho de por todos os sub-metodos especificos de uma classe aqui -> NAO E PERMANENTE
+        // Tenho de contar que podem haver mais que 1 valor -> FALTA FAZER
+        Class par=java.lang.String.class;
+        Method method2 = null;
+        String[] specificMethods={"setHumidity", "setTemperature"};
+        try {
+            for (String method:specificMethods
+                 ) {
+                method2 = factoryImpl.getMethod(method,par);
+                //System.out.println(method2);System.out.println(method + "\n");
+                if(method2!=null){
+                    break;
+                }
+            }
 
+            //Maybe a static value with all the specific values from the classes??
+            /*method2 = factoryImpl.getMethod("setHumidity",par);
+            method2 = factoryImpl.getMethod("setTemperature",par);*/
+            // System.out.println(method2);
+        } catch (NoSuchMethodException e) {
+            //Poderia passar isto a frente (Just information to test)
+            System.err.format("This Sensor doesn't have this option\n");
+        }
+
+        try {
+            //Pode vir das regras
+            String input2=cols[3]; //if doesn't have the value, it's caught in the exception "ArrayIndexOutOfBoundsException"
+
+            //System.out.println(obj.toString());
+            // If it's different there is a actuator instantiated
+            if (obj != null) {
+                AbstractSensor es = (AbstractSensor)method2.invoke(obj,input2);
+                System.out.println(obj.toString());
+                sensorList.add(es);
+            }
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        catch (ArrayIndexOutOfBoundsException ex){
+            // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
+            sensorList.add(obj);
+            System.out.println(obj.toString());
+        }
+
+        /*System.out.format("Sensor %s was instantiate%n", classe);
+        System.out.println("Number of Sensors: " + getNumberOfSensors());*/
     }
 
     public Integer getNumberOfActuators(){

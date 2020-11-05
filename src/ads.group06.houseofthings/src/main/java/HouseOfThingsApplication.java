@@ -18,8 +18,9 @@ public class HouseOfThingsApplication {
 		discoveryModule.loadFiles();
 		discoveryModule.processEvents();*/
 
-		//DiscoveryModuleTestWithSupplier discoveryModule=new DiscoveryModuleTestWithSupplier();
-		DiscoveryModuleTestWithReflection discoveryModule=new DiscoveryModuleTestWithReflection();
+
+		DiscoveryModuleManualReflection discoveryModule=new DiscoveryModuleManualReflection();
+        //DiscoveryModuleTestWithReflection discoveryModule=new DiscoveryModuleTestWithReflection();
 		discoveryModule.loadFiles();
 		discoveryModule.processEvents();
 
