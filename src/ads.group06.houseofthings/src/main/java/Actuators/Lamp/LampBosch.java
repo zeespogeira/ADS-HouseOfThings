@@ -7,12 +7,11 @@ public class LampBosch extends Lamp {
     //static final AtomicInteger idGen = new AtomicInteger(1);
 
     public LampBosch(String ilumination) {
-        //super(idGen.getAndIncrement());
         this.ilumination = ilumination;
     }
 
     public LampBosch(boolean isOn, String ilumination) {
-        super(idGen.getAndIncrement(), isOn);
+        super(isOn);
         this.ilumination = ilumination;
     }
 
@@ -33,7 +32,7 @@ public class LampBosch extends Lamp {
 
     @Override
     public String toString() {
-        return "LampBosch{id=" + id + ", " +  super.toString() +
+        return "LampBosch{" + super.toString() +
                 ", ilumination='" + ilumination + '\'' +
                 '}';
     }

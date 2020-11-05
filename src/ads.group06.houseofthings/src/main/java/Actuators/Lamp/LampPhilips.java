@@ -11,11 +11,11 @@ public class LampPhilips extends Lamp {
     }
 
     public LampPhilips(boolean isOn) {
-        super(idGen.getAndIncrement(), isOn);
+        super(isOn);
     }
 
     @Override
     public String toString() {
-        return "LampPhilips{id=" + id + ", " + super.toString() +"}";
+        return "LampPhilips{" + super.toString() +"}";
     }
 }

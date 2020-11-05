@@ -2,6 +2,7 @@ package infrastructure;
 import Interface.IAction;
 import Models.AbstractActuator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Action implements IAction {
     private List<AbstractActuator> actuators;
@@ -42,9 +43,9 @@ public class Action implements IAction {
     }
 
     @Override
-    public void removeActuator(int actuatorId) {
+    public void removeActuator(AtomicInteger actuatorId) {
         AbstractActuator actuator = this.actuators.stream()
-                .filter(a->a.getId() == actuatorId)
+                .filter(a->a.getId() == actuatorId) //check this
                 .findFirst()
                 .orElse(null);
 

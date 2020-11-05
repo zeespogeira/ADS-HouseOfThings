@@ -14,6 +14,10 @@ public class ThermometerBosch extends Thermometer {
 
     }
 
-
-
+    @Override
+    public String toString() {
+        return "ThermometerBosch{" + super.toString() +
+                ", temperature=" + temperature +
+                '}';
+    }
 }
