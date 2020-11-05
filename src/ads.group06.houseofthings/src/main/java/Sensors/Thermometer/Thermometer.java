@@ -5,20 +5,20 @@ import Models.AbstractActuator;
 import Models.AbstractSensor;
 
 public abstract class Thermometer extends AbstractSensor {
-    public Integer temperature;
+    public String temperature;
 
-    public Thermometer(Integer temperature) {
+    public Thermometer(String temperature) {
         this.temperature = temperature;
     }
 
     public Thermometer() {
     }
 
-    public Integer getTemperature() {
+    public String getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(Integer temperature) {
+    public void setTemperature(String temperature) {
         this.temperature = temperature;
     }
 

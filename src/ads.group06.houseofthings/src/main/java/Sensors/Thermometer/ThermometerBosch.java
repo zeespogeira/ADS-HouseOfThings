@@ -2,7 +2,7 @@ package Sensors.Thermometer;
 
 public class ThermometerBosch extends Thermometer {
 
-    public ThermometerBosch(Integer temperature) {
+    public ThermometerBosch(String temperature) {
         super(temperature);
     }
 
@@ -20,4 +20,6 @@ public class ThermometerBosch extends Thermometer {
                 ", temperature=" + temperature +
                 '}';
     }
+
+
 }

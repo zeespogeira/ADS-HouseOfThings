@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -187,8 +188,7 @@ public class DiscoveryModuleManualReflection {
         Class<?> factoryClsImpl = null;
         AbstractActuator obj = null;
         try {
-            //Tambem teria de por todos os actuators no mesmo package
-            factoryClsImpl = Class.forName("Actuators.Lamp." + classe);
+            factoryClsImpl = Class.forName("Actuators." + cols[1].replaceAll("\\s+","") + "." +  classe);
             obj = (AbstractActuator) factoryClsImpl.newInstance();
             //System.out.println(obj);
         } catch (ClassNotFoundException e) {
@@ -257,47 +257,86 @@ public class DiscoveryModuleManualReflection {
 
         // Desta forma tenho de por todos os sub-metodos especificos de uma classe aqui -> NAO E PERMANENTE
         // Tenho de contar que podem haver mais que 1 valor -> FALTA FAZER
-        Class par=java.lang.String.class;
-        Method method2 = null;
-        String[] specificMethods={"setHumidity", "setTemperature"};
-        try {
-            for (String method:specificMethods
-                 ) {
-                method2 = factoryImpl.getMethod(method,par);
-                //System.out.println(method2);System.out.println(method + "\n");
-                if(method2!=null){
-                    break;
+
+        // if there is arguments in file
+        //System.out.println(cols.length);
+        if(cols.length>3){
+            Method methodToInsertValue = null;
+            Method methodSuperClass = null;
+            String[] specificMethods={"setHumidity", "setTemperature", "setRealFeel"};
+            //System.out.println("specificMethods: "+ specificMethods.length);
+
+            try {
+                for (String method2:specificMethods
+                ) {
+                    /*System.out.println(methodSubclass);
+                    String variableValue=methodSubclass.replaceAll("set","").toLowerCase();
+                    System.out.println(variableValue);
+                    //Class par=factoryImpl.getField(variableValue).getType();
+                    System.out.println("tipo: " + factoryImpl.getField(variableValue));
+*/
+                    methodToInsertValue = factoryImpl.getMethod(method2,java.lang.String.class);
+                    //System.out.println("method2"+ method2);System.out.println("method: "+ method + "\n");
+                    if(methodToInsertValue!=null){
+                        break;
+                    }
                 }
+            } catch (NoSuchMethodException  e) {
+
+                try {
+
+                    for (String methodS:specificMethods
+                    ) {
+                        try {
+                            String variableValue=methodS.replaceAll("set","").toLowerCase();
+                            //System.out.println("**********test: "+variableValue);
+                            //System.out.println("field: "+ factoryImpl.getSuperclass().getField(variableValue));
+
+                           Class pal= factoryImpl.getSuperclass().getField(variableValue).getType();
+                            //method2 = factoryImpl.getSuperclass().getMethod(methodS, par);
+                            methodToInsertValue = factoryImpl.getSuperclass().getMethod(methodS, java.lang.String.class);
+                            if(methodToInsertValue!=null){
+                                break;
+                            }
+                        }
+                        catch ( NoSuchFieldException ex) {
+                        }
+                    }
+                } catch (NoSuchMethodException ex) {
+                    //Poderia passar isto a frente (Just information to test)
+                    System.err.format("This Sensor doesn't have this option\n");
+                }
+                //System.err.format("This Sensor doesn't have this option\n");
             }
 
-            //Maybe a static value with all the specific values from the classes??
-            /*method2 = factoryImpl.getMethod("setHumidity",par);
-            method2 = factoryImpl.getMethod("setTemperature",par);*/
-            // System.out.println(method2);
-        } catch (NoSuchMethodException e) {
-            //Poderia passar isto a frente (Just information to test)
-            System.err.format("This Sensor doesn't have this option\n");
-        }
 
-        try {
-            //Pode vir das regras
-            String input2=cols[3]; //if doesn't have the value, it's caught in the exception "ArrayIndexOutOfBoundsException"
+            try {
+                //Pode vir das regras
+                String input2=cols[3]; //if doesn't have the value, it's caught in the exception "ArrayIndexOutOfBoundsException"
 
-            //System.out.println(obj.toString());
-            // If it's different there is a actuator instantiated
-            if (obj != null) {
-                AbstractSensor es = (AbstractSensor)method2.invoke(obj,input2);
+                // If it's different there is an empty actuator instantiated
+                if (obj != null) {
+                    AbstractSensor es = (AbstractSensor)methodToInsertValue.invoke(obj,input2);
+                    System.out.println(obj.toString());
+                    sensorList.add(es);
+                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            catch (ArrayIndexOutOfBoundsException ex){
+                // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
+                sensorList.add(obj);
                 System.out.println(obj.toString());
-                sensorList.add(es);
             }
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
         }
-        catch (ArrayIndexOutOfBoundsException ex){
-            // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
+        else //same as catch ArrayIndexOutOfBoundsException
+        {
             sensorList.add(obj);
             System.out.println(obj.toString());
         }
+
+
+
 
         /*System.out.format("Sensor %s was instantiate%n", classe);
         System.out.println("Number of Sensors: " + getNumberOfSensors());*/
