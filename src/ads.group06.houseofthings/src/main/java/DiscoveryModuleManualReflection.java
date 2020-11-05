@@ -201,15 +201,36 @@ public class DiscoveryModuleManualReflection {
 
         // Desta forma tenho de por todos os sub-metodos especificos de uma classe aqui -> NAO E PERMANENTE
         Class par=java.lang.String.class;
-        Method method2 = null;
+        Method methodToInsertValue = null;
+        String[] specificMethods={"setIlumination"};
+
         try {
-            //Maybe a static value with all the specific values from the classes??
-            method2 = factoryClsImpl.getMethod("setIlumination",par);
-           // System.out.println(method2);
-        } catch (NoSuchMethodException e) {
-            //Poderia passar isto a frente (Just information to test)
-            System.err.format("This Actuator brand doesn't have this option\n");
+            for (String method2:specificMethods
+            ) {
+                methodToInsertValue = factoryClsImpl.getMethod(method2,par);
+                if(methodToInsertValue!=null){
+                    break;
+                }
+            }
+        } catch (NoSuchMethodException  e) { //To search in the superClass
+            try {
+                for (String methodS:specificMethods
+                ) {
+                    String variableValue=methodS.replaceAll("set","").toLowerCase();
+                    //Class pal= factoryClsImpl.getSuperclass().getField(variableValue).getType();
+                    //method2 = factoryImpl.getSuperclass().getMethod(methodS, par);
+                    methodToInsertValue = factoryClsImpl.getSuperclass().getMethod(methodS, par);
+                    if(methodToInsertValue!=null){
+                        break;
+                    }
+                }
+            } catch (NoSuchMethodException ex) {
+                //Poderia passar isto a frente (Just information to test)
+                System.err.format("This Actuator doesn't have this option\n");
+            }
+            //System.err.format("This Sensor doesn't have this option\n");
         }
+       // System.out.println(method2);
 
 
         try {
@@ -219,7 +240,7 @@ public class DiscoveryModuleManualReflection {
             // If it's different there is a actuator instantiated
             if (obj != null) {
 
-                AbstractActuator es = (AbstractActuator)method2.invoke(obj,input2);
+                AbstractActuator es = (AbstractActuator)methodToInsertValue.invoke(obj,input2);
                 System.out.println(obj.toString());
                 actuatorList.add(es);
             }
@@ -262,7 +283,6 @@ public class DiscoveryModuleManualReflection {
         //System.out.println(cols.length);
         if(cols.length>3){
             Method methodToInsertValue = null;
-            Method methodSuperClass = null;
             String[] specificMethods={"setHumidity", "setTemperature", "setRealFeel"};
             //System.out.println("specificMethods: "+ specificMethods.length);
 

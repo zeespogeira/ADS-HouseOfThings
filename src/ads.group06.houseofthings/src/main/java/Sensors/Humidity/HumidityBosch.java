@@ -2,10 +2,9 @@ package Sensors.Humidity;
 
 public class HumidityBosch extends Humidity {
 
-    String humidity;
+    //String humidity;
     public HumidityBosch(String humidity) {
-        //super(humidity);
-        this.humidity=humidity;
+        super(humidity);
     }
 
     public HumidityBosch() {
@@ -14,14 +13,6 @@ public class HumidityBosch extends Humidity {
     @Override
     public void sense(boolean flag) {
 
-    }
-
-    public String getHumidity() {
-        return humidity;
-    }
-
-    public void setHumidity(String humidity) {
-        this.humidity = humidity;
     }
 
     @Override

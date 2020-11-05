@@ -16,4 +16,12 @@ public abstract class Humidity extends AbstractSensor {
     public String toString() {
         return super.toString();
     }
+
+    public String getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(String humidity) {
+        this.humidity = humidity;
+    }
 }
