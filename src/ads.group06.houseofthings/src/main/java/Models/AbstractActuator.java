@@ -4,6 +4,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class AbstractActuator {
     static final AtomicInteger idGen = new AtomicInteger(1);
+    protected String name;
+
+    public AbstractActuator(String name){
+        this.name = name;
+        idGen.getAndIncrement();
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public AbstractActuator(){
         idGen.getAndIncrement();
@@ -20,5 +30,9 @@ public abstract class AbstractActuator {
     @Override
     public String toString() {
         return "id=" + idGen;
+    }
+
+    public String getName() {
+        return name;
     }
 }

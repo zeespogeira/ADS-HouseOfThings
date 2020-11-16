@@ -1,7 +1,6 @@
 package Sensors.Thermometer;
 
 
-import Models.AbstractActuator;
 import Models.AbstractSensor;
 
 public abstract class Thermometer extends AbstractSensor {

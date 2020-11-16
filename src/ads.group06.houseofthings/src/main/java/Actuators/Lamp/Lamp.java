@@ -1,8 +1,6 @@
 package Actuators.Lamp;
 import Models.AbstractActuator;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 
 public abstract class Lamp extends AbstractActuator {
     private boolean isOn;

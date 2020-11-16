@@ -6,6 +6,12 @@ public abstract class AbstractSensor {
 
     static final AtomicInteger idGen = new AtomicInteger(1);
     //final public int id;
+    private String name;
+
+    public AbstractSensor(String name){
+        this.name = name;
+        idGen.getAndIncrement();
+    }
 
     public AbstractSensor(){
         idGen.getAndIncrement();
@@ -20,5 +26,13 @@ public abstract class AbstractSensor {
     @Override
     public String toString() {
         return "id=" + idGen;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

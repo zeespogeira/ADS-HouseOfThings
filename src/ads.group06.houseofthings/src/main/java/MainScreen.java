@@ -1,10 +1,16 @@
+import Models.AbstractActuator;
+import Models.AbstractSensor;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainScreen extends JFrame {
     private JPanel panelMain;
@@ -19,8 +25,8 @@ public class MainScreen extends JFrame {
     private JTextField controlValueInput;
     private JComboBox sensorSelection;
     private JTextField sensorReading;
-    private ArrayList<Actuator> actuatorList;
-    private ArrayList<Sensor> sensorList;
+    private ArrayList<AbstractActuator> actuatorList;
+    private ArrayList<AbstractSensor> sensorList;
     private ArrayList<Action> actionList;
     private DefaultListModel actuatorListModel;
     private DefaultListModel actionListModel;
@@ -53,16 +59,16 @@ public class MainScreen extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 int actuatorNumber = actuatorsList.getSelectedIndex();
                 if (actuatorNumber >= 0){
-                    Actuator actuator = actuatorList.get(actuatorNumber);
+                    AbstractActuator actuator = actuatorList.get(actuatorNumber);
                     System.out.println("The selected actuator is: :" + actuator.getName());
                     //TODO: get list of actions of the actuator
 
                     // Populating actions (for testing)
-                    Action action1 = new Action(actuator.getName() + " is cold", "Lower than", 10, actuator);
-                    Action action2 = new Action(actuator.getName() + " is hot", "Larger than", 25, actuator);
-                    actionList.clear();
-                    actionList.add(action1);
-                    actionList.add(action2);
+//                    Action action1 = new Action(actuator.getName() + " is cold", "Lower than", 10, actuator);
+//                    Action action2 = new Action(actuator.getName() + " is hot", "Larger than", 25, actuator);
+//                    actionList.clear();
+//                    actionList.add(action1);
+//                    actionList.add(action2);
                     // End data for testing
 
                     refreshActionList();
@@ -75,8 +81,8 @@ public class MainScreen extends JFrame {
                 int actionNumber = actionsList.getSelectedIndex();
                 if (actionNumber >= 0){
                     Action action = actionList.get(actionNumber);
-                    actionName.setText(action.getName());
-                    controlValueInput.setText(String.valueOf(action.getControlValue()));
+//                    actionName.setText(action.getName());
+//                    controlValueInput.setText(String.valueOf(action.getControlValue()));
                     operatorSelection.removeAllItems();
                     // TODO: These options should probably come from one component...
                     operatorSelection.addItem("Larger than");
@@ -84,7 +90,7 @@ public class MainScreen extends JFrame {
                     operatorSelection.addItem("Equal to");
                     // End
                     sensorSelection.removeAllItems();
-                    for (Sensor sensor : sensorList) {
+                    for (AbstractSensor sensor : sensorList) {
                         sensorSelection.addItem(sensor.getName());
                     }
                 }
@@ -96,9 +102,9 @@ public class MainScreen extends JFrame {
                 // TODO: This logic is repeated... refactor?
                 int actuatorNumber = actuatorsList.getSelectedIndex();
                 if (actuatorNumber >= 0) {
-                    Actuator actuator = actuatorList.get(actuatorNumber);
-                    Action new_action = new Action(actuator.getName() + " new action", "Larger than", 25, actuator);
-                    actionList.add(new_action);
+                    AbstractActuator actuator = actuatorList.get(actuatorNumber);
+                    //Action new_action = new Action(actuator.getName() + " new action", "Larger than", 25, actuator);
+                    //actionList.add(new_action);
                     refreshActionList();
                 }
 
@@ -125,8 +131,8 @@ public class MainScreen extends JFrame {
                 // TODO: This logic is repeated... refactor?
                 int sensorNumber = sensorsList.getSelectedIndex();
                 if (sensorNumber >= 0){
-                    Sensor sensor = sensorList.get(sensorNumber);
-                    sensorReading.setText(String.valueOf(sensor.getReading()));
+                    AbstractSensor sensor = sensorList.get(sensorNumber);
+                    //sensorReading.setText(String.valueOf(sensor.getReading()));
                 }
             }
         });
@@ -141,7 +147,7 @@ public class MainScreen extends JFrame {
 
     public void refreshActuatorsList(){
         actuatorListModel.removeAllElements();
-        for (Actuator actuator : actuatorList) {
+        for (AbstractActuator actuator : actuatorList) {
             actuatorListModel.addElement(actuator.getName());
 
         }
@@ -149,7 +155,7 @@ public class MainScreen extends JFrame {
 
     public void refreshSensorsList(){
         sensorListModel.removeAllElements();
-        for (Sensor sensor : sensorList) {
+        for (AbstractSensor sensor : sensorList) {
             sensorListModel.addElement(sensor.getName());
         }
     }
@@ -157,41 +163,43 @@ public class MainScreen extends JFrame {
     public void refreshActionList(){
         actionListModel.removeAllElements();
         for (Action action : actionList) {
-            System.out.println("Adding action to list: " + action.getName());
-            actionListModel.addElement(action.getName());
+//            System.out.println("Adding action to list: " + action.getName());
+//            actionListModel.addElement(action.getName());
         }
     }
 
-    public void addActuatorToList(Actuator actuator){
-        // TODO: Probably not needed (should be part of another component)
-        actuatorList.add(actuator);
+    public void addActuatorToList(AbstractActuator actuator) throws IOException {
+
+        DiscoveryModuleManualReflection discoveryModule=new DiscoveryModuleManualReflection();
+        //DiscoveryModuleTestWithReflection discoveryModule=new DiscoveryModuleTestWithReflection();
+        discoveryModule.loadFiles();
+        //discoveryModule.processEvents();
+        ExecutorService service = Executors.newFixedThreadPool(4);
+        service.submit(new Runnable() {
+            public void run() {
+                try {
+                    discoveryModule.processEvents();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        actuatorList = discoveryModule.getActuatorsList();
         refreshActuatorsList();
     }
 
-    public void addSensorToList(Sensor sensor){
+    public void addSensorToList(AbstractSensor sensor){
         // TODO: Probably not needed (should be part of another component)
         sensorList.add(sensor);
         refreshSensorsList();
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         MainScreen mainscreen = new MainScreen();
         mainscreen.setVisible(true);
 
-        // Populating actuators (for testing)
-        Actuator bosch_actuator = new Actuator("Actuator Bosch");
-        mainscreen.addActuatorToList(bosch_actuator);
-        Actuator philips_actuator = new Actuator("Actuator Philips");
-        mainscreen.addActuatorToList(philips_actuator);
-        System.out.print("List of actuators: " + mainscreen.actuatorList.toString());
 
-        // Populating sensors (for testing)
-        Sensor bosch_sensor = new Sensor("Sensor Bosch");
-        mainscreen.addSensorToList(bosch_sensor);
-        Sensor philips_sensor = new Sensor("Sensor Philips");
-        mainscreen.addSensorToList(philips_sensor);
-        System.out.print("List of sensors: " + mainscreen.sensorList.toString());
 
     }
 

@@ -4,6 +4,7 @@ import Models.AbstractActuator;
 import Models.AbstractSensor;
 import Sensors.Humidity.HumidityBosch;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -242,6 +243,7 @@ public class DiscoveryModuleManualReflection {
 
                 AbstractActuator es = (AbstractActuator)methodToInsertValue.invoke(obj,input2);
                 System.out.println(obj.toString());
+                es.setName(input2);
                 actuatorList.add(es);
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -249,6 +251,7 @@ public class DiscoveryModuleManualReflection {
         }
         catch (ArrayIndexOutOfBoundsException ex){
             // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
+            obj.setName(classe);
             actuatorList.add(obj);
             System.out.println(obj.toString());
         }
@@ -338,6 +341,7 @@ public class DiscoveryModuleManualReflection {
                 if (obj != null) {
                     AbstractSensor es = (AbstractSensor)methodToInsertValue.invoke(obj,input2);
                     System.out.println(obj.toString());
+                    es.setName(input2);
                     sensorList.add(es);
                 }
             } catch (IllegalAccessException | InvocationTargetException e) {
@@ -346,6 +350,7 @@ public class DiscoveryModuleManualReflection {
             catch (ArrayIndexOutOfBoundsException ex){
                 // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
                 sensorList.add(obj);
+                obj.setName(classe);
                 System.out.println(obj.toString());
             }
         }
@@ -370,10 +375,11 @@ public class DiscoveryModuleManualReflection {
         return sensorList.size();
     }
 
-    public void getActuatorsList(){
+    public List<AbstractActuator> getActuatorsList(){
         Iterator it =actuatorList.iterator();
         while (it.hasNext()){
             System.out.println(it.next());
         }
+        return actuatorList;
     }
 }
