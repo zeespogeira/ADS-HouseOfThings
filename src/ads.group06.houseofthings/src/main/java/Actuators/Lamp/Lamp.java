@@ -1,6 +1,8 @@
 package Actuators.Lamp;
 import Models.AbstractActuator;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 public abstract class Lamp extends AbstractActuator {
     private boolean isOn;
@@ -47,8 +49,6 @@ public abstract class Lamp extends AbstractActuator {
 
     @Override
     public String toString() {
-        return "Lamp{" +
-                "isOn=" + isOn +
-                '}';
+        return super.toString() + ", isOn=" + isOn;
     }
 }

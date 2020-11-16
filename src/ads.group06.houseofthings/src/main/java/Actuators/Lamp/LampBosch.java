@@ -1,8 +1,10 @@
 package Actuators.Lamp;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class LampBosch extends Lamp {
     String ilumination;
-
+    //static final AtomicInteger idGen = new AtomicInteger(1);
 
     public LampBosch(String ilumination) {
         this.ilumination = ilumination;
@@ -14,6 +16,7 @@ public class LampBosch extends Lamp {
     }
 
     public LampBosch() {
+        super();
     }
 
     public String getIlumination() {
@@ -29,8 +32,8 @@ public class LampBosch extends Lamp {
 
     @Override
     public String toString() {
-        return super.toString() + "LampBosch{" +
-                "ilumination='" + ilumination + '\'' +
+        return "LampBosch{" + super.toString() +
+                ", ilumination='" + ilumination + '\'' +
                 '}';
     }
 }

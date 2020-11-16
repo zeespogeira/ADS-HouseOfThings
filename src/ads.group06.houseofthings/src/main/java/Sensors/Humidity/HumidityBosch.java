@@ -1,13 +1,11 @@
 package Sensors.Humidity;
 
 public class HumidityBosch extends Humidity {
-    String humidity;
 
-
+    //String humidity;
     public HumidityBosch(String humidity) {
-        this.humidity = humidity;
+        super(humidity);
     }
-
 
     public HumidityBosch() {
     }
@@ -17,4 +15,10 @@ public class HumidityBosch extends Humidity {
 
     }
 
+    @Override
+    public String toString() {
+        return "HumidityBosch{" + super.toString() +
+                ", humidity='" + humidity + '\'' +
+                '}';
+    }
 }

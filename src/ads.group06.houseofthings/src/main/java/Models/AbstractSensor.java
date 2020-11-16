@@ -1,17 +1,24 @@
 package Models;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public abstract class AbstractSensor {
 
-    private static int count = 0;
+    static final AtomicInteger idGen = new AtomicInteger(1);
+    //final public int id;
 
     public AbstractSensor(){
-        this.id = ++count;
+        idGen.getAndIncrement();
     }
 
     public abstract void sense(boolean flag);
-    protected int id;
 
-    public int getId(){
+   /* public int getId(){
         return this.id;
+    }*/
+
+    @Override
+    public String toString() {
+        return "id=" + idGen;
     }
 }
