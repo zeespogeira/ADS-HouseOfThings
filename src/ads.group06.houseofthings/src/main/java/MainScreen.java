@@ -4,7 +4,6 @@ import Models.AbstractSensor;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -36,7 +35,7 @@ public class MainScreen extends JFrame {
     private DefaultListModel sensorListModel;
 
 
-    MainScreen() {
+    MainScreen() throws IOException {
         super("ADS House Controller");
         this.setContentPane(this.panelMain);
         //this.setPreferredSize(new Dimension(500,1000));
@@ -44,6 +43,9 @@ public class MainScreen extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
         //actuatorList = new ArrayList<>();
+
+        //addActuatorToList();
+
         actuatorListModel = new DefaultListModel();
         actuatorsList.setModel(actuatorListModel);
 
@@ -173,32 +175,16 @@ public class MainScreen extends JFrame {
     }
 
     //public void addActuatorToList(AbstractActuator actuator) throws IOException
-    public static void addActuatorToList() throws IOException {
-        DiscoveryModuleManualReflection discoveryModule=new DiscoveryModuleManualReflection(actuatorList);
-        //discoveryModule.start();
-        discoveryModule.loadFiles();
-        //discoveryModule.processEvents();
-        ExecutorService service = Executors.newFixedThreadPool(1);
-        service.submit(new Runnable() {
+    public void addActuatorToList(List<AbstractActuator> actuatorList) throws IOException {
 
-            public void run() {
-                try {
-                    discoveryModule.processEvents();
-                    //actuatorList= discoveryModule.getActuatorsList() ;
-                    discoveryModule.getActuatorsList();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
-        //actuatorList = discoveryModule.getActuatorsList();
+        this.actuatorList = actuatorList;
         /*System.out.println("******* Actuators List Main *******");
         Iterator it =actuatorList.iterator();
         while (it.hasNext()){
             System.out.println(it.next());
         }*/
-        //refreshActuatorsList();
+        refreshActuatorsList();
     }
 
     public void addSensorToList(AbstractSensor sensor){
@@ -213,7 +199,31 @@ public class MainScreen extends JFrame {
         mainscreen.setVisible(true);
 
 
-        addActuatorToList();
+        //actuatorList=  ;
+        //mainscreen.addActuatorToList(bosch_actuator);
+
+        DiscoveryModule discoveryModule=new DiscoveryModule(actuatorList);
+        //discoveryModule.start();
+        discoveryModule.loadFiles();
+        //discoveryModule.processEvents();
+        /*ExecutorService service = Executors.newFixedThreadPool(1);
+        service.submit(new Runnable() {
+            public void run() {
+                try {
+                    discoveryModule.processEvents();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });*/
+
+        mainscreen.addActuatorToList(discoveryModule.getActuatorsList());
+        System.out.println("******* Actuators List Main *******");
+        Iterator it =actuatorList.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
 
     }
 

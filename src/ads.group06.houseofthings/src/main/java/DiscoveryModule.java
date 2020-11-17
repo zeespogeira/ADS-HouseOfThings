@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
-public class DiscoveryModuleManualReflection extends Thread{
+public class DiscoveryModule extends Thread{
     Integer numberOfModulesConnected;
 
     private final String currentPath;
@@ -30,22 +30,17 @@ public class DiscoveryModuleManualReflection extends Thread{
     /**
      * Creates a WatchService and registers the given directory
      */
-    DiscoveryModuleManualReflection(List<AbstractActuator> actuatorList) throws IOException {
+    DiscoveryModule(List<AbstractActuator> actuatorList) throws IOException {
 
         this.actuatorList = actuatorList;
-        File directory = new File("./"); //  ./../../../Devices
-        //directory.getParent();directory.getParent();directory.getParent();
-        //currentPath=directory.getCanonicalPath() + "\\Devices";
+        File directory = new File("./");
         currentPath=directory.getCanonicalPath() + "\\src\\ads.group06.houseofthings\\src\\main\\java\\Devices";
 
-        actuatorList=new ArrayList<>();
         sensorList=new ArrayList<>();
 
         String currentFolder= directory + "/src/ads.group06.houseofthings/src/main/java/Devices";
-        //System.out.println("currentFolder" + currentFolder);
 
         dir = Path.of(currentFolder);
-        //System.out.println("dir " + dir);
         this.watcher = FileSystems.getDefault().newWatchService();
         dir.register(watcher, ENTRY_CREATE);
     }
@@ -54,17 +49,20 @@ public class DiscoveryModuleManualReflection extends Thread{
         try {
             while (true) {
                 synchronized (actuatorList) {
-                    if (!actuatorList.isEmpty()) {
+                    /*if (!actuatorList.isEmpty()) {
                         AbstractActuator s = actuatorList.remove(0);
                         System.out.println(this + " processed " + s);
                     }
                     else {
                         actuatorList.wait(1000);
-                    }
+                    }*/
+                   /* System.out.println(this + " processed " );
+                    this.loadFiles();System.out.println(this + " processed " );
+                    this.processEvents();
                 }
             }
         }
-        catch (InterruptedException e) {
+        catch (IOException e) {
         }
     }*/
 
@@ -111,7 +109,7 @@ public class DiscoveryModuleManualReflection extends Thread{
                 //System.out.format("Instantiate Class from file %s%n", filename);
 
                 //using threads
-                synchronized(DiscoveryModuleManualReflection.class){
+                synchronized(DiscoveryModule.class){
                     ExecutorService service = Executors.newFixedThreadPool(4);
                     service.submit(new Runnable() {
                         public void run() {
@@ -149,9 +147,7 @@ public class DiscoveryModuleManualReflection extends Thread{
 
         files.forEach((temp) -> {
             //System.out.println(temp);
-            //File file=File.
-
-            synchronized(DiscoveryModuleManualReflection.class){
+            synchronized(DiscoveryModule.class){
                 try {
                     readCSV((Path) temp);
                 } catch (IOException e) {
@@ -162,13 +158,6 @@ public class DiscoveryModuleManualReflection extends Thread{
     }
 
     public void readCSV(Path filename) throws IOException {
-        //ver os ficheiros
-        // inicializar as classes adicionadas ao ficheiro
-           /* Aquecedor aquecedor=new AquecerdorBosch();
-            aquecedor.setTemperatura(20);*/
-        // inicializar as classes adicionadas ao ficheiro
-        //Aquecedor aquecedor=new AquecerdorBosch(temperatura);
-
         BufferedReader br = new BufferedReader(new FileReader(String.valueOf(filename)));
         String line;
         // Maybe just go to the first line. Don't check the other lines
@@ -177,7 +166,6 @@ public class DiscoveryModuleManualReflection extends Thread{
             String[] cols = line.split(",");
             //System.out.println(cols[0] + " " + cols[1]);
             if(cols[0].equalsIgnoreCase("Actuator")){
-                //System.out.println("Entrou");
                 //System.out.println("********* Actuators *********");
                 this.instantiateModuleActuators(cols);
             }
@@ -187,7 +175,6 @@ public class DiscoveryModuleManualReflection extends Thread{
             else System.out.println("File has a wrong structure. Try \"Actuator/Sensor, Type, Brand\"");
         }
         br.close();
-
         // CSV Format:
         // Actuator/Sensor, Brand
     }
@@ -246,15 +233,13 @@ public class DiscoveryModuleManualReflection extends Thread{
 
 
         try {
-            //Pode vir das regras
+            //Vai ser aleatorio
             String input2=cols[3]; //if doesn't have the value, it's caught in the exception "ArrayIndexOutOfBoundsException"
 
             // If it's different there is a actuator instantiated
             if (obj != null) {
                 AbstractActuator es = (AbstractActuator)methodToInsertValue.invoke(obj, input2);
                 //System.out.println(obj.toString());
-                //System.out.println(es);
-                //obj.setName(classe);
                 actuatorList.add(obj);
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -262,14 +247,9 @@ public class DiscoveryModuleManualReflection extends Thread{
         }
         catch (ArrayIndexOutOfBoundsException | NullPointerException ex){
             // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
-            //obj.setName(classe);
             actuatorList.add(obj);
             //System.out.println(obj.toString());
         }
-
-        getActuatorsList();
-        //System.out.format("Actuator %s was instantiate%n", classe);
-        //System.out.println("Number of Actuators: " + getNumberOfActuators());
     }
 
     public void instantiateModuleSensor(String[] cols){
@@ -390,11 +370,11 @@ public class DiscoveryModuleManualReflection extends Thread{
     }
 
     public List<AbstractActuator> getActuatorsList(){
-        System.out.println("******* Actuators List *******");
+        /*System.out.println("******* Actuators List *******");
         Iterator it =actuatorList.iterator();
         while (it.hasNext()){
             System.out.println(it.next());
-        }
+        }*/
         return actuatorList;
     }
 }

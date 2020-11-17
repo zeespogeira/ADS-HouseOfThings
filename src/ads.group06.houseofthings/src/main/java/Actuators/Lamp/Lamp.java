@@ -10,16 +10,12 @@ public abstract class Lamp extends AbstractActuator {
     private Integer id;
 
     public Lamp() {
-        //super(idGen.getAndIncrement());
-        //idGen.getAndIncrement();
         this.id= idGen.getAndIncrement();
     }
 
     public Lamp(boolean isOn) {
-        //super(idGen.getAndIncrement());
         this.isOn = isOn;
         this.id= idGen.getAndIncrement();
-        //idGen.getAndIncrement();
         }
 
 
