@@ -219,7 +219,7 @@ public class DiscoveryModule extends Thread{
                 // If it's different there is a actuator instantiated
                 if (obj != null) {
                     AbstractActuator es = (AbstractActuator)methodToInsertValue.invoke(obj, input2);
-                    System.out.println(obj.toString());
+                    //System.out.println(obj.toString());
                     actuatorList.add(obj);
                 }
             } catch (IllegalAccessException | InvocationTargetException e) {
@@ -228,7 +228,7 @@ public class DiscoveryModule extends Thread{
             catch (ArrayIndexOutOfBoundsException | NullPointerException ex){
                 // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
                 actuatorList.add(obj);
-                System.out.println(obj.toString());
+                //System.out.println(obj.toString());
             }
         }
     }
@@ -303,8 +303,6 @@ public class DiscoveryModule extends Thread{
                 }
                 //System.err.format("This Sensor doesn't have this option\n");
             }
-
-
                 try {
                     //Pode vir das regras
                     String input2 = cols[3]; //if doesn't have the value, it's caught in the exception "ArrayIndexOutOfBoundsException"
@@ -312,7 +310,7 @@ public class DiscoveryModule extends Thread{
                     // If it's different there is an empty actuator instantiated
                     if (obj != null) {
                         AbstractSensor es = (AbstractSensor) methodToInsertValue.invoke(obj, input2);
-                        System.out.println(obj.toString());
+                        //System.out.println(obj.toString());
                         //obj.setName(classe);
                         sensorList.add(obj);
                     }
@@ -320,7 +318,7 @@ public class DiscoveryModule extends Thread{
                     e.printStackTrace();
                 } catch (ArrayIndexOutOfBoundsException ex) {
                     // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
-                    System.out.println(obj.toString());
+                    //System.out.println(obj.toString());
                     sensorList.add(obj);
 
                 }
