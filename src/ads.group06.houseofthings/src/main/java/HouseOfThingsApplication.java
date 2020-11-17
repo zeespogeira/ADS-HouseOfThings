@@ -1,3 +1,5 @@
+import Models.AbstractActuator;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -10,7 +12,10 @@ import java.util.concurrent.Executors;
 public class HouseOfThingsApplication {
 
 	public static void main(String[] args) throws IOException {
-		//List<Object> actuatorList;
+		//List<AbstractActuator> actuatorList;
+		//actuatorList=new ArrayList<>();
+
+		//List<AbstractActuator> actuatorList;
 		//actuatorList=new ArrayList<>();
 
 		// Run this 3 lines
@@ -19,10 +24,10 @@ public class HouseOfThingsApplication {
 		discoveryModule.processEvents();*/
 
 
-		DiscoveryModuleManualReflection discoveryModule=new DiscoveryModuleManualReflection();
-        //DiscoveryModuleTestWithReflection discoveryModule=new DiscoveryModuleTestWithReflection();
+		//CODIGO PARA CORRER
+		/*DiscoveryModuleManualReflection discoveryModule=new DiscoveryModuleManualReflection();
 		discoveryModule.loadFiles();
-		discoveryModule.processEvents();
+		discoveryModule.processEvents();*/
 
 
 		/*ExecutorService service = Executors.newFixedThreadPool(4);
@@ -36,9 +41,8 @@ public class HouseOfThingsApplication {
 			}
 		});*/
 
+		//System.out.println("MAIN");
 
-		discoveryModule.getActuatorsList();
-		//System.out.println("Hello");
 	}
 
 }

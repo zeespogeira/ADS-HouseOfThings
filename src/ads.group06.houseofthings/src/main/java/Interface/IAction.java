@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public interface IAction {
     void addActuator(AbstractActuator actuator);
-    void removeActuator(AtomicInteger actuatorId);
+    void removeActuator(Integer actuatorId);
     void execute(SensorReading sensorReading);
     boolean hasConditionWithSensor(int sensorId);
 }

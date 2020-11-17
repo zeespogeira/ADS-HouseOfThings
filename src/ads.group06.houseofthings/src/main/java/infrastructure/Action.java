@@ -43,7 +43,7 @@ public class Action implements IAction {
     }
 
     @Override
-    public void removeActuator(AtomicInteger actuatorId) {
+    public void removeActuator(Integer actuatorId) {
         AbstractActuator actuator = this.actuators.stream()
                 .filter(a->a.getId() == actuatorId) //check this
                 .findFirst()

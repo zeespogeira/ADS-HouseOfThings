@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,7 +28,7 @@ public class MainScreen extends JFrame {
     private JTextField controlValueInput;
     private JComboBox sensorSelection;
     private JTextField sensorReading;
-    private ArrayList<AbstractActuator> actuatorList;
+    static List<AbstractActuator> actuatorList= Collections.synchronizedList(new ArrayList<AbstractActuator>());
     private ArrayList<AbstractSensor> sensorList;
     private ArrayList<Action> actionList;
     private DefaultListModel actuatorListModel;
@@ -40,7 +43,7 @@ public class MainScreen extends JFrame {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
-        actuatorList = new ArrayList<>();
+        //actuatorList = new ArrayList<>();
         actuatorListModel = new DefaultListModel();
         actuatorsList.setModel(actuatorListModel);
 
@@ -53,6 +56,7 @@ public class MainScreen extends JFrame {
         actionsList.setModel(actionListModel);
 
         sensorReading.setEditable(false);
+
 
         actuatorsList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -168,24 +172,33 @@ public class MainScreen extends JFrame {
         }
     }
 
-    public void addActuatorToList(AbstractActuator actuator) throws IOException {
-
-        DiscoveryModuleManualReflection discoveryModule=new DiscoveryModuleManualReflection();
-        //DiscoveryModuleTestWithReflection discoveryModule=new DiscoveryModuleTestWithReflection();
+    //public void addActuatorToList(AbstractActuator actuator) throws IOException
+    public static void addActuatorToList() throws IOException {
+        DiscoveryModuleManualReflection discoveryModule=new DiscoveryModuleManualReflection(actuatorList);
+        //discoveryModule.start();
         discoveryModule.loadFiles();
         //discoveryModule.processEvents();
-        ExecutorService service = Executors.newFixedThreadPool(4);
+        ExecutorService service = Executors.newFixedThreadPool(1);
         service.submit(new Runnable() {
+
             public void run() {
                 try {
                     discoveryModule.processEvents();
+                    //actuatorList= discoveryModule.getActuatorsList() ;
+                    discoveryModule.getActuatorsList();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
-        actuatorList = discoveryModule.getActuatorsList();
-        refreshActuatorsList();
+
+        //actuatorList = discoveryModule.getActuatorsList();
+        /*System.out.println("******* Actuators List Main *******");
+        Iterator it =actuatorList.iterator();
+        while (it.hasNext()){
+            System.out.println(it.next());
+        }*/
+        //refreshActuatorsList();
     }
 
     public void addSensorToList(AbstractSensor sensor){
@@ -200,6 +213,7 @@ public class MainScreen extends JFrame {
         mainscreen.setVisible(true);
 
 
+        addActuatorToList();
 
     }
 

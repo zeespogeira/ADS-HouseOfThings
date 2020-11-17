@@ -1,22 +1,14 @@
-import Actuators.ActuatorsFactory;
-import Actuators.Lamp.LampBosch;
 import Models.AbstractActuator;
 import Models.AbstractSensor;
-import Sensors.Humidity.HumidityBosch;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -24,22 +16,23 @@ import java.util.stream.Collectors;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
-public class DiscoveryModuleManualReflection {
+public class DiscoveryModuleManualReflection extends Thread{
     Integer numberOfModulesConnected;
 
     private final String currentPath;
     private final WatchService watcher;
     private final Path dir;
 
-    List<AbstractActuator> actuatorList;
+    //ArrayList<AbstractActuator> actuatorList;
+    List<AbstractActuator> actuatorList = Collections.synchronizedList(new ArrayList<AbstractActuator>());
     List<AbstractSensor> sensorList;
 
     /**
      * Creates a WatchService and registers the given directory
      */
-    DiscoveryModuleManualReflection() throws IOException {
+    DiscoveryModuleManualReflection(List<AbstractActuator> actuatorList) throws IOException {
 
-        //this.actuatorList = actuatorList;
+        this.actuatorList = actuatorList;
         File directory = new File("./"); //  ./../../../Devices
         //directory.getParent();directory.getParent();directory.getParent();
         //currentPath=directory.getCanonicalPath() + "\\Devices";
@@ -56,6 +49,24 @@ public class DiscoveryModuleManualReflection {
         this.watcher = FileSystems.getDefault().newWatchService();
         dir.register(watcher, ENTRY_CREATE);
     }
+
+    /*public void run() {
+        try {
+            while (true) {
+                synchronized (actuatorList) {
+                    if (!actuatorList.isEmpty()) {
+                        AbstractActuator s = actuatorList.remove(0);
+                        System.out.println(this + " processed " + s);
+                    }
+                    else {
+                        actuatorList.wait(1000);
+                    }
+                }
+            }
+        }
+        catch (InterruptedException e) {
+        }
+    }*/
 
     /**
      * Process all events for the key queued to the watcher.
@@ -105,7 +116,6 @@ public class DiscoveryModuleManualReflection {
                     service.submit(new Runnable() {
                         public void run() {
                             try {
-                                //
                                 //discoveryModule.readCSV(filename);
                                 //var filePath = currentPath + "\\" + filename;
                                 readCSV(Paths.get(currentPath + "\\" + filename));
@@ -191,6 +201,7 @@ public class DiscoveryModuleManualReflection {
         try {
             factoryClsImpl = Class.forName("Actuators." + cols[1].replaceAll("\\s+","") + "." +  classe);
             obj = (AbstractActuator) factoryClsImpl.newInstance();
+            obj.setName(classe);
             //System.out.println(obj);
         } catch (ClassNotFoundException e) {
             System.err.format("This Actuator brand doesn't have a plugin\n");
@@ -227,7 +238,7 @@ public class DiscoveryModuleManualReflection {
                 }
             } catch (NoSuchMethodException ex) {
                 //Poderia passar isto a frente (Just information to test)
-                System.err.format("This Actuator doesn't have this option\n");
+                //System.err.format("This Actuator doesn't have this option\n");
             }
             //System.err.format("This Sensor doesn't have this option\n");
         }
@@ -240,22 +251,23 @@ public class DiscoveryModuleManualReflection {
 
             // If it's different there is a actuator instantiated
             if (obj != null) {
-
-                AbstractActuator es = (AbstractActuator)methodToInsertValue.invoke(obj,input2);
-                System.out.println(obj.toString());
-                es.setName(input2);
-                actuatorList.add(es);
+                AbstractActuator es = (AbstractActuator)methodToInsertValue.invoke(obj, input2);
+                //System.out.println(obj.toString());
+                //System.out.println(es);
+                //obj.setName(classe);
+                actuatorList.add(obj);
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        catch (ArrayIndexOutOfBoundsException ex){
+        catch (ArrayIndexOutOfBoundsException | NullPointerException ex){
             // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
-            obj.setName(classe);
+            //obj.setName(classe);
             actuatorList.add(obj);
-            System.out.println(obj.toString());
+            //System.out.println(obj.toString());
         }
 
+        getActuatorsList();
         //System.out.format("Actuator %s was instantiate%n", classe);
         //System.out.println("Number of Actuators: " + getNumberOfActuators());
     }
@@ -341,21 +353,23 @@ public class DiscoveryModuleManualReflection {
                 if (obj != null) {
                     AbstractSensor es = (AbstractSensor)methodToInsertValue.invoke(obj,input2);
                     System.out.println(obj.toString());
-                    es.setName(input2);
-                    sensorList.add(es);
+                    obj.setName(classe);
+                    sensorList.add(obj);
                 }
             } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
             catch (ArrayIndexOutOfBoundsException ex){
                 // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
-                sensorList.add(obj);
                 obj.setName(classe);
                 System.out.println(obj.toString());
+                sensorList.add(obj);
+
             }
         }
         else //same as catch ArrayIndexOutOfBoundsException
         {
+            obj.setName(classe);
             sensorList.add(obj);
             System.out.println(obj.toString());
         }
@@ -376,6 +390,7 @@ public class DiscoveryModuleManualReflection {
     }
 
     public List<AbstractActuator> getActuatorsList(){
+        System.out.println("******* Actuators List *******");
         Iterator it =actuatorList.iterator();
         while (it.hasNext()){
             System.out.println(it.next());

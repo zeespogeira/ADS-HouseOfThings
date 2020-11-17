@@ -3,12 +3,12 @@ package Models;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class AbstractActuator {
-    static final AtomicInteger idGen = new AtomicInteger(1);
+    //static final AtomicInteger idGen = new AtomicInteger(1);
     protected String name;
 
     public AbstractActuator(String name){
         this.name = name;
-        idGen.getAndIncrement();
+        //idGen.getAndIncrement();
     }
 
     public void setName(String name) {
@@ -16,23 +16,26 @@ public abstract class AbstractActuator {
     }
 
     public AbstractActuator(){
-        idGen.getAndIncrement();
+        //idGen.getAndIncrement();
     }
 
     public abstract void act(boolean flag);
    // protected int id;
 
 
-    public static AtomicInteger getId() {
-        return idGen;
+    public String getName() {
+        return name;
     }
+
+    public abstract Integer getId();
+
+    //public abstract void setId();
+    /*public AtomicInteger getId(){
+        return idGen;
+    }*/
 
     @Override
     public String toString() {
-        return "id=" + idGen;
-    }
-
-    public String getName() {
-        return name;
+        return "name='" + name + '\'';
     }
 }

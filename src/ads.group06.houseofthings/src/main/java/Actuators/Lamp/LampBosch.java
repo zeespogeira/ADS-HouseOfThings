@@ -7,17 +7,23 @@ public class LampBosch extends Lamp {
     //static final AtomicInteger idGen = new AtomicInteger(1);
 
     public LampBosch(String ilumination) {
+        //super();
         this.ilumination = ilumination;
+        //super.idGen.getAndIncrement();
     }
 
     public LampBosch(boolean isOn, String ilumination) {
         super(isOn);
         this.ilumination = ilumination;
+        //super.idGen.getAndIncrement();
     }
 
     public LampBosch() {
-        super();
+        //super(idGen.getAndIncrement());
+        //super.idGen.getAndIncrement();
     }
+
+
 
     public String getIlumination() {
          //this.turnOff();

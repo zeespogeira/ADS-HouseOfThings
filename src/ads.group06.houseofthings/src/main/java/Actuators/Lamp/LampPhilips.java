@@ -7,15 +7,16 @@ public class LampPhilips extends Lamp {
    // static final AtomicInteger idGen = new AtomicInteger(1);
 
     public LampPhilips() {
-        //super(idGen.getAndIncrement());
+        /*super.idGen.getAndIncrement();*/
     }
 
     public LampPhilips(boolean isOn) {
-        super(isOn);
+        super(/*idGen.getAndIncrement(),*/ isOn);
+        //super.idGen.getAndIncrement();
     }
 
     @Override
     public String toString() {
-        return "LampPhilips{" + super.toString() +"}";
+        return "LampPhilips{" +super.toString() +"}";
     }
 }

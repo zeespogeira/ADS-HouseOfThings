@@ -1,16 +1,27 @@
 package Actuators.Lamp;
 import Models.AbstractActuator;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 public abstract class Lamp extends AbstractActuator {
     private boolean isOn;
+    static final AtomicInteger idGen = new AtomicInteger(1);
+    private Integer id;
 
     public Lamp() {
+        //super(idGen.getAndIncrement());
+        //idGen.getAndIncrement();
+        this.id= idGen.getAndIncrement();
     }
 
     public Lamp(boolean isOn) {
+        //super(idGen.getAndIncrement());
         this.isOn = isOn;
-    }
+        this.id= idGen.getAndIncrement();
+        //idGen.getAndIncrement();
+        }
+
 
     protected boolean turnOn(){
         isOn=true;
@@ -46,7 +57,17 @@ public abstract class Lamp extends AbstractActuator {
     }
 
     @Override
+    public Integer getId() {
+        return id;
+    }
+
+    /*@Override
+    public void setId() {
+        this.id=
+    }*/
+
+    @Override
     public String toString() {
-        return super.toString() + ", isOn=" + isOn;
+        return "id=" + id + ", " + super.toString() + ", isOn=" + isOn;
     }
 }
