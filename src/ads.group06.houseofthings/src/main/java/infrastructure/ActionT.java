@@ -5,11 +5,11 @@ import Models.AbstractActuator;
 public class ActionT {
 
     private String name;
-    private String operator;
+    private Operator operator;
     private int ControlValue;
     private AbstractActuator actuator;
 
-    public ActionT(String name, String operator, int controlValue, AbstractActuator actuator) {
+    public ActionT(String name, Operator operator, int controlValue, AbstractActuator actuator) {
         this.name = name;
         this.operator = operator;
         ControlValue = controlValue;
@@ -24,11 +24,11 @@ public class ActionT {
         ControlValue = controlValue;
     }
 
-    public String getOperator() {
+    public Operator getOperator() {
         return operator;
     }
 
-    public void setOperator(String operator) {
+    public void setOperator(Operator operator) {
         this.operator = operator;
     }
 

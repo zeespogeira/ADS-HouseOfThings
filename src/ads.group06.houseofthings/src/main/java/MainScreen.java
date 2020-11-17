@@ -15,6 +15,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MainScreen extends JFrame {
     private JPanel panelMain;
@@ -86,8 +88,8 @@ public class MainScreen extends JFrame {
                     action.execute(sensorReading);*/
 
                     // Populating actions (for testing)
-                    ActionT action1 = new ActionT(actuator.getName() + " is cold", "Lower than", 10, actuator);
-                    ActionT action2 = new ActionT(actuator.getName() + " is hot", "Larger than", 25, actuator);
+                    ActionT action1 = new ActionT(actuator.getName() + " is cold", Operator.LOWER, 10, actuator);
+                    ActionT action2 = new ActionT(actuator.getName() + " is hot", Operator.HIGHER, 25, actuator);
 
                     actionList.clear();
                     actionList.add(action1);
@@ -104,17 +106,14 @@ public class MainScreen extends JFrame {
                 int actionNumber = actionsList.getSelectedIndex();
                 if (actionNumber >= 0){
                     ActionT action = actionList.get(actionNumber);
-//                    actionName.setText(action.getName());
-//                    controlValueInput.setText(String.valueOf(action.getControlValue()));
-                    operatorSelection.removeAllItems();
+                    actionName.setText(action.getName());
+                    controlValueInput.setText(String.valueOf(action.getControlValue()));
+                    action.setOperator((Operator) operatorSelection.getSelectedItem());
 
-                    //operatorSelection=new JComboBox(Operator.values());
-                    //operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
-                    // TODO: These options should probably come from one component...
-                    operatorSelection.addItem("Bigger than");
-                    operatorSelection.addItem("Smaller than");
-                    operatorSelection.addItem("Equal to");
-                    // End
+                    operatorSelection.removeAllItems();
+                    operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
+                    Operator selectedType = (Operator)operatorSelection.getSelectedItem();
+
                     sensorSelection.removeAllItems();
                     for (AbstractSensor sensor : sensorList) {
                         sensorSelection.addItem(sensor.getName());
@@ -147,8 +146,7 @@ public class MainScreen extends JFrame {
                     Action action = new Action(actuatorList, conditions);
                     action.execute(sensorReading);*/
 
-
-                    ActionT new_action = new ActionT(actuator.getName() + " new action", "Larger than", 25, actuator);
+                    ActionT new_action = new ActionT(actuator.getName() + " new action", Operator.HIGHER, 25, actuator);
                     actionList.add(new_action);
                     refreshActionList();
                 }
@@ -184,6 +182,19 @@ public class MainScreen extends JFrame {
             }
         });
 
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int actionNumber = actionsList.getSelectedIndex();
+                if (actionNumber >= 0) {
+                    ActionT action = actionList.get(actionNumber);
+                    action.setName(actionName.getText());
+                    action.setControlValue(Integer.valueOf(controlValueInput.getText()));
+                    action.setOperator((Operator) operatorSelection.getSelectedItem());
+                    refreshActionList();
+                }
+            }
+        });
     }
 
     public void clearActionDetails(){
