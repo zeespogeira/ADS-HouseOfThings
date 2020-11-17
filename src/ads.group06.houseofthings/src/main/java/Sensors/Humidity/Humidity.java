@@ -2,6 +2,8 @@ package Sensors.Humidity;
 
 import Models.AbstractSensor;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public abstract class Humidity extends AbstractSensor {
     String humidity;
 
@@ -16,6 +18,7 @@ public abstract class Humidity extends AbstractSensor {
     public String toString() {
         return super.toString();
     }
+
 
     public String getHumidity() {
         return humidity;

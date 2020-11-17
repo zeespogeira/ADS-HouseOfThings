@@ -27,8 +27,8 @@ public class MainScreen extends JFrame {
     private JTextField controlValueInput;
     private JComboBox sensorSelection;
     private JTextField sensorReading;
-    static List<AbstractActuator> actuatorList= Collections.synchronizedList(new ArrayList<AbstractActuator>());
-    private ArrayList<AbstractSensor> sensorList;
+    private static List<AbstractActuator> actuatorList= Collections.synchronizedList(new ArrayList<AbstractActuator>());
+    private static List<AbstractSensor> sensorList= Collections.synchronizedList(new ArrayList<AbstractSensor>());
     private ArrayList<Action> actionList;
     private DefaultListModel actuatorListModel;
     private DefaultListModel actionListModel;
@@ -42,14 +42,11 @@ public class MainScreen extends JFrame {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
-        //actuatorList = new ArrayList<>();
-
-        //addActuatorToList();
 
         actuatorListModel = new DefaultListModel();
         actuatorsList.setModel(actuatorListModel);
 
-        sensorList = new ArrayList<>();
+        //sensorList = new ArrayList<>();
         sensorListModel = new DefaultListModel();
         sensorsList.setModel(sensorListModel);
 
@@ -70,7 +67,7 @@ public class MainScreen extends JFrame {
                     //TODO: get list of actions of the actuator
 
                     // Populating actions (for testing)
-//                    Action action1 = new Action(actuator.getName() + " is cold", "Lower than", 10, actuator);
+ //                   Action action1 = new Action(actuator.getName() + " is cold", "Lower than", 10, actuator);
 //                    Action action2 = new Action(actuator.getName() + " is hot", "Larger than", 25, actuator);
 //                    actionList.clear();
 //                    actionList.add(action1);
@@ -142,6 +139,7 @@ public class MainScreen extends JFrame {
                 }
             }
         });
+
     }
 
     public void clearActionDetails(){
@@ -176,20 +174,20 @@ public class MainScreen extends JFrame {
 
     //public void addActuatorToList(AbstractActuator actuator) throws IOException
     public void addActuatorToList(List<AbstractActuator> actuatorList) throws IOException {
+        synchronized (actuatorList){
+            this.actuatorList = actuatorList;
+        }
 
-
-        this.actuatorList = actuatorList;
-        /*System.out.println("******* Actuators List Main *******");
-        Iterator it =actuatorList.iterator();
-        while (it.hasNext()){
-            System.out.println(it.next());
-        }*/
         refreshActuatorsList();
     }
 
-    public void addSensorToList(AbstractSensor sensor){
+    //public void addSensorToList(AbstractSensor sensor){
+    public void addSensorToList(List<AbstractSensor> sensor){
         // TODO: Probably not needed (should be part of another component)
-        sensorList.add(sensor);
+        //sensorList.add(sensor);
+        synchronized (sensorList){
+            this.sensorList = sensor;
+        }
         refreshSensorsList();
     }
 
@@ -198,33 +196,44 @@ public class MainScreen extends JFrame {
         MainScreen mainscreen = new MainScreen();
         mainscreen.setVisible(true);
 
-
-        //actuatorList=  ;
-        //mainscreen.addActuatorToList(bosch_actuator);
-
-        DiscoveryModule discoveryModule=new DiscoveryModule(actuatorList);
-        //discoveryModule.start();
+        DiscoveryModule discoveryModule=new DiscoveryModule(actuatorList, sensorList);
         discoveryModule.loadFiles();
-        //discoveryModule.processEvents();
-        /*ExecutorService service = Executors.newFixedThreadPool(1);
+        synchronized (actuatorList){
+            //System.out.println(actuatorList.size());
+            //Add files actuators to mainscreen
+            mainscreen.addActuatorToList(discoveryModule.getActuatorsList());
+        }
+        synchronized (sensorList){
+            //System.out.println(sensorList.size());
+            //Add files actuators to mainscreen
+            mainscreen.addSensorToList(discoveryModule.getSensorList());
+        }
+
+        ExecutorService service = Executors.newFixedThreadPool(4);
         service.submit(new Runnable() {
             public void run() {
                 try {
                     discoveryModule.processEvents();
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        });*/
+        });
 
-        mainscreen.addActuatorToList(discoveryModule.getActuatorsList());
-        System.out.println("******* Actuators List Main *******");
-        Iterator it =actuatorList.iterator();
-        while (it.hasNext()) {
-            System.out.println(it.next());
-        }
 
+                   /*System.out.println("******* Actuators List Main *******");
+            Iterator it =actuatorList.iterator();
+            while (it.hasNext()) {
+                System.out.println(it.next());
+            }*/
+
+
+
+
+
+    }
+    public Integer getNumberOfActuators(){
+        return actuatorList.size();
     }
 
 }

@@ -25,47 +25,24 @@ public class DiscoveryModule extends Thread{
 
     //ArrayList<AbstractActuator> actuatorList;
     List<AbstractActuator> actuatorList = Collections.synchronizedList(new ArrayList<AbstractActuator>());
-    List<AbstractSensor> sensorList;
+    List<AbstractSensor> sensorList= Collections.synchronizedList(new ArrayList<AbstractSensor>());;
 
     /**
      * Creates a WatchService and registers the given directory
      */
-    DiscoveryModule(List<AbstractActuator> actuatorList) throws IOException {
+    DiscoveryModule(List<AbstractActuator> actuatorList, List<AbstractSensor> sensorList) throws IOException {
 
         this.actuatorList = actuatorList;
+        this.sensorList=sensorList;
+
         File directory = new File("./");
         currentPath=directory.getCanonicalPath() + "\\src\\ads.group06.houseofthings\\src\\main\\java\\Devices";
-
-        sensorList=new ArrayList<>();
-
         String currentFolder= directory + "/src/ads.group06.houseofthings/src/main/java/Devices";
 
         dir = Path.of(currentFolder);
         this.watcher = FileSystems.getDefault().newWatchService();
         dir.register(watcher, ENTRY_CREATE);
     }
-
-    /*public void run() {
-        try {
-            while (true) {
-                synchronized (actuatorList) {
-                    /*if (!actuatorList.isEmpty()) {
-                        AbstractActuator s = actuatorList.remove(0);
-                        System.out.println(this + " processed " + s);
-                    }
-                    else {
-                        actuatorList.wait(1000);
-                    }*/
-                   /* System.out.println(this + " processed " );
-                    this.loadFiles();System.out.println(this + " processed " );
-                    this.processEvents();
-                }
-            }
-        }
-        catch (IOException e) {
-        }
-    }*/
-
     /**
      * Process all events for the key queued to the watcher.
      * @return
@@ -117,11 +94,14 @@ public class DiscoveryModule extends Thread{
                                 //discoveryModule.readCSV(filename);
                                 //var filePath = currentPath + "\\" + filename;
                                 readCSV(Paths.get(currentPath + "\\" + filename));
+                                //getActuatorsList();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
                     });
+
+                    //printActuatorsList();
                     //discoveryModule.readCSV(filename);
                 }}
 
@@ -179,7 +159,7 @@ public class DiscoveryModule extends Thread{
         // Actuator/Sensor, Brand
     }
 
-    public void instantiateModuleActuators(String[] cols){
+    public synchronized void instantiateModuleActuators(String[] cols){
         String classe=cols[1].concat(cols[2]);
         classe=classe.replaceAll("\\s+","");
 
@@ -231,28 +211,29 @@ public class DiscoveryModule extends Thread{
         }
        // System.out.println(method2);
 
+        synchronized (actuatorList){
+            try {
+                //Vai ser aleatorio
+                String input2=cols[3]; //if doesn't have the value, it's caught in the exception "ArrayIndexOutOfBoundsException"
 
-        try {
-            //Vai ser aleatorio
-            String input2=cols[3]; //if doesn't have the value, it's caught in the exception "ArrayIndexOutOfBoundsException"
-
-            // If it's different there is a actuator instantiated
-            if (obj != null) {
-                AbstractActuator es = (AbstractActuator)methodToInsertValue.invoke(obj, input2);
-                //System.out.println(obj.toString());
-                actuatorList.add(obj);
+                // If it's different there is a actuator instantiated
+                if (obj != null) {
+                    AbstractActuator es = (AbstractActuator)methodToInsertValue.invoke(obj, input2);
+                    System.out.println(obj.toString());
+                    actuatorList.add(obj);
+                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
             }
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        catch (ArrayIndexOutOfBoundsException | NullPointerException ex){
-            // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
-            actuatorList.add(obj);
-            //System.out.println(obj.toString());
+            catch (ArrayIndexOutOfBoundsException | NullPointerException ex){
+                // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
+                actuatorList.add(obj);
+                System.out.println(obj.toString());
+            }
         }
     }
 
-    public void instantiateModuleSensor(String[] cols){
+    public synchronized void instantiateModuleSensor(String[] cols){
         String classe=cols[1].concat(cols[2]);
         classe=classe.replaceAll("\\s+","");
 
@@ -262,6 +243,7 @@ public class DiscoveryModule extends Thread{
             //Tambem teria de por todos os sensors no mesmo package
             factoryImpl = Class.forName("Sensors." + cols[1].replaceAll("\\s+","") + "." + classe);
             obj = (AbstractSensor) factoryImpl.newInstance();
+            obj.setName(classe);
             //System.out.println(factoryImpl);
         } catch (ClassNotFoundException e) {
             System.err.format("This Sensor brand doesn't have a plugin\n");
@@ -272,17 +254,16 @@ public class DiscoveryModule extends Thread{
 
 
         // Desta forma tenho de por todos os sub-metodos especificos de uma classe aqui -> NAO E PERMANENTE
-        // Tenho de contar que podem haver mais que 1 valor -> FALTA FAZER
 
         // if there is arguments in file
-        //System.out.println(cols.length);
-        if(cols.length>3){
+        synchronized (sensorList) {
+            if(cols.length>3) {
             Method methodToInsertValue = null;
-            String[] specificMethods={"setHumidity", "setTemperature", "setRealFeel"};
+            String[] specificMethods = {"setHumidity", "setTemperature", "setRealFeel"};
             //System.out.println("specificMethods: "+ specificMethods.length);
 
             try {
-                for (String method2:specificMethods
+                for (String method2 : specificMethods
                 ) {
                     /*System.out.println(methodSubclass);
                     String variableValue=methodSubclass.replaceAll("set","").toLowerCase();
@@ -290,75 +271,66 @@ public class DiscoveryModule extends Thread{
                     //Class par=factoryImpl.getField(variableValue).getType();
                     System.out.println("tipo: " + factoryImpl.getField(variableValue));
 */
-                    methodToInsertValue = factoryImpl.getMethod(method2,java.lang.String.class);
+                    methodToInsertValue = factoryImpl.getMethod(method2, java.lang.String.class);
                     //System.out.println("method2"+ method2);System.out.println("method: "+ method + "\n");
-                    if(methodToInsertValue!=null){
+                    if (methodToInsertValue != null) {
                         break;
                     }
                 }
-            } catch (NoSuchMethodException  e) {
+            } catch (NoSuchMethodException e) {
 
                 try {
 
-                    for (String methodS:specificMethods
+                    for (String methodS : specificMethods
                     ) {
                         try {
-                            String variableValue=methodS.replaceAll("set","").toLowerCase();
+                            String variableValue = methodS.replaceAll("set", "").toLowerCase();
                             //System.out.println("**********test: "+variableValue);
                             //System.out.println("field: "+ factoryImpl.getSuperclass().getField(variableValue));
 
-                           Class pal= factoryImpl.getSuperclass().getField(variableValue).getType();
+                            Class pal = factoryImpl.getSuperclass().getField(variableValue).getType();
                             //method2 = factoryImpl.getSuperclass().getMethod(methodS, par);
                             methodToInsertValue = factoryImpl.getSuperclass().getMethod(methodS, java.lang.String.class);
-                            if(methodToInsertValue!=null){
+                            if (methodToInsertValue != null) {
                                 break;
                             }
-                        }
-                        catch ( NoSuchFieldException ex) {
+                        } catch (NoSuchFieldException ex) {
                         }
                     }
                 } catch (NoSuchMethodException ex) {
                     //Poderia passar isto a frente (Just information to test)
-                    System.err.format("This Sensor doesn't have this option\n");
+                    //System.err.format("This Sensor doesn't have this option\n");
                 }
                 //System.err.format("This Sensor doesn't have this option\n");
             }
 
 
-            try {
-                //Pode vir das regras
-                String input2=cols[3]; //if doesn't have the value, it's caught in the exception "ArrayIndexOutOfBoundsException"
+                try {
+                    //Pode vir das regras
+                    String input2 = cols[3]; //if doesn't have the value, it's caught in the exception "ArrayIndexOutOfBoundsException"
 
-                // If it's different there is an empty actuator instantiated
-                if (obj != null) {
-                    AbstractSensor es = (AbstractSensor)methodToInsertValue.invoke(obj,input2);
+                    // If it's different there is an empty actuator instantiated
+                    if (obj != null) {
+                        AbstractSensor es = (AbstractSensor) methodToInsertValue.invoke(obj, input2);
+                        System.out.println(obj.toString());
+                        //obj.setName(classe);
+                        sensorList.add(obj);
+                    }
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (ArrayIndexOutOfBoundsException ex) {
+                    // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
                     System.out.println(obj.toString());
-                    obj.setName(classe);
                     sensorList.add(obj);
+
                 }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-            catch (ArrayIndexOutOfBoundsException ex){
-                // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
-                obj.setName(classe);
-                System.out.println(obj.toString());
+
+            }else //same as catch ArrayIndexOutOfBoundsException
+            {
                 sensorList.add(obj);
-
+                System.out.println(obj.toString());
             }
         }
-        else //same as catch ArrayIndexOutOfBoundsException
-        {
-            obj.setName(classe);
-            sensorList.add(obj);
-            System.out.println(obj.toString());
-        }
-
-
-
-
-        /*System.out.format("Sensor %s was instantiate%n", classe);
-        System.out.println("Number of Sensors: " + getNumberOfSensors());*/
     }
 
     public Integer getNumberOfActuators(){
@@ -370,11 +342,34 @@ public class DiscoveryModule extends Thread{
     }
 
     public List<AbstractActuator> getActuatorsList(){
-        /*System.out.println("******* Actuators List *******");
-        Iterator it =actuatorList.iterator();
-        while (it.hasNext()){
-            System.out.println(it.next());
-        }*/
-        return actuatorList;
+        synchronized (actuatorList) {
+            return actuatorList;
+        }
+    }
+
+    public void printActuatorsList(){
+        synchronized (actuatorList){
+            System.out.println("******* Actuators List *******");
+            Iterator it =actuatorList.iterator();
+            while (it.hasNext()){
+                System.out.println(it.next());
+            }
+        }
+    }
+
+    public List<AbstractSensor> getSensorList(){
+        synchronized (sensorList) {
+            return sensorList;
+        }
+    }
+
+    public void printSensorList(){
+        synchronized (sensorList){
+            System.out.println("******* Sensor List *******");
+            Iterator it =sensorList.iterator();
+            while (it.hasNext()){
+                System.out.println(it.next());
+            }
+        }
     }
 }

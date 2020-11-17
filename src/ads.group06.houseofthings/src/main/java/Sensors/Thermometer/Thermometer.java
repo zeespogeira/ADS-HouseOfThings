@@ -6,8 +6,10 @@ import Models.AbstractSensor;
 public abstract class Thermometer extends AbstractSensor {
     public String temperature;
 
+
     public Thermometer(String temperature) {
         this.temperature = temperature;
+
     }
 
     public Thermometer() {

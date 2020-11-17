@@ -6,16 +6,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Lamp extends AbstractActuator {
     private boolean isOn;
-    static final AtomicInteger idGen = new AtomicInteger(1);
-    private Integer id;
 
     public Lamp() {
-        this.id= idGen.getAndIncrement();
     }
 
     public Lamp(boolean isOn) {
         this.isOn = isOn;
-        this.id= idGen.getAndIncrement();
         }
 
 
@@ -52,10 +48,6 @@ public abstract class Lamp extends AbstractActuator {
         return isOn;
     }
 
-    @Override
-    public Integer getId() {
-        return id;
-    }
 
     /*@Override
     public void setId() {
@@ -64,6 +56,6 @@ public abstract class Lamp extends AbstractActuator {
 
     @Override
     public String toString() {
-        return "id=" + id + ", " + super.toString() + ", isOn=" + isOn;
+        return super.toString() + ", isOn=" + isOn;
     }
 }
