@@ -77,7 +77,7 @@ place would then be responsible for notifying all the interested entities.
 - Pattern description
     - The pattern defines a mechanism to notify multiple objects about events that happen on the observed object.
 - Usage
-    - Using this pattern allowed us to implement a mechanism in a sinlge component that notifies all the objects that need to act after a sensor emits a reading. The pattern is implemented in the Hub class.
+    - Using this pattern allowed us to implement a mechanism in a single component that notifies all the objects that need to act after a sensor emits a reading. The pattern is implemented in the Hub class.
 
 ### 3.3. Actuator Infrastructure
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/infra-diagrams-infra-actuators.png?raw=true)
@@ -99,4 +99,4 @@ Actuators are entities that need to be triggered once a condition or set of cond
 - Pattern
     - The patter provides an object responsible for deciding the instation of the correct implementation.
 - Usage
-    - We introduced the interface IComparer that is implemeted by any class responsible for performing comparissons.An ComparerFactory was added, with the responsability to decide which of of the IComparer impementation should be instaciated. 
+    - We introduced the interface IComparer that is implemeted by any class responsible for performing comparissons. A ComparerFactory was added, with the responsability to decide which of of the IComparer impementation should be instantiated. 
