@@ -1,7 +1,10 @@
 import Models.AbstractActuator;
 import Models.AbstractSensor;
-import infrastructure.*;
+import infrastructure.ActionT;
+import infrastructure.Condition;
+import infrastructure.Operator;
 import infrastructure.Action;
+import infrastructure.SensorReading;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -9,16 +12,12 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.*;
 import java.util.Timer;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class MainScreen extends JFrame {
+public class MainScreenTest extends JFrame {
     private JPanel panelMain;
     private JList actuatorsList;
     private JList sensorsList;
@@ -33,13 +32,13 @@ public class MainScreen extends JFrame {
     private JTextField sensorReading;
     private static List<AbstractActuator> actuatorList= Collections.synchronizedList(new ArrayList<AbstractActuator>());
     private static List<AbstractSensor> sensorList= Collections.synchronizedList(new ArrayList<AbstractSensor>());
-    private ArrayList<ActionT> actionList;
+    private ArrayList<Action> actionList;
     private DefaultListModel actuatorListModel;
     private DefaultListModel actionListModel;
     private DefaultListModel sensorListModel;
 
 
-    MainScreen() throws IOException {
+    MainScreenTest() throws IOException {
         super("ADS House Controller");
         this.setContentPane(this.panelMain);
         //this.setPreferredSize(new Dimension(500,1000));
@@ -85,12 +84,12 @@ public class MainScreen extends JFrame {
                     action.execute(sensorReading);*/
 
                     // Populating actions (for testing)
-                    ActionT action1 = new ActionT(actuator.getName() + " is cold", Operator.LOWER, 10, actuator);
+                    /*ActionT action1 = new ActionT(actuator.getName() + " is cold", Operator.LOWER, 10, actuator);
                     ActionT action2 = new ActionT(actuator.getName() + " is hot", Operator.HIGHER, 25, actuator);
 
                     actionList.clear();
                     actionList.add(action1);
-                    actionList.add(action2);
+                    actionList.add(action2);*/
                     // End data for testing
 
                     refreshActionList();
@@ -102,17 +101,17 @@ public class MainScreen extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 int actionNumber = actionsList.getSelectedIndex();
                 if (actionNumber >= 0){
-                    ActionT action = actionList.get(actionNumber);
-                    actionName.setText(action.getName());
+                    Action action = actionList.get(actionNumber);
+
+                    /*actionName.setText(action.getName());
                     controlValueInput.setText(String.valueOf(action.getControlValue()));
                     action.setOperator((Operator) operatorSelection.getSelectedItem());
-
+                    */
 
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
                     Operator selectedType = (Operator)operatorSelection.getSelectedItem();
 
-                    //System.out.println(operatorSelection.getSelectedItem());
                     sensorSelection.removeAllItems();
                     for (AbstractSensor sensor : sensorList) {
                         sensorSelection.addItem(sensor.getName());
@@ -135,22 +134,21 @@ public class MainScreen extends JFrame {
                     AbstractActuator actuator = actuatorList.get(actuatorNumber);
 
                     //To Test
-                   /* int sensorId = sensorList.get(0).getId();
-                    Condition condition01 = new Condition(sensorId, 123, Operator.EQUAL);
-                    Condition condition02 = new Condition(sensorId, 124, Operator.HIGHER);
-                    Condition condition03 = new Condition(sensorId, 125, Operator.LOWER);
+                    int sensorId = sensorSelection.getSelectedIndex();
+                    System.out.println(sensorId);
+                    //sensorSelection.setSelectedItem(sensorId);
+                    Condition condition01 = new Condition(sensorId, Integer.valueOf(controlValueInput.getText()), Operator.valueOf((String) operatorSelection.getSelectedItem()));
+
                     List<Condition> conditions = new ArrayList<Condition>();
                     conditions.add(condition01);
-                    conditions.add(condition02);
-                    conditions.add(condition03);
 
 
                     SensorReading sensorReading = new SensorReading(sensorId, 100);
                     Action action = new Action(actuatorList, conditions);
-                    action.execute(sensorReading);*/
-
+                    action.execute(sensorReading);
+/*
                     ActionT new_action = new ActionT(actuator.getName() + " new action", Operator.HIGHER, 25, actuator);
-                    actionList.add(new_action);
+                    */actionList.add(action);
                     refreshActionList();
                 }
 
@@ -162,10 +160,10 @@ public class MainScreen extends JFrame {
                 // TODO: This logic is repeated... refactor?
                 int actionNumber = actionsList.getSelectedIndex();
                 if (actionNumber >= 0) {
-                    ActionT action = actionList.get(actionNumber);
-                    actionList.remove(action);
+                    /*ActionT action = actionList.get(actionNumber);
+                    actionList.remove(action);*/
                     // TODO: delete action
-                    action = null;
+                    //action = null;
                     refreshActionList();
                     clearActionDetails();
                 }
@@ -190,10 +188,10 @@ public class MainScreen extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 int actionNumber = actionsList.getSelectedIndex();
                 if (actionNumber >= 0) {
-                    ActionT action = actionList.get(actionNumber);
+                   /* ActionT action = actionList.get(actionNumber);
                     action.setName(actionName.getText());
                     action.setControlValue(Integer.valueOf(controlValueInput.getText()));
-                    action.setOperator((Operator) operatorSelection.getSelectedItem());
+                    action.setOperator((Operator) operatorSelection.getSelectedItem());*/
                     refreshActionList();
                 }
             }
@@ -224,10 +222,10 @@ public class MainScreen extends JFrame {
 
     public void refreshActionList(){
         actionListModel.removeAllElements();
-        for (ActionT action : actionList) {
+       /* for (Action action : actionList) {
             System.out.println("Adding action to list: " + action.getName());
             actionListModel.addElement(action.getName());
-        }
+        }*/
     }
 
     //public void addActuatorToList(AbstractActuator actuator) throws IOException
@@ -251,7 +249,7 @@ public class MainScreen extends JFrame {
 
 
     public static void main(String[] args) throws IOException {
-        MainScreen mainscreen = new MainScreen();
+        MainScreenTest mainscreen = new MainScreenTest();
         mainscreen.setVisible(true);
 
         DiscoveryModule discoveryModule=new DiscoveryModule(actuatorList, sensorList);
