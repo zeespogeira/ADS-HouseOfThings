@@ -53,7 +53,6 @@ and create the corresponding device object.
 
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/Devices%20Discovery.png?raw=true)
 
-
 ### 3.2. Sensor Infrastructure
 #### 3.2.1. Domain model
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/infra-diagrams-infra-sensors.png?raw=true)
@@ -67,7 +66,7 @@ place would then be responsible for notifying all the interested entities.
 - Problem
     - How can we make sure that when a Sensor publishes a reading, the reading is stored in an common object to all sensors?
 - Pattern description
-    - The pattern enforces the existance of a single instance of a class.
+    - The pattern enforces the existence of a single instance of a class.
 - Usage
     - By using this pattern that all the readings are stored in a single object and we can react to the "new reading" by notifying all the "sensor reading dependants". The Hub class is a singleton class.
 
@@ -82,14 +81,14 @@ place would then be responsible for notifying all the interested entities.
 ### 3.3. Actuator Infrastructure
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/infra-diagrams-infra-actuators.png?raw=true)
 
-Actuators are entities that need to be triggered once a condition or set of conditions are met. Both actuators and conditions are independant entities that should not know each other. Following this principle, we should create a mechanism that mediates the action of an actuator given some condition(s). We came up with the concept os an Action which is the entity responsible to check if a set of conditions are met and triggers (on/off) a set of actuator(s).
+Actuators are entities that need to be triggered once a condition or set of conditions are met. Both actuators and conditions are independent entities that should not know each other. Following this principle, we should create a mechanism that mediates the action of an actuator given some condition(s). We came up with the concept os an Action which is the entity responsible to check if a set of conditions are met and triggers (on/off) a set of actuator(s).
 
 #### 3.3.1. Used patterns
 #### 3.3.1.1. Mediator
 . Problem 
     - How can an actuator be triggered when a set of conditions are met?
 - Pattern description
-    - The pattern reduces dependencies between objects. It restrics direct comunication of the objects and enforces the comunnication only via the mediator object. 
+    - The pattern reduces dependencies between objects. It restricts direct communication of the objects and enforces the communication only via the mediator object. 
 - Usage
     - The Action object serves as the mediator between Conditions and Actuators. When an Action is notified to execute, then checks the state of all of its conditions and signals the actuators to act.
 
@@ -97,6 +96,6 @@ Actuators are entities that need to be triggered once a condition or set of cond
 - Problem
     - How can we remove the complex chainning of "if conditions" needed to compare the sensor value with the Condition value?
 - Pattern
-    - The patter provides an object responsible for deciding the instation of the correct implementation.
+    - The patter provides an object responsible for deciding the instantiation of the correct implementation.
 - Usage
-    - We introduced the interface IComparer that is implemeted by any class responsible for performing comparissons. A ComparerFactory was added, with the responsability to decide which of of the IComparer impementation should be instantiated. 
+    - We introduced the interface IComparer that is implemented by any class responsible for performing comparisons. A ComparerFactory was added, with the responsibility to decide which of of the IComparer implementation should be instantiated. 
