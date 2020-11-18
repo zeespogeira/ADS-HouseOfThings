@@ -92,7 +92,7 @@ Actuators are entities that need to be triggered once a condition or set of cond
 - Usage
     - The Action object serves as the mediator between Conditions and Actuators. When an Action is notified to execute, then checks the state of all of its conditions and signals the actuators to act.
 
-#### 3.3.1.1. Factory
+#### 3.3.1.1. Factory Method
 - Problem
     - How can we remove the complex chainning of "if conditions" needed to compare the sensor value with the Condition value?
 - Pattern
