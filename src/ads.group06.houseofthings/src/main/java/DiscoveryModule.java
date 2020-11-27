@@ -160,16 +160,24 @@ public class DiscoveryModule extends Thread{
     }
 
     public synchronized void instantiateModuleActuators(String[] cols){
+        for(int i=0; i<cols.length; i++){
+            cols[i]=cols[i].replaceAll("\\s+","");
+        }
         String classe=(cols[1].substring(0, 1).toUpperCase() + cols[1].substring(1).toLowerCase())
                 .concat(cols[2].substring(0, 1).toUpperCase() + cols[2].substring(1).toLowerCase());
         classe=classe.replaceAll("\\s+","");
+
+        String name=(cols[1].substring(0, 1).toUpperCase() + cols[1].substring(1).toLowerCase())
+                .concat(" ");
+        name=name.concat(cols[3].substring(0, 1).toUpperCase() + cols[3].substring(1).toLowerCase());
+        //name=name.replaceAll("\\s+","");
 
         Class<?> factoryClsImpl = null;
         AbstractActuator obj = null;
         try {
             factoryClsImpl = Class.forName("Actuators." + cols[1].replaceAll("\\s+","") + "." +  classe);
             obj = (AbstractActuator) factoryClsImpl.newInstance();
-            obj.setName(classe);
+            obj.setName(name);
             actuatorList.add(obj);
             //System.out.println(obj);
         } catch (ClassNotFoundException e) {
@@ -237,10 +245,16 @@ public class DiscoveryModule extends Thread{
     }
 
     public synchronized void instantiateModuleSensor(String[] cols){
+        for(int i=0; i<cols.length; i++){
+            cols[i]=cols[i].replaceAll("\\s+","");
+        }
         String classe=(cols[1].substring(0, 1).toUpperCase() + cols[1].substring(1))
                 .concat(cols[2].substring(0, 1).toUpperCase() + cols[2].substring(1).toLowerCase());
-
         classe=classe.replaceAll("\\s+","");
+
+
+        String name=(cols[3].substring(0, 1).toUpperCase() + cols[3].substring(1).toLowerCase()).concat(" ");
+        name=name.concat(cols[4].substring(0, 1).toUpperCase() + cols[4].substring(1).toLowerCase());
 
         Class<?> factoryImpl = null;
         AbstractSensor obj = null;
@@ -248,7 +262,7 @@ public class DiscoveryModule extends Thread{
             //Tambem teria de por todos os sensors no mesmo package
             factoryImpl = Class.forName("Sensors." + cols[1].replaceAll("\\s+","") + "." + classe);
             obj = (AbstractSensor) factoryImpl.newInstance();
-            obj.setName(classe + " " + cols[3]);
+            obj.setName(name);
             obj.setWhatIsMeasuring(cols[3]);
             sensorList.add(obj);
             //System.out.println(factoryImpl);
