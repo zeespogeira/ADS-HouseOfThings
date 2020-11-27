@@ -19,14 +19,12 @@ public class LampBosch extends Lamp {
     }*/
 
     public LampBosch() {
-        RandomValue value=new RandomValue(0, 100);
-        setIlumination(value.getRandom());
+        this.setIlumination(0);
     }
 
 
 
     public Integer getIlumination() {
-         //this.turnOff();
         return ilumination;
     }
 
@@ -34,6 +32,21 @@ public class LampBosch extends Lamp {
         this.ilumination = ilumination;
     }
 
+    @Override
+    public void act(boolean state) {
+        //if need to turn ON and the actuator is OFF then turn ON
+        if(state && super.isOn() == false){
+            setState(true);
+            RandomValue value=new RandomValue(0, 100);
+            setIlumination(value.getRandom());
+        }
+
+        //if need to turn OFF and the actuator is ON then turn OFF
+        if(state == false && super.isOn()){
+            setState(false);
+            setIlumination(0);
+        }
+    }
 
 
     @Override

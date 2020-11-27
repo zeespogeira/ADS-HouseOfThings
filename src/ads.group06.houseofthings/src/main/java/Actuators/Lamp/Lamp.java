@@ -50,11 +50,6 @@ public abstract class Lamp extends AbstractActuator {
     }
 
 
-    /*@Override
-    public void setId() {
-        this.id=
-    }*/
-
     @Override
     public String toString() {
         return super.toString() + ", isOn=" + isOn;

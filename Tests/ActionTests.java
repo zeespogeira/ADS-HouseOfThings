@@ -20,8 +20,13 @@ public class ActionTests {
         Condition condition02 = new Condition(sensorId, 124, Operator.HIGHER);
         Condition condition03 = new Condition(sensorId, 125, Operator.LOWER);
 
-        Lamp lampBosch = new LampBosch("true");
-        Lamp lampPhilips = new LampPhilips(true);
+        Lamp lampBosch = new LampBosch();
+        lampBosch.setState(true);
+        lampBosch.act(lampBosch.isOn());
+        Lamp lampPhilips = new LampPhilips();
+        lampPhilips.setState(true);
+        lampBosch.act(lampPhilips.isOn());
+
         List<AbstractActuator> actuators = new ArrayList<AbstractActuator>();
         actuators.add(lampBosch);
         actuators.add(lampPhilips);

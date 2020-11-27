@@ -231,9 +231,9 @@ public class DiscoveryModuleTestWithReflection {
         }
 
         // Irá vir das regras
-        if(newAct instanceof LampBosch){
-            ((LampBosch) newAct).setIlumination(String.valueOf(cols[3]));
-        }
+        /*if(newAct instanceof LampBosch){
+            ((LampBosch) newAct).setIlumination(Integer.valueOf(cols[3]));
+        }*/
 
 
 
