@@ -1,34 +1,33 @@
 package Sensors.Thermometer;
 
 import Models.AbstractSensor;
+import infrastructure.RandomValue;
 
 import java.util.Random;
 
 public class ThermometerPhillips extends Thermometer {
 
     Integer realFeel;
-    public ThermometerPhillips(String temperature) {
+    /*public ThermometerPhillips(String temperature) {
         super(temperature);
-    }
+    }*/
 
     public ThermometerPhillips() {
+        RandomValue randomValue=new RandomValue(-15, 40);
+        this.realFeel=Integer.valueOf(randomValue.getRandom());
     }
 
     @Override
-    public AbstractSensor sense(boolean flag) {
-        Random r = new Random();
-        int low = -5;
-        int high = 35;
-        int result = r.nextInt(high-low) + low;
-        setRealFeel(result);
+    public AbstractSensor sense() {
+        RandomValue randomValue=new RandomValue(-15, 40);
+        setRealFeel(Integer.valueOf(randomValue.getRandom()));
         return this;
     }
 
     @Override
     public String toString() {
-        return "ThermometerBosch{" + super.toString() +
-                ", realFeel=" + realFeel +
-                '}';
+        return "" + super.toString() +
+                ", realFeel=" + realFeel;
     }
 
     public Integer getRealFeel() {

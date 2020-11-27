@@ -2,24 +2,29 @@ package Sensors.Thermometer;
 
 
 import Models.AbstractSensor;
+import infrastructure.RandomValue;
 
 public abstract class Thermometer extends AbstractSensor {
-    public String temperature;
+    private Integer temperature;
 
-
-    public Thermometer(String temperature) {
-        this.temperature = temperature;
-
-    }
 
     public Thermometer() {
+        RandomValue randomValue=new RandomValue(-15, 40);
+        this.temperature=Integer.valueOf(randomValue.getRandom());
     }
 
-    public String getTemperature() {
+    @Override
+    public AbstractSensor sense() {
+        RandomValue randomValue=new RandomValue(-15, 40);
+        this.temperature=Integer.valueOf(randomValue.getRandom());
+        return this;
+    }
+
+    public Integer getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(String temperature) {
+    public void setTemperature(Integer temperature) {
         this.temperature = temperature;
     }
 

@@ -1,8 +1,10 @@
 package Models;
 
+import Interface.ISensor;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class AbstractSensor {
+public abstract class AbstractSensor implements ISensor {
     static final AtomicInteger idGen = new AtomicInteger(1);
     private Integer id;
     private String name;
@@ -17,7 +19,7 @@ public abstract class AbstractSensor {
     }
 
 
-    public abstract AbstractSensor sense(boolean flag);
+    public abstract AbstractSensor sense();
 
    public int getId(){
         return this.id;

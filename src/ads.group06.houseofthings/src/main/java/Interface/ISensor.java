@@ -1,6 +1,8 @@
 package Interface;
 
+import Models.AbstractSensor;
+
 public interface ISensor {
 
-    void sense();
+    abstract AbstractSensor sense();
 }
