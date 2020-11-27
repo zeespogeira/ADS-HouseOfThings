@@ -10,13 +10,6 @@ public class HumidityBosch extends Humidity {
     }*/
 
     public HumidityBosch() {
-    }
-
-
-
-    @Override
-    public String toString() {
-        return super.toString() +
-                ", humidity='" + humidity;
+        super.setMeasuringUnit("%");
     }
 }

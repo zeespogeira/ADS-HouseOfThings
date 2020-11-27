@@ -11,6 +11,7 @@ public class ThermometerBosch extends Thermometer {
     }*/
 
     public ThermometerBosch() {
+        super.setMeasuringUnit("C");
     }
 
     @Override

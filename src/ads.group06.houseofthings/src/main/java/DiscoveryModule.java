@@ -246,6 +246,7 @@ public class DiscoveryModule extends Thread{
             factoryImpl = Class.forName("Sensors." + cols[1].replaceAll("\\s+","") + "." + classe);
             obj = (AbstractSensor) factoryImpl.newInstance();
             obj.setName(classe);
+            obj.setWhatIsMeasuring(cols[3]);
             sensorList.add(obj);
             //System.out.println(factoryImpl);
         } catch (ClassNotFoundException e) {

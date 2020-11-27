@@ -4,8 +4,6 @@ package Sensors.Humidity;
 import Models.AbstractSensor;
 import infrastructure.RandomValue;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public abstract class Humidity extends AbstractSensor {
     Integer humidity;
 
@@ -27,9 +25,8 @@ public abstract class Humidity extends AbstractSensor {
 
     @Override
     public String toString() {
-        return super.toString();
+        return super.toString() + "humidity=" + humidity;
     }
-
 
     public Integer getHumidity() {
         return humidity;
