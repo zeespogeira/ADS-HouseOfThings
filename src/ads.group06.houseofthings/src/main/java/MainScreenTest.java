@@ -92,6 +92,17 @@ public class MainScreenTest extends JFrame {
                     actionList.add(action2);*/
                     // End data for testing
 
+                    operatorSelection.removeAllItems();
+                    operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
+                    Operator selectedType = (Operator)operatorSelection.getSelectedItem();
+
+                    //System.out.println(operatorSelection.getSelectedItem());
+                    // FALTA juntar o whatsismeasuring ao nome
+                    sensorSelection.removeAllItems();
+                    for (AbstractSensor sensor : sensorList) {
+                        sensorSelection.addItem(sensor.getName());
+                    }
+
                     refreshActionList();
                 }
             }
@@ -181,7 +192,7 @@ public class MainScreenTest extends JFrame {
 
                     //sensor.sense();
                     SensorReading sensorReadingClass = new SensorReading(sensorId, Double.valueOf((Double) sensor.getReading()));
-                    sensorReading.setText(String.valueOf(sensorReadingClass.getValue()));
+                    sensorReading.setText(String.valueOf(sensorReadingClass.getValue() + " " + sensor.getMeasuringUnit()));
                 }
             }
         });
