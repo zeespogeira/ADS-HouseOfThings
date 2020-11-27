@@ -32,6 +32,8 @@ public class LampBosch extends Lamp {
         this.ilumination = ilumination;
     }
 
+
+    //Template Method
     @Override
     public void act(boolean state) {
         //if need to turn ON and the actuator is OFF then turn ON
