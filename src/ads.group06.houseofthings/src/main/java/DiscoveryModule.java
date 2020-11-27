@@ -169,6 +169,7 @@ public class DiscoveryModule extends Thread{
             factoryClsImpl = Class.forName("Actuators." + cols[1].replaceAll("\\s+","") + "." +  classe);
             obj = (AbstractActuator) factoryClsImpl.newInstance();
             obj.setName(classe);
+            actuatorList.add(obj);
             //System.out.println(obj);
         } catch (ClassNotFoundException e) {
             System.err.format("This Actuator brand doesn't have a plugin\n");
@@ -245,6 +246,7 @@ public class DiscoveryModule extends Thread{
             factoryImpl = Class.forName("Sensors." + cols[1].replaceAll("\\s+","") + "." + classe);
             obj = (AbstractSensor) factoryImpl.newInstance();
             obj.setName(classe);
+            sensorList.add(obj);
             //System.out.println(factoryImpl);
         } catch (ClassNotFoundException e) {
             System.err.format("This Sensor brand doesn't have a plugin\n");
