@@ -45,7 +45,7 @@ public abstract class Lamp extends AbstractActuator {
         isOn = state;
     }
 
-    public boolean isOn() {
+    public boolean getisOn() {
         return isOn;
     }
 

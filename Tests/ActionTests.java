@@ -22,10 +22,10 @@ public class ActionTests {
 
         Lamp lampBosch = new LampBosch();
         lampBosch.setState(true);
-        lampBosch.act(lampBosch.isOn());
+        lampBosch.act(lampBosch.getisOn());
         Lamp lampPhilips = new LampPhilips();
         lampPhilips.setState(true);
-        lampBosch.act(lampPhilips.isOn());
+        lampBosch.act(lampPhilips.getisOn());
 
         //Command Pattern
         List<AbstractActuator> actuators = new ArrayList<AbstractActuator>();

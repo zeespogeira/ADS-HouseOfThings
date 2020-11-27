@@ -31,6 +31,7 @@ public abstract class AbstractActuator {
         return this.id;
     }
 
+    public abstract void act(boolean state);
     @Override
     public String toString() {
         return "id=" + id + ", name=" + name + '\'';

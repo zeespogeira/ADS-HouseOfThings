@@ -12,6 +12,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Timer;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -29,7 +30,10 @@ public class MainScreenTest extends JFrame {
     private JComboBox operatorSelection;
     private JTextField controlValueInput;
     private JComboBox sensorSelection;
+    private JComboBox actuatorAction;
     private JTextField sensorReading;
+    private JComboBox actActionSelection;
+    private JTextField textField1;
     private static List<AbstractActuator> actuatorList= Collections.synchronizedList(new ArrayList<AbstractActuator>());
     private static List<AbstractSensor> sensorList= Collections.synchronizedList(new ArrayList<AbstractSensor>());
     private ArrayList<Action> actionList;
@@ -102,6 +106,12 @@ public class MainScreenTest extends JFrame {
                         sensorSelection.addItem(sensor.getName());
                     }
 
+                    actActionSelection.removeAllItems();
+
+
+                    loadActuatorsMethods(actuator);
+
+
                     refreshActionList();
                 }
             }
@@ -131,6 +141,7 @@ public class MainScreenTest extends JFrame {
                         sensorSelection.addItem(sensor.getName());
                     }
 
+                    //loadActuatorsMethods(actuator);
                     /*int sensorId = action.getID();
                     System.out.println(sensorId);
                     sensorSelection.setSelectedItem(sensorId);*/
@@ -219,6 +230,17 @@ public class MainScreenTest extends JFrame {
             }
         });
     }
+
+    public void loadActuatorsMethods(AbstractActuator actuator){
+        for (var method : actuator.getClass().getMethods()) {
+            if (method.getName().contains("set") && !method.getName().contains("setName")){
+                String variableName=method.getName().replaceAll("set","");
+                actActionSelection.addItem(variableName);
+                //System.out.println(method);
+            }
+        }
+    }
+
 
     public void clearActionDetails(){
         actionName.setText("");

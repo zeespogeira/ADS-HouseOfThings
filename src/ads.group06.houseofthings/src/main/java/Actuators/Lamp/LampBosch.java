@@ -37,14 +37,14 @@ public class LampBosch extends Lamp {
     @Override
     public void act(boolean state) {
         //if need to turn ON and the actuator is OFF then turn ON
-        if(state && super.isOn() == false){
+        if(state && super.getisOn() == false){
             setState(true);
             RandomValue value=new RandomValue(0, 100);
             setIlumination(value.getRandom());
         }
 
         //if need to turn OFF and the actuator is ON then turn OFF
-        if(state == false && super.isOn()){
+        if(state == false && super.getisOn()){
             setState(false);
             setIlumination(0);
         }
