@@ -179,11 +179,9 @@ public class MainScreenTest extends JFrame {
                     int sensorId = sensorSelection.getSelectedIndex();
                     System.out.println(sensorId);
 
-                   // sensorReading.setText(String.valueOf(sensor.getReading()));
-                    //To test. Cannot be toString()
-                    Object valores=sensor.sense();
-                    //SensorReading sensorReadingClass = new SensorReading(sensorId, Double.valueOf(sensor.sense()));
-                    //sensorReading.setText(String.valueOf(sensorReadingClass.getValue()));
+                    sensor.sense();
+                    SensorReading sensorReadingClass = new SensorReading(sensorId, (Double) sensor.getReading());
+                    sensorReading.setText(String.valueOf(sensorReadingClass.getValue()));
                 }
             }
         });

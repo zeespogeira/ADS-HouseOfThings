@@ -35,4 +35,9 @@ public abstract class Humidity extends AbstractSensor {
     public void setHumidity(Integer humidity) {
         this.humidity = humidity;
     }
+
+    @Override
+    public Object getReading() {
+        return this.getHumidity();
+    }
 }

@@ -32,4 +32,9 @@ public abstract class Thermometer extends AbstractSensor {
     public String toString() {
         return super.toString();
     }
+
+    @Override
+    public Object getReading() {
+        return this.getTemperature();
+    }
 }

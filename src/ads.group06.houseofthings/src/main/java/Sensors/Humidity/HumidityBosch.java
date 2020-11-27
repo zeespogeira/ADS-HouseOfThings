@@ -12,4 +12,6 @@ public class HumidityBosch extends Humidity {
     public HumidityBosch() {
         super.setMeasuringUnit("%");
     }
+
+
 }
