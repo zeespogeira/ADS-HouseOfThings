@@ -5,26 +5,26 @@ import Models.AbstractSensor;
 import infrastructure.RandomValue;
 
 public abstract class Thermometer extends AbstractSensor {
-    private Integer temperature;
+    private Double temperature;
 
 
     public Thermometer() {
         RandomValue randomValue=new RandomValue(-15, 40);
-        this.temperature=Integer.valueOf(randomValue.getRandom());
+        this.temperature=Double.valueOf(randomValue.getRandom());
     }
 
     @Override
     public AbstractSensor sense() {
         RandomValue randomValue=new RandomValue(-15, 40);
-        this.temperature=Integer.valueOf(randomValue.getRandom());
+        this.temperature=Double.valueOf(randomValue.getRandom());
         return this;
     }
 
-    public Integer getTemperature() {
+    public Double getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(Integer temperature) {
+    public void setTemperature(Double temperature) {
         this.temperature = temperature;
     }
 
@@ -34,7 +34,7 @@ public abstract class Thermometer extends AbstractSensor {
     }
 
     @Override
-    public Object getReading() {
+    public Double getReading() {
         return this.getTemperature();
     }
 }

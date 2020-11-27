@@ -5,11 +5,11 @@ import Models.AbstractSensor;
 import infrastructure.RandomValue;
 
 public abstract class Humidity extends AbstractSensor {
-    Integer humidity;
+    Double humidity;
 
     public Humidity() {
         RandomValue randomValue=new RandomValue(0, 50);
-        this.humidity=Integer.valueOf(randomValue.getRandom());
+        this.humidity=Double.valueOf(randomValue.getRandom());
     }
 
     /*public Humidity(String humidity) {
@@ -19,7 +19,7 @@ public abstract class Humidity extends AbstractSensor {
     @Override
     public AbstractSensor sense() {
         RandomValue randomValue=new RandomValue(0, 50);
-        this.humidity=Integer.valueOf(randomValue.getRandom());
+        this.humidity=Double.valueOf(randomValue.getRandom());
         return this;
     }
 
@@ -28,16 +28,16 @@ public abstract class Humidity extends AbstractSensor {
         return super.toString() + "humidity=" + humidity;
     }
 
-    public Integer getHumidity() {
+    public Double getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(Integer humidity) {
+    public void setHumidity(Double humidity) {
         this.humidity = humidity;
     }
 
     @Override
-    public Object getReading() {
+    public Double getReading() {
         return this.getHumidity();
     }
 }

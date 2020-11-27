@@ -179,8 +179,8 @@ public class MainScreenTest extends JFrame {
                     int sensorId = sensorSelection.getSelectedIndex();
                     System.out.println(sensorId);
 
-                    sensor.sense();
-                    SensorReading sensorReadingClass = new SensorReading(sensorId, (Double) sensor.getReading());
+                    //sensor.sense();
+                    SensorReading sensorReadingClass = new SensorReading(sensorId, Double.valueOf((Double) sensor.getReading()));
                     sensorReading.setText(String.valueOf(sensorReadingClass.getValue()));
                 }
             }
