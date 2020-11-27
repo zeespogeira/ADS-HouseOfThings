@@ -97,7 +97,6 @@ public class MainScreenTest extends JFrame {
                     Operator selectedType = (Operator)operatorSelection.getSelectedItem();
 
                     //System.out.println(operatorSelection.getSelectedItem());
-                    // FALTA juntar o whatsismeasuring ao nome
                     sensorSelection.removeAllItems();
                     for (AbstractSensor sensor : sensorList) {
                         sensorSelection.addItem(sensor.getName());
@@ -112,7 +111,11 @@ public class MainScreenTest extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 int actionNumber = actionsList.getSelectedIndex();
                 if (actionNumber >= 0){
+
+                    //Falta carregar actions para um ficheiro para guardar ao desligar
                     Action action = actionList.get(actionNumber);
+
+                    //Falta carregar conditions para um ficheiro para guardar ao desligar
 
                     /*actionName.setText(action.getName());
                     controlValueInput.setText(String.valueOf(action.getControlValue()));
@@ -134,6 +137,7 @@ public class MainScreenTest extends JFrame {
                 }
             }
         });
+        //Feitas alteracoes
         newActionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -148,18 +152,24 @@ public class MainScreenTest extends JFrame {
                     int sensorId = sensorSelection.getSelectedIndex();
                     System.out.println(sensorId);
                     //sensorSelection.setSelectedItem(sensorId);
-                    Condition condition01 = new Condition(sensorId, Integer.valueOf(controlValueInput.getText()), Operator.valueOf((String) operatorSelection.getSelectedItem()));
 
+                    //Command Pattern (Verificar porque é só 1 tipo)
+                    Condition condition01 = new Condition(sensorId, Integer.valueOf(controlValueInput.getText()), Operator.valueOf((String) operatorSelection.getSelectedItem()));
                     List<Condition> conditions = new ArrayList<Condition>();
                     conditions.add(condition01);
 
 
-                    SensorReading sensorReading = new SensorReading(sensorId, 100);
-                    Action action = new Action(actuatorList, conditions);
-                    action.execute(sensorReading);
-/*
-                    ActionT new_action = new ActionT(actuator.getName() + " new action", Operator.HIGHER, 25, actuator);
-                    */actionList.add(action);
+                    SensorReading sensorReadingClass =
+                            new SensorReading(sensorId, sensorList.get(sensorId).getReading());
+
+
+                    //Command Pattern
+                    List<AbstractActuator> actuatorsForAction=new ArrayList<>();
+                    actuatorsForAction.add(actuator);
+                    Action action = new Action(actuatorsForAction, conditions);
+                    action.execute(sensorReadingClass);
+
+                    actionList.add(action);
                     refreshActionList();
                 }
 
@@ -188,9 +198,7 @@ public class MainScreenTest extends JFrame {
                 if (sensorNumber >= 0){
                     AbstractSensor sensor = sensorList.get(sensorNumber);
                     int sensorId = sensorSelection.getSelectedIndex();
-                    System.out.println(sensorId);
 
-                    //sensor.sense();
                     SensorReading sensorReadingClass = new SensorReading(sensorId, Double.valueOf((Double) sensor.getReading()));
                     sensorReading.setText(String.valueOf(sensorReadingClass.getValue() + " " + sensor.getMeasuringUnit()));
                 }

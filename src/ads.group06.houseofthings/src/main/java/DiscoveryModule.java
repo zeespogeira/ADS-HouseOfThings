@@ -160,7 +160,8 @@ public class DiscoveryModule extends Thread{
     }
 
     public synchronized void instantiateModuleActuators(String[] cols){
-        String classe=cols[1].concat(cols[2]);
+        String classe=(cols[1].substring(0, 1).toUpperCase() + cols[1].substring(1).toLowerCase())
+                .concat(cols[2].substring(0, 1).toUpperCase() + cols[2].substring(1).toLowerCase());
         classe=classe.replaceAll("\\s+","");
 
         Class<?> factoryClsImpl = null;
@@ -236,7 +237,9 @@ public class DiscoveryModule extends Thread{
     }
 
     public synchronized void instantiateModuleSensor(String[] cols){
-        String classe=cols[1].concat(cols[2]);
+        String classe=(cols[1].substring(0, 1).toUpperCase() + cols[1].substring(1))
+                .concat(cols[2].substring(0, 1).toUpperCase() + cols[2].substring(1).toLowerCase());
+
         classe=classe.replaceAll("\\s+","");
 
         Class<?> factoryImpl = null;
@@ -245,7 +248,7 @@ public class DiscoveryModule extends Thread{
             //Tambem teria de por todos os sensors no mesmo package
             factoryImpl = Class.forName("Sensors." + cols[1].replaceAll("\\s+","") + "." + classe);
             obj = (AbstractSensor) factoryImpl.newInstance();
-            obj.setName(classe);
+            obj.setName(classe + " " + cols[3]);
             obj.setWhatIsMeasuring(cols[3]);
             sensorList.add(obj);
             //System.out.println(factoryImpl);

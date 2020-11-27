@@ -27,10 +27,12 @@ public class ActionTests {
         lampPhilips.setState(true);
         lampBosch.act(lampPhilips.isOn());
 
+        //Command Pattern
         List<AbstractActuator> actuators = new ArrayList<AbstractActuator>();
         actuators.add(lampBosch);
         actuators.add(lampPhilips);
 
+        //Command Pattern (Verificar porque é só 1 tipo)
         List<Condition> conditions = new ArrayList<Condition>();
         conditions.add(condition01);
         conditions.add(condition02);
@@ -41,11 +43,11 @@ public class ActionTests {
         action.execute(sensorReading);
 
 
-        List<AbstractActuator> actualActuators = action.getActuators();
+        /*List<AbstractActuator> actualActuators = action.getActuators();
 
         for (var actuator : actualActuators) {
 
 //            assertEquals(true, actuator.);
-        }
+        }*/
     }
 }
