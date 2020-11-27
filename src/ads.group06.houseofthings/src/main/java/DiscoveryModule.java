@@ -178,6 +178,7 @@ public class DiscoveryModule extends Thread{
         }
 
 
+        /*
         // Desta forma tenho de por todos os sub-metodos especificos de uma classe aqui -> NAO E PERMANENTE
         Class par=java.lang.String.class;
         Method methodToInsertValue = null;
@@ -230,7 +231,7 @@ public class DiscoveryModule extends Thread{
                 actuatorList.add(obj);
                 //System.out.println(obj.toString());
             }
-        }
+        }*/
     }
 
     public synchronized void instantiateModuleSensor(String[] cols){
@@ -253,8 +254,8 @@ public class DiscoveryModule extends Thread{
         }
 
 
+        /*
         // Desta forma tenho de por todos os sub-metodos especificos de uma classe aqui -> NAO E PERMANENTE
-
         // if there is arguments in file
         synchronized (sensorList) {
             if(cols.length>3) {
@@ -265,12 +266,6 @@ public class DiscoveryModule extends Thread{
             try {
                 for (String method2 : specificMethods
                 ) {
-                    /*System.out.println(methodSubclass);
-                    String variableValue=methodSubclass.replaceAll("set","").toLowerCase();
-                    System.out.println(variableValue);
-                    //Class par=factoryImpl.getField(variableValue).getType();
-                    System.out.println("tipo: " + factoryImpl.getField(variableValue));
-*/
                     methodToInsertValue = factoryImpl.getMethod(method2, java.lang.String.class);
                     //System.out.println("method2"+ method2);System.out.println("method: "+ method + "\n");
                     if (methodToInsertValue != null) {
@@ -328,7 +323,7 @@ public class DiscoveryModule extends Thread{
                 sensorList.add(obj);
                 System.out.println(obj.toString());
             }
-        }
+        }*/
     }
 
     public Integer getNumberOfActuators(){

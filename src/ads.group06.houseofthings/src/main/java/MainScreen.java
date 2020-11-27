@@ -180,7 +180,8 @@ public class MainScreen extends JFrame {
                     AbstractSensor sensor = sensorList.get(sensorNumber);
                    // sensorReading.setText(String.valueOf(sensor.getReading()));
                     //To test. Cannot be toString()
-                    sensorReading.setText(String.valueOf(sensor.toString()));
+                    //sensorReading.setText(String.valueOf(sensor.toString()));
+                    sensorReading.setText(String.valueOf(sensor.sense(true)));
                 }
             }
         });

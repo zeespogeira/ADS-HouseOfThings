@@ -17,7 +17,7 @@ public abstract class AbstractSensor {
     }
 
 
-    public abstract void sense(boolean flag);
+    public abstract AbstractSensor sense(boolean flag);
 
    public int getId(){
         return this.id;

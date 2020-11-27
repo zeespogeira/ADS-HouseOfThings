@@ -50,6 +50,7 @@ The system will automatically detect if there are changes
 to the Devices folder (e.g. when adding a new .csv file)
 and create the corresponding device object.
 
+#### 3.1.1. Used patterns
 
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/Devices%20Discovery.png?raw=true)
 

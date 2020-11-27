@@ -1,5 +1,6 @@
 package Sensors.Humidity;
 
+
 import Models.AbstractSensor;
 
 import java.util.concurrent.atomic.AtomicInteger;

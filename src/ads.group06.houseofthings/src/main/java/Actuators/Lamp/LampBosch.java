@@ -1,36 +1,36 @@
 package Actuators.Lamp;
 
+import infrastructure.RandomValue;
+
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LampBosch extends Lamp {
-    String ilumination;
-    //static final AtomicInteger idGen = new AtomicInteger(1);
+    Integer ilumination;
 
-    public LampBosch(String ilumination) {
-        //super();
+    //Construtores para teste
+    /*public LampBosch(String ilumination) {
         this.ilumination = ilumination;
-        //super.idGen.getAndIncrement();
     }
 
     public LampBosch(boolean isOn, String ilumination) {
         super(isOn);
         this.ilumination = ilumination;
-        //super.idGen.getAndIncrement();
-    }
+    }*/
 
     public LampBosch() {
-        //super(idGen.getAndIncrement());
-        //super.idGen.getAndIncrement();
+        RandomValue value=new RandomValue(0, 100);
+        setIlumination(value.getRandom());
     }
 
 
 
-    public String getIlumination() {
+    public Integer getIlumination() {
          //this.turnOff();
         return ilumination;
     }
 
-    public void setIlumination(String ilumination) {
+    public void setIlumination(Integer ilumination) {
         this.ilumination = ilumination;
     }
 

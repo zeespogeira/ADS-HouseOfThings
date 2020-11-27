@@ -4,14 +4,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class LampPhilips extends Lamp {
 
-   // static final AtomicInteger idGen = new AtomicInteger(1);
-
     public LampPhilips() {
     }
 
-    public LampPhilips(boolean isOn) {
-        super(/*idGen.getAndIncrement(),*/ isOn);
-    }
+    /*public LampPhilips(boolean isOn) {
+        super( isOn);
+    }*/
 
     @Override
     public String toString() {

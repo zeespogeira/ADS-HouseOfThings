@@ -1,5 +1,7 @@
 package Sensors.Thermometer;
 
+import Models.AbstractSensor;
+
 import java.util.Random;
 
 public class ThermometerBosch extends Thermometer {
@@ -12,7 +14,7 @@ public class ThermometerBosch extends Thermometer {
     }
 
     @Override
-    public void sense(boolean flag) {
+    public AbstractSensor sense(boolean flag) {
         if(temperature.isEmpty()){
             Random r = new Random();
             int low = -5;
@@ -20,7 +22,7 @@ public class ThermometerBosch extends Thermometer {
             int result = r.nextInt(high-low) + low;
             setTemperature(String.valueOf(result));
         }
-
+        return this;
     }
 
     @Override

@@ -8,11 +8,12 @@ public abstract class Lamp extends AbstractActuator {
     private boolean isOn;
 
     public Lamp() {
+        this.isOn=false;
     }
 
-    public Lamp(boolean isOn) {
+    /*public Lamp(boolean isOn) {
         this.isOn = isOn;
-        }
+        }*/
 
 
     protected boolean turnOn(){

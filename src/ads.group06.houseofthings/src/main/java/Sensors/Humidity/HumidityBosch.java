@@ -1,5 +1,8 @@
 package Sensors.Humidity;
 
+
+import Models.AbstractSensor;
+
 public class HumidityBosch extends Humidity {
 
     //String humidity;
@@ -11,8 +14,9 @@ public class HumidityBosch extends Humidity {
     }
 
     @Override
-    public void sense(boolean flag) {
+    public AbstractSensor sense(boolean flag) {
 
+        return this;
     }
 
     @Override
