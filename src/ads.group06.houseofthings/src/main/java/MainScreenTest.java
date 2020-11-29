@@ -171,8 +171,9 @@ public class MainScreenTest extends JFrame {
                 if (actionNumber >= 0) {
                     /*ActionT action = actionList.get(actionNumber);
                     actionList.remove(action);*/
-                    // TODO: delete action
-                    //action = null;
+                    Action action = actionList.get(actionNumber);
+                    actionList.remove(action);
+                    action = null;
                     refreshActionList();
                     clearActionDetails();
                 }
@@ -217,15 +218,14 @@ public class MainScreenTest extends JFrame {
 
                     //Arrays.stream(Operator.values()).anyMatch((t) -> t.name().equals(controlValueInput.getText()));
                     action.getConditions().set(0,condition01 );
-                    //action.getActuators().add(0, actuator);
                     action.getActuators().set(0, actuator);
 
                     refreshActionList();
 
-                    Iterator it=actionList.iterator();
+                    /*Iterator it=actionList.iterator();
                     while (it.hasNext()){
                         System.out.println(it.next());
-                    }
+                    }*/
                 }
             }
         });
