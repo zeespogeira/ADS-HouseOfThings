@@ -49,9 +49,13 @@ public abstract class Lamp extends AbstractActuator {
         return isOn;
     }
 
-
     @Override
     public String toString() {
         return super.toString() + ", isOn=" + isOn;
+    }
+
+    @Override
+    public String getState() {
+        return ((this.getisOn()) ? "On" : "Off");
     }
 }

@@ -31,6 +31,8 @@ public abstract class AbstractActuator {
         return this.id;
     }
 
+    public abstract String getState();
+
     public abstract void act(boolean state);
     @Override
     public String toString() {

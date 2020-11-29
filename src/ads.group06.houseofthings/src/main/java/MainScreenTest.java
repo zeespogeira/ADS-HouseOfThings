@@ -35,6 +35,7 @@ public class MainScreenTest extends JFrame {
     private JTextField controlValueInput;
     private JComboBox sensorSelection;
     private JTextField sensorReading;
+    private JTextField actuatorState;
     private JComboBox actActionSelection;
     private JPanel actuatorsOptions;
     private JTextField acActionOption;
@@ -65,7 +66,6 @@ public class MainScreenTest extends JFrame {
         actionsList.setModel(actionListModel);
 
         sensorReading.setEditable(false);
-
 
         actuatorsList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -202,7 +202,7 @@ public class MainScreenTest extends JFrame {
                 System.out.println(actionNumber);
                 if (actionNumber >= 0) {
 
-                   Action action=actionList.get(actionNumber);
+                    Action action=actionList.get(actionNumber);
                     action.setName(actionName.getText());
 
                     Condition condition01 = new Condition(sensorSelection.getSelectedIndex(),
@@ -344,6 +344,14 @@ public class MainScreenTest extends JFrame {
 
     public Integer getNumberOfActuators(){
         return actuatorList.size();
+    }
+
+    public void refreshActuatorState(){
+        int actuatorNumber = actuatorsList.getSelectedIndex();
+        if (actuatorNumber >= 0) {
+            AbstractActuator actuator = actuatorList.get(actuatorNumber);
+            actuatorState.setText(actuator.getState());
+        }
     }
 
 }
