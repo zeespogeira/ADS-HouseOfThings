@@ -6,10 +6,12 @@ import infrastructure.Action;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,8 +33,8 @@ public class MainScreen extends JFrame {
     private JTextField controlValueInput;
     private JComboBox sensorSelection;
     private JTextField sensorReading;
-    private static List<AbstractActuator> actuatorList= Collections.synchronizedList(new ArrayList<AbstractActuator>());
-    private static List<AbstractSensor> sensorList= Collections.synchronizedList(new ArrayList<AbstractSensor>());
+    private static List<AbstractActuator> actuatorList = Collections.synchronizedList(new ArrayList<AbstractActuator>());
+    private static List<AbstractSensor> sensorList = Collections.synchronizedList(new ArrayList<AbstractSensor>());
     private ArrayList<ActionT> actionList;
     private DefaultListModel actuatorListModel;
     private DefaultListModel actionListModel;
@@ -64,7 +66,7 @@ public class MainScreen extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 int actuatorNumber = actuatorsList.getSelectedIndex();
-                if (actuatorNumber >= 0){
+                if (actuatorNumber >= 0) {
                     AbstractActuator actuator = actuatorList.get(actuatorNumber);
                     System.out.println("The selected actuator is: :" + actuator.getName());
                     //TODO: get list of actions of the actuator
@@ -101,7 +103,7 @@ public class MainScreen extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 int actionNumber = actionsList.getSelectedIndex();
-                if (actionNumber >= 0){
+                if (actionNumber >= 0) {
                     ActionT action = actionList.get(actionNumber);
                     actionName.setText(action.getName());
                     controlValueInput.setText(String.valueOf(action.getControlValue()));
@@ -110,7 +112,7 @@ public class MainScreen extends JFrame {
 
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
-                    Operator selectedType = (Operator)operatorSelection.getSelectedItem();
+                    Operator selectedType = (Operator) operatorSelection.getSelectedItem();
 
                     //System.out.println(operatorSelection.getSelectedItem());
                     sensorSelection.removeAllItems();
@@ -176,9 +178,9 @@ public class MainScreen extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 // TODO: This logic is repeated... refactor?
                 int sensorNumber = sensorsList.getSelectedIndex();
-                if (sensorNumber >= 0){
+                if (sensorNumber >= 0) {
                     AbstractSensor sensor = sensorList.get(sensorNumber);
-                   // sensorReading.setText(String.valueOf(sensor.getReading()));
+                    // sensorReading.setText(String.valueOf(sensor.getReading()));
                     //To test. Cannot be toString()
                     //sensorReading.setText(String.valueOf(sensor.toString()));
                     sensorReading.setText(String.valueOf(sensor.sense()));
@@ -201,14 +203,14 @@ public class MainScreen extends JFrame {
         });
     }
 
-    public void clearActionDetails(){
+    public void clearActionDetails() {
         actionName.setText("");
         sensorSelection.removeAllItems();
         operatorSelection.removeAllItems();
         controlValueInput.setText("");
     }
 
-    public void refreshActuatorsList(){
+    public void refreshActuatorsList() {
         actuatorListModel.removeAllElements();
         for (AbstractActuator actuator : actuatorList) {
             //System.out.println(actuator.toString());
@@ -216,14 +218,14 @@ public class MainScreen extends JFrame {
         }
     }
 
-    public void refreshSensorsList(){
+    public void refreshSensorsList() {
         sensorListModel.removeAllElements();
         for (AbstractSensor sensor : sensorList) {
             sensorListModel.addElement(sensor.getName());
         }
     }
 
-    public void refreshActionList(){
+    public void refreshActionList() {
         actionListModel.removeAllElements();
         for (ActionT action : actionList) {
             System.out.println("Adding action to list: " + action.getName());
@@ -233,7 +235,7 @@ public class MainScreen extends JFrame {
 
     //public void addActuatorToList(AbstractActuator actuator) throws IOException
     public void addActuatorToList(List<AbstractActuator> actuatorList) throws IOException {
-        synchronized (actuatorList){
+        synchronized (actuatorList) {
             this.actuatorList = actuatorList;
         }
 
@@ -241,10 +243,10 @@ public class MainScreen extends JFrame {
     }
 
     //public void addSensorToList(AbstractSensor sensor){
-    public void addSensorToList(List<AbstractSensor> sensor){
+    public void addSensorToList(List<AbstractSensor> sensor) {
         // TODO: Probably not needed (should be part of another component)
         //sensorList.add(sensor);
-        synchronized (sensorList){
+        synchronized (sensorList) {
             this.sensorList = sensor;
         }
         refreshSensorsList();
@@ -255,14 +257,14 @@ public class MainScreen extends JFrame {
         MainScreen mainscreen = new MainScreen();
         mainscreen.setVisible(true);
 
-        DiscoveryModule discoveryModule=new DiscoveryModule(actuatorList, sensorList);
+        DiscoveryModule discoveryModule = new DiscoveryModule(actuatorList, sensorList);
         discoveryModule.loadFiles();
-        synchronized (actuatorList){
+        synchronized (actuatorList) {
             //System.out.println(actuatorList.size());
             //Add files actuators to mainscreen
             mainscreen.addActuatorToList(discoveryModule.getActuatorsList());
         }
-        synchronized (sensorList){
+        synchronized (sensorList) {
             //System.out.println(sensorList.size());
             //Add files actuators to mainscreen
             mainscreen.addSensorToList(discoveryModule.getSensorList());
@@ -295,7 +297,8 @@ public class MainScreen extends JFrame {
             }*/
 
     }
-    public Integer getNumberOfActuators(){
+
+    public Integer getNumberOfActuators() {
         return actuatorList.size();
     }
 

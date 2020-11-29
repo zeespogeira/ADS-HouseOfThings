@@ -40,4 +40,16 @@ public class VaccumCleanerSamsung extends VaccumCleaner {
                 ", velocity='" + velocity + '\'' +
                 '}';
     }
+
+    @Override
+    public String getState() {
+        String state;
+        if (this.isOn()) {
+            state = "On, " + this.getVelocity() + "%";
+        } else {
+            state = "Off";
+        }
+        return state;
+    }
+
 }

@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,13 +38,13 @@ public class MainScreenTest extends JFrame {
     private JComboBox actActionSelection;
     private JPanel actuatorsOptions;
     private JTextField acActionOption;
-    private static List<AbstractActuator> actuatorList= Collections.synchronizedList(new ArrayList<AbstractActuator>());
-    private static List<AbstractSensor> sensorList= Collections.synchronizedList(new ArrayList<AbstractSensor>());
+    private JTextField actuatorState;
+    private static List<AbstractActuator> actuatorList = Collections.synchronizedList(new ArrayList<AbstractActuator>());
+    private static List<AbstractSensor> sensorList = Collections.synchronizedList(new ArrayList<AbstractSensor>());
     private ArrayList<Action> actionList;
     private DefaultListModel actuatorListModel;
     private DefaultListModel actionListModel;
     private DefaultListModel sensorListModel;
-
 
     MainScreenTest() throws IOException {
         super("ADS House Controller");
@@ -59,25 +60,26 @@ public class MainScreenTest extends JFrame {
         sensorListModel = new DefaultListModel();
         sensorsList.setModel(sensorListModel);
 
-        actionList = new ArrayList<>();
+        //actionList = new ArrayList<>();
         actionListModel = new DefaultListModel();
         actionsList.setModel(actionListModel);
 
         sensorReading.setEditable(false);
 
+        actuatorState.setEditable(false);
 
         actuatorsList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 int actuatorNumber = actuatorsList.getSelectedIndex();
-                if (actuatorNumber >= 0){
+                if (actuatorNumber >= 0) {
                     AbstractActuator actuator = actuatorList.get(actuatorNumber);
                     System.out.println("The selected actuator is: :" + actuator.getName());
                     //TODO: get list of actions of the actuator
 
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
-                    Operator selectedType = (Operator)operatorSelection.getSelectedItem();
+                    Operator selectedType = (Operator) operatorSelection.getSelectedItem();
 
                     //System.out.println(operatorSelection.getSelectedItem());
                     sensorSelection.removeAllItems();
@@ -88,8 +90,8 @@ public class MainScreenTest extends JFrame {
                     actActionSelection.removeAllItems();
 
                     loadActuatorsMethods(actuator);
-
                     refreshActionList();
+                    refreshActuatorState();
                 }
             }
         });
@@ -97,7 +99,7 @@ public class MainScreenTest extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 int actionNumber = actionsList.getSelectedIndex();
-                if (actionNumber >= 0){
+                if (actionNumber >= 0) {
 
                     //Falta carregar actions para um ficheiro para guardar ao desligar
                     Action action = actionList.get(actionNumber);
@@ -111,7 +113,7 @@ public class MainScreenTest extends JFrame {
 
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
-                    Operator selectedType = (Operator)operatorSelection.getSelectedItem();
+                    Operator selectedType = (Operator) operatorSelection.getSelectedItem();
 
                     sensorSelection.removeAllItems();
                     for (AbstractSensor sensor : sensorList) {
@@ -184,7 +186,7 @@ public class MainScreenTest extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 // TODO: This logic is repeated... refactor?
                 int sensorNumber = sensorsList.getSelectedIndex();
-                if (sensorNumber >= 0){
+                if (sensorNumber >= 0) {
                     AbstractSensor sensor = sensorList.get(sensorNumber);
                     int sensorId = sensorSelection.getSelectedIndex();
 
@@ -220,7 +222,7 @@ public class MainScreenTest extends JFrame {
                             new SensorReading(sensorId, sensorList.get(sensorId).getReading());
 
                     //Command Pattern
-                    List<AbstractActuator> actuatorsForAction=new ArrayList<>();
+                    List<AbstractActuator> actuatorsForAction = new ArrayList<>();
                     actuatorsForAction.add(actuator);
                     Action action = new Action(actuatorsForAction, conditions);
                     action.execute(sensorReadingClass);
@@ -232,12 +234,12 @@ public class MainScreenTest extends JFrame {
         });
     }
 
-    public List<String> loadActuatorsMethods(AbstractActuator actuator){
-        List<String> methods=new ArrayList<>();
+    public List<String> loadActuatorsMethods(AbstractActuator actuator) {
+        List<String> methods = new ArrayList<>();
 
         for (var method : actuator.getClass().getMethods()) {
-            if (method.getName().contains("set") && !method.getName().contains("setName")){
-                String variableName=method.getName().replaceAll("set","");
+            if (method.getName().contains("set") && !method.getName().contains("setName")) {
+                String variableName = method.getName().replaceAll("set", "");
                 actActionSelection.addItem(variableName);
                 System.out.println(variableName);
                 methods.add(variableName);
@@ -246,15 +248,23 @@ public class MainScreenTest extends JFrame {
         return methods;
     }
 
+    public void refreshActuatorState(){
+        int actuatorNumber = actuatorsList.getSelectedIndex();
+        if (actuatorNumber >= 0) {
+            AbstractActuator actuator = actuatorList.get(actuatorNumber);
+            actuatorState.setText(actuator.getState());
+        }
+    }
 
-    public void clearActionDetails(){
+
+    public void clearActionDetails() {
         actionName.setText("");
         sensorSelection.removeAllItems();
         operatorSelection.removeAllItems();
         controlValueInput.setText("");
     }
 
-    public void refreshActuatorsList(){
+    public void refreshActuatorsList() {
         actuatorListModel.removeAllElements();
         for (AbstractActuator actuator : actuatorList) {
             //System.out.println(actuator.toString());
@@ -262,14 +272,14 @@ public class MainScreenTest extends JFrame {
         }
     }
 
-    public void refreshSensorsList(){
+    public void refreshSensorsList() {
         sensorListModel.removeAllElements();
         for (AbstractSensor sensor : sensorList) {
             sensorListModel.addElement(sensor.getName());
         }
     }
 
-    public void refreshActionList(){
+    public void refreshActionList() {
         actionListModel.removeAllElements();
        /* for (Action action : actionList) {
             System.out.println("Adding action to list: " + action.getName());
@@ -279,7 +289,7 @@ public class MainScreenTest extends JFrame {
 
     //public void addActuatorToList(AbstractActuator actuator) throws IOException
     public void addActuatorToList(List<AbstractActuator> actuatorList) throws IOException {
-        synchronized (actuatorList){
+        synchronized (actuatorList) {
             this.actuatorList = actuatorList;
         }
 
@@ -287,10 +297,10 @@ public class MainScreenTest extends JFrame {
     }
 
     //public void addSensorToList(AbstractSensor sensor){
-    public void addSensorToList(List<AbstractSensor> sensor){
+    public void addSensorToList(List<AbstractSensor> sensor) {
         // TODO: Probably not needed (should be part of another component)
         //sensorList.add(sensor);
-        synchronized (sensorList){
+        synchronized (sensorList) {
             this.sensorList = sensor;
         }
         refreshSensorsList();
@@ -301,14 +311,14 @@ public class MainScreenTest extends JFrame {
         MainScreenTest mainscreen = new MainScreenTest();
         mainscreen.setVisible(true);
 
-        DiscoveryModule discoveryModule=new DiscoveryModule(actuatorList, sensorList);
+        DiscoveryModule discoveryModule = new DiscoveryModule(actuatorList, sensorList);
         discoveryModule.loadFiles();
-        synchronized (actuatorList){
+        synchronized (actuatorList) {
             //System.out.println(actuatorList.size());
             //Add files actuators to mainscreen
             mainscreen.addActuatorToList(discoveryModule.getActuatorsList());
         }
-        synchronized (sensorList){
+        synchronized (sensorList) {
             //System.out.println(sensorList.size());
             //Add files actuators to mainscreen
             mainscreen.addSensorToList(discoveryModule.getSensorList());
@@ -341,8 +351,7 @@ public class MainScreenTest extends JFrame {
             }*/
     }
 
-
-    public Integer getNumberOfActuators(){
+    public Integer getNumberOfActuators() {
         return actuatorList.size();
     }
 
