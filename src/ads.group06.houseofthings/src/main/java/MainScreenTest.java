@@ -91,6 +91,7 @@ public class MainScreenTest extends JFrame {
                     loadActuatorsMethods(actuator);
 
                     refreshActionList();
+                    refreshActuatorState();
                 }
             }
         });
