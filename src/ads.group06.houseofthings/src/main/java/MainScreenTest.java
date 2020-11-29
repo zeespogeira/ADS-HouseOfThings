@@ -9,10 +9,13 @@ import infrastructure.SensorReading;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.ComponentUI;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Timer;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -30,7 +33,6 @@ public class MainScreenTest extends JFrame {
     private JComboBox operatorSelection;
     private JTextField controlValueInput;
     private JComboBox sensorSelection;
-    private JComboBox actuatorAction;
     private JTextField sensorReading;
     private JComboBox actActionSelection;
     private JTextField textField1;
@@ -106,11 +108,9 @@ public class MainScreenTest extends JFrame {
                         sensorSelection.addItem(sensor.getName());
                     }
 
-                    actActionSelection.removeAllItems();
-
+                   // actActionSelection.removeAllItems();
 
                     loadActuatorsMethods(actuator);
-
 
                     refreshActionList();
                 }
@@ -173,6 +173,7 @@ public class MainScreenTest extends JFrame {
                     SensorReading sensorReadingClass =
                             new SensorReading(sensorId, sensorList.get(sensorId).getReading());
 
+                   // loadActuatorsMethods(actuator);
 
                     //Command Pattern
                     List<AbstractActuator> actuatorsForAction=new ArrayList<>();
@@ -231,14 +232,18 @@ public class MainScreenTest extends JFrame {
         });
     }
 
-    public void loadActuatorsMethods(AbstractActuator actuator){
+    public List<String> loadActuatorsMethods(AbstractActuator actuator){
+        List<String> methods=new ArrayList<>();
+
         for (var method : actuator.getClass().getMethods()) {
             if (method.getName().contains("set") && !method.getName().contains("setName")){
                 String variableName=method.getName().replaceAll("set","");
                 actActionSelection.addItem(variableName);
-                //System.out.println(method);
+                System.out.println(method);
+                methods.add(variableName);
             }
         }
+        return methods;
     }
 
 
@@ -334,8 +339,9 @@ public class MainScreenTest extends JFrame {
             while (it.hasNext()) {
                 System.out.println(it.next());
             }*/
-
     }
+
+
     public Integer getNumberOfActuators(){
         return actuatorList.size();
     }
