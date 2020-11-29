@@ -73,30 +73,6 @@ public class MainScreenTest extends JFrame {
                     AbstractActuator actuator = actuatorList.get(actuatorNumber);
                     System.out.println("The selected actuator is: :" + actuator.getName());
                     //TODO: get list of actions of the actuator
-                    //To Test
-                    /*int sensorId = 1;
-                    System.out.println(sensorId);
-                    Condition condition01 = new Condition(sensorId, 123, Operator.EQUAL);
-                    Condition condition02 = new Condition(sensorId, 124, Operator.HIGHER);
-                    Condition condition03 = new Condition(sensorId, 125, Operator.LOWER);
-                    List<Condition> conditions = new ArrayList<Condition>();
-                    conditions.add(condition01);
-                    conditions.add(condition02);
-                    conditions.add(condition03);
-
-
-                    SensorReading sensorReading = new SensorReading(sensorId, 100);
-                    Action action = new Action(actuatorList, conditions);
-                    action.execute(sensorReading);*/
-
-                    // Populating actions (for testing)
-                    /*ActionT action1 = new ActionT(actuator.getName() + " is cold", Operator.LOWER, 10, actuator);
-                    ActionT action2 = new ActionT(actuator.getName() + " is hot", Operator.HIGHER, 25, actuator);
-
-                    actionList.clear();
-                    actionList.add(action1);
-                    actionList.add(action2);*/
-                    // End data for testing
 
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
@@ -108,7 +84,7 @@ public class MainScreenTest extends JFrame {
                         sensorSelection.addItem(sensor.getName());
                     }
 
-                   // actActionSelection.removeAllItems();
+                    actActionSelection.removeAllItems();
 
                     loadActuatorsMethods(actuator);
 
@@ -161,7 +137,7 @@ public class MainScreenTest extends JFrame {
 
                     //To Test
                     int sensorId = sensorSelection.getSelectedIndex();
-                    System.out.println(sensorId);
+                    //System.out.println(sensorId);
                     //sensorSelection.setSelectedItem(sensorId);
 
                     //Command Pattern (Verificar porque é só 1 tipo)
