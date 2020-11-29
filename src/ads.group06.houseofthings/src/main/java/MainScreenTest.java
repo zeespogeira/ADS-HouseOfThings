@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Timer;
@@ -129,36 +130,46 @@ public class MainScreenTest extends JFrame {
         newActionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                //System.out.println("newActionButton");
                 // TODO: This logic is repeated... refactor?
                 int actuatorNumber = actuatorsList.getSelectedIndex();
                 //System.out.println(actuatorNumber);
                 if (actuatorNumber >= 0) {
-                   /* AbstractActuator actuator = actuatorList.get(actuatorNumber);
+                    controlValueInput.setText("0");
+                    actionName.setText("New action");
+
+                    AbstractActuator actuator = actuatorList.get(actuatorNumber);
 
                     //To Test
                     int sensorId = sensorSelection.getSelectedIndex();
-                    //System.out.println(sensorId);
+                    System.out.println("sensorID: " + sensorId);
                     //sensorSelection.setSelectedItem(sensorId);
 
+                    System.out.println("controlValueInput: "+controlValueInput.getText());
+                    System.out.println("sensorReading: "+sensorList.get(sensorId).getReading());
                     //Command Pattern (Verificar porque é só 1 tipo)
-                    Condition condition01 = new Condition(sensorId, Integer.valueOf(controlValueInput.getText()), Operator.valueOf((String) operatorSelection.getSelectedItem()));
-                    List<Condition> conditions = new ArrayList<Condition>();
+                   /* Condition condition01 = new Condition(sensorId, Double.valueOf(controlValueInput.getText()) ,
+                            Operator.valueOf((String) operatorSelection.getSelectedItem()));*/
+                    Condition condition01 = new Condition(sensorId, Double.valueOf(controlValueInput.getText()) ,
+                            Operator.LOWER);
+                    List<Condition> conditions = new ArrayList<>();
                     conditions.add(condition01);
-
 
                     SensorReading sensorReadingClass =
                             new SensorReading(sensorId, sensorList.get(sensorId).getReading());
 
-                   // loadActuatorsMethods(actuator);
+                    System.out.println(sensorReadingClass.toString());
+                    System.out.println(condition01.toString());
 
                     //Command Pattern
                     List<AbstractActuator> actuatorsForAction=new ArrayList<>();
                     actuatorsForAction.add(actuator);
-                    Action action = new Action(actuatorsForAction, conditions);
-                    action.execute(sensorReadingClass);
+                    Action action = new Action(actionName.getText(), actuatorsForAction, conditions);
 
-                    actionList.add(action);*/
+                    action.execute(sensorReadingClass);
+                    System.out.println(action.toString());
+                    actionList.add(action);
+
                     refreshActionList();
                 }
 
@@ -197,35 +208,35 @@ public class MainScreenTest extends JFrame {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("saveButton");
                 int actionNumber = actionsList.getSelectedIndex();
                 int actuatorNumber = actuatorsList.getSelectedIndex();
+                System.out.println(actionNumber);
                 if (actionNumber >= 0) {
                    /* ActionT action = actionList.get(actionNumber);
                     action.setName(actionName.getText());
                     action.setControlValue(Integer.valueOf(controlValueInput.getText()));
                     action.setOperator((Operator) operatorSelection.getSelectedItem());*/
-                    AbstractActuator actuator = actuatorList.get(actuatorNumber);
 
-                    //To Test
-                    int sensorId = sensorSelection.getSelectedIndex();
-                    //System.out.println(sensorId);
-                    //sensorSelection.setSelectedItem(sensorId);
+                   Action action=actionList.get(actionNumber);
+                    action.setName(actionName.getText());
+                    //System.out.println(operatorSelection.getSelectedItem());
 
-                    //Command Pattern (Verificar porque é só 1 tipo)
-                    Condition condition01 = new Condition(sensorId, Integer.valueOf(controlValueInput.getText()), Operator.valueOf((String) operatorSelection.getSelectedItem()));
-                    List<Condition> conditions = new ArrayList<>();
-                    conditions.add(condition01);
+                    Condition condition01 = new Condition(sensorSelection.getSelectedIndex(),
+                            Double.valueOf(controlValueInput.getText()),
+                            (Operator) operatorSelection.getSelectedItem());
 
-                    SensorReading sensorReadingClass =
-                            new SensorReading(sensorId, sensorList.get(sensorId).getReading());
+                    AbstractActuator actuator=action.getActuators().get(0);
+                    String method= (String) actActionSelection.getSelectedItem();
+                    try {
+                        actuator.getClass().getMethod("set"+method).invoke(acActionOption.getText());
+                    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    }
 
-                    //Command Pattern
-                    List<AbstractActuator> actuatorsForAction=new ArrayList<>();
-                    actuatorsForAction.add(actuator);
-                    Action action = new Action(actuatorsForAction, conditions);
-                    action.execute(sensorReadingClass);
+                    //Arrays.stream(Operator.values()).anyMatch((t) -> t.name().equals(controlValueInput.getText()));
+                    action.getConditions().add(0,condition01 );
+                    action.getActuators().add(0, actuator);
 
-                    actionList.add(action);
                     refreshActionList();
                 }
             }
@@ -239,7 +250,7 @@ public class MainScreenTest extends JFrame {
             if (method.getName().contains("set") && !method.getName().contains("setName")){
                 String variableName=method.getName().replaceAll("set","");
                 actActionSelection.addItem(variableName);
-                System.out.println(variableName);
+                //System.out.println(variableName);
                 methods.add(variableName);
             }
         }
@@ -251,7 +262,7 @@ public class MainScreenTest extends JFrame {
         actionName.setText("");
         sensorSelection.removeAllItems();
         operatorSelection.removeAllItems();
-        controlValueInput.setText("");
+        controlValueInput.setText("0");
     }
 
     public void refreshActuatorsList(){
@@ -270,11 +281,12 @@ public class MainScreenTest extends JFrame {
     }
 
     public void refreshActionList(){
+        //System.out.println("refreshActionList ");
         actionListModel.removeAllElements();
-       /* for (Action action : actionList) {
+        for (Action action : actionList) {
             System.out.println("Adding action to list: " + action.getName());
             actionListModel.addElement(action.getName());
-        }*/
+        }
     }
 
     //public void addActuatorToList(AbstractActuator actuator) throws IOException

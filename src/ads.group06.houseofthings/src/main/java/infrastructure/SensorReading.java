@@ -17,4 +17,12 @@ public class SensorReading {
     public double getValue(){
         return this.value;
     }
+
+    @Override
+    public String toString() {
+        return "SensorReading{" +
+                "sensorId=" + sensorId +
+                ", value=" + value +
+                '}';
+    }
 }

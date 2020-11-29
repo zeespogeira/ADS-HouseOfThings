@@ -5,16 +5,26 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Action implements IAction {
+    private String name;
     private List<AbstractActuator> actuators;
     private List<Condition> conditions;
 
-    public Action(List<AbstractActuator> actuators, List<Condition> conditions){
+    public Action(String name, List<AbstractActuator> actuators, List<Condition> conditions){
         this.actuators = actuators;
         this.conditions = conditions;
+        this.name=name;
     }
 
     public Action() {
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void execute(SensorReading sensorReading) {
@@ -29,6 +39,11 @@ public class Action implements IAction {
 
     public List<AbstractActuator> getActuators() {
         return actuators;
+        //s
+    }
+
+    public List<Condition> getConditions() {
+        return conditions;
         //s
     }
 
@@ -52,5 +67,14 @@ public class Action implements IAction {
         if(actuator != null){
             this.actuators.remove(actuator);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Action{" +
+                "name='" + name + '\'' +
+                ", actuators=" + actuators +
+                ", conditions=" + conditions +
+                '}';
     }
 }

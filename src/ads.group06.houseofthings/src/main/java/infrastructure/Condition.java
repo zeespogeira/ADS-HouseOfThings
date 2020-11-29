@@ -28,4 +28,14 @@ public class Condition {
     private void checkCondition(double value){
         this.isMet = Comparer.compare(referenceValue, operator, value);
     }
+
+    @Override
+    public String toString() {
+        return "Condition{" +
+                "sensorId=" + sensorId +
+                ", referenceValue=" + referenceValue +
+                ", operator=" + operator +
+                ", isMet=" + isMet +
+                '}';
+    }
 }

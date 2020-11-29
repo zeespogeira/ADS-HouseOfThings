@@ -39,7 +39,7 @@ public class ActionTests {
         conditions.add(condition03);
 
         SensorReading sensorReading = new SensorReading(sensorId, 100);
-        Action action = new Action(actuators, conditions);
+        Action action = new Action("test", actuators, conditions);
         action.execute(sensorReading);
 
 

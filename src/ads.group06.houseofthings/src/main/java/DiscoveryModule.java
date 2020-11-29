@@ -163,7 +163,7 @@ public class DiscoveryModule extends Thread{
         for(int i=0; i<cols.length; i++){
             cols[i]=cols[i].replaceAll("\\s+","");
         }
-        String classe=(cols[1].substring(0, 1).toUpperCase() + cols[1].substring(1).toLowerCase())
+        String classe=(cols[1].substring(0, 1).toUpperCase() + cols[1].substring(1))
                 .concat(cols[2].substring(0, 1).toUpperCase() + cols[2].substring(1).toLowerCase());
         classe=classe.replaceAll("\\s+","");
 

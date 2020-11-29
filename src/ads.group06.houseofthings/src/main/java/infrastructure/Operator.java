@@ -21,5 +21,16 @@ public enum Operator {
     public String toString() {
         return this.name;
     }
+
+    public static boolean contains(String value) {
+
+        for (Operator operator : Operator.values()) {
+            if (operator.name().equals(value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
