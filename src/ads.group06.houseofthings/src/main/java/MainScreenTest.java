@@ -212,15 +212,9 @@ public class MainScreenTest extends JFrame {
                     System.out.println("set"+method);
                     System.out.println(Integer.valueOf(acActionOption.getText()));
                     try {
-
                         actuator.getClass().getDeclaredMethod("set" + method, Integer.class).
                                 invoke(actuator, Integer.valueOf(acActionOption.getText()));
-                    } catch (IllegalAccessException  e) {
-                        System.err.println("Nao aparece");
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
+                    } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     }
 
                     //Arrays.stream(Operator.values()).anyMatch((t) -> t.name().equals(controlValueInput.getText()));
@@ -390,18 +384,14 @@ public class MainScreenTest extends JFrame {
             ObjectInputStream ois = new ObjectInputStream(fis);
             List<Action> actions = (List<Action>) ois.readObject();
 
-            actionList.addAll(actions);
-
-            //Name isnt' being instantiated. However, the file has a name
+            //Name isnt' being instantiated. However, in the file it has a name
             Iterator it=actions.iterator();
             while(it.hasNext()){
                 System.out.println(it.next());
             }
 
             ois.close();
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
         }
 
     }
