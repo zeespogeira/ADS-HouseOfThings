@@ -154,7 +154,7 @@ public class MainScreenTest extends JFrame {
                     Action action = new Action(actionName.getText(), actuatorsForAction, conditions);
 
                     action.execute(sensorReadingClass);
-                    System.out.println(action.toString());
+                    //System.out.println(action.toString());
                     actionList.add(action);
 
                     refreshActionList();
@@ -175,6 +175,7 @@ public class MainScreenTest extends JFrame {
                     action = null;
                     refreshActionList();
                     clearActionDetails();
+                    save();
                 }
             }
         });
@@ -209,12 +210,33 @@ public class MainScreenTest extends JFrame {
 
                     AbstractActuator actuator=action.getActuators().get(0);
                     String method= (String) actActionSelection.getSelectedItem();
-                    System.out.println("set"+method);
-                    System.out.println(Integer.valueOf(acActionOption.getText()));
+                    //System.out.println("set"+method);
+                    //System.out.println(acActionOption.getText());
+
+                    //If the variable is a integer
                     try {
                         actuator.getClass().getDeclaredMethod("set" + method, Integer.class).
                                 invoke(actuator, Integer.valueOf(acActionOption.getText()));
                     } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                        //If is not a integer
+                        try {
+                            //if is the state (boolean ->on/off)
+                            if(("set" + method).equalsIgnoreCase("setState")){
+                                if(acActionOption.getText().equalsIgnoreCase("on")){ //if is on
+                                    actuator.getClass().getMethod("set" + method, boolean.class).
+                                            invoke(actuator, true);
+                                } else if(acActionOption.getText().equalsIgnoreCase("off")){ //if is off
+                                    actuator.getClass().getMethod("set" + method, boolean.class).
+                                            invoke(actuator, false);
+                                }
+                            }
+                            // if is a String (need do re-check)
+                            else{
+                                actuator.getClass().getMethod("set" + method, String.class).
+                                        invoke(actuator, acActionOption.getText());
+                            }
+                        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
+                        }
                     }
 
                     //Arrays.stream(Operator.values()).anyMatch((t) -> t.name().equals(controlValueInput.getText()));
@@ -228,11 +250,7 @@ public class MainScreenTest extends JFrame {
                         System.out.println(it.next());
                     }*/
 
-                    try {
-                        save();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    save();
                 }
             }
         });
@@ -361,19 +379,25 @@ public class MainScreenTest extends JFrame {
         }
     }
 
-    public void save() throws IOException {
-        FileOutputStream fos = new FileOutputStream("actions.txt");
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
+    public void save() {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream("actions.txt");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-        System.out.println("Save");
-        Iterator it=actionList.iterator();
-        while(it.hasNext()){
-            System.out.println(it.next());
+            System.out.println("Save");
+            Iterator it=actionList.iterator();
+            while(it.hasNext()){
+                System.out.println(it.next());
+            }
+
+            oos.writeObject(actionList);
+
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        oos.writeObject(actionList);
-
-        oos.close();
     }
 
     public void load() {
@@ -383,6 +407,8 @@ public class MainScreenTest extends JFrame {
             fis = new FileInputStream("actions.txt");
             ObjectInputStream ois = new ObjectInputStream(fis);
             List<Action> actions = (List<Action>) ois.readObject();
+
+            actionList.addAll(actions);
 
             //Name isnt' being instantiated. However, in the file it has a name
             Iterator it=actions.iterator();

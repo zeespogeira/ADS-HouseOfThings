@@ -11,6 +11,8 @@ public class Action implements IAction, Serializable {
     private List<AbstractActuator> actuators;
     private List<Condition> conditions;
 
+    //FALTA valor para o act (quando a condição se concretizar) [valores do action do form da parte direita] ?
+
     public Action(String name, List<AbstractActuator> actuators, List<Condition> conditions){
         this.actuators = actuators;
         this.conditions = conditions;
