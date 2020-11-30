@@ -13,7 +13,7 @@ import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -64,6 +64,9 @@ public class MainScreenTest extends JFrame {
         actionList = new ArrayList<>();
         actionListModel = new DefaultListModel();
         actionsList.setModel(actionListModel);
+
+        load();
+
 
         sensorReading.setEditable(false);
 
@@ -200,7 +203,6 @@ public class MainScreenTest extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 //System.out.println("saveButton");
                 int actionNumber = actionsList.getSelectedIndex();
-                System.out.println(actionNumber);
                 if (actionNumber >= 0) {
 
                     Action action=actionList.get(actionNumber);
@@ -227,6 +229,12 @@ public class MainScreenTest extends JFrame {
                     while (it.hasNext()){
                         System.out.println(it.next());
                     }*/
+
+                    try {
+                        save();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -353,6 +361,45 @@ public class MainScreenTest extends JFrame {
             AbstractActuator actuator = actuatorList.get(actuatorNumber);
             actuatorState.setText(actuator.getState());
         }
+    }
+
+    public void save() throws IOException {
+        FileOutputStream fos = new FileOutputStream("actions.txt");
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+        System.out.println("Save");
+        Iterator it=actionList.iterator();
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        oos.writeObject(actionList);
+
+        oos.close();
+    }
+
+    public void load() {
+
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream("actions.txt");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            List<Action> actions = (List<Action>) ois.readObject();
+
+            actionList.addAll(actions);
+
+            Iterator it=actions.iterator();
+            while(it.hasNext()){
+                System.out.println(it.next());
+            }
+            System.out.println(actionList.get(0).getActuators().get(0).getName());
+
+            ois.close();
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        } catch (ClassNotFoundException e) {
+        }
+
     }
 
 }

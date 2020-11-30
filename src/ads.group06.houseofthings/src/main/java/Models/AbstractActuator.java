@@ -2,14 +2,21 @@ package Models;
 
 import Interface.IActuators;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 //Abstract Factory
 public abstract class AbstractActuator {
 
     static final AtomicInteger idGen = new AtomicInteger(1);
+
     private Integer id;
     protected String name;
+
+    public AbstractActuator(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public AbstractActuator(String name){
         this.name = name;
@@ -36,6 +43,6 @@ public abstract class AbstractActuator {
     public abstract void act(boolean state);
     @Override
     public String toString() {
-        return "id=" + id + ", name=" + name + '\'';
+        return "id=" + id + ", name=" + name;
     }
 }

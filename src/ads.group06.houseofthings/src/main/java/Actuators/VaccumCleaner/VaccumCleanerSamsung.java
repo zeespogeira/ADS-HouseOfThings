@@ -2,11 +2,17 @@ package Actuators.VaccumCleaner;
 
 import infrastructure.RandomValue;
 
-public class VaccumCleanerSamsung extends VaccumCleaner {
-    Integer velocity;
+import java.io.Serializable;
 
+public class VaccumCleanerSamsung extends VaccumCleaner implements Serializable {
+    Integer velocity;
+    //private static final long serialVersionUID = 6529685098267757690L;
     public VaccumCleanerSamsung() {
         this.setVelocity(0);
+    }
+
+    public VaccumCleanerSamsung(Integer velocity) {
+        this.velocity = velocity;
     }
 
     public Integer getVelocity() {

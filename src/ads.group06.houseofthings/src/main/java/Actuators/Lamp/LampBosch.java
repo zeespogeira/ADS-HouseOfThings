@@ -2,11 +2,13 @@ package Actuators.Lamp;
 
 import infrastructure.RandomValue;
 
+import java.io.Serializable;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class LampBosch extends Lamp {
+public class LampBosch extends Lamp implements Serializable {
     Integer ilumination;
+    //private static final long serialVersionUID = 6529685098267757690L;
 
     //Construtores para teste
     /*public LampBosch(String ilumination) {
@@ -22,7 +24,9 @@ public class LampBosch extends Lamp {
         this.setIlumination(0);
     }
 
-
+    public LampBosch(Integer ilumination) {
+        this.ilumination = ilumination;
+    }
 
     public Integer getIlumination() {
         return ilumination;

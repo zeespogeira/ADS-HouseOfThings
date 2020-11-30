@@ -11,6 +11,15 @@ public abstract class Lamp extends AbstractActuator {
         this.isOn=false;
     }
 
+    public Lamp(String name, boolean isOn) {
+        super(name);
+        this.isOn = isOn;
+    }
+
+    public Lamp(boolean isOn) {
+        this.isOn = isOn;
+    }
+
     /*public Lamp(boolean isOn) {
         this.isOn = isOn;
         }*/

@@ -1,18 +1,20 @@
 package infrastructure;
 import Interface.IAction;
 import Models.AbstractActuator;
+
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Action implements IAction {
-    private String name;
+public class Action implements IAction, Serializable {
+    private String actionName;
     private List<AbstractActuator> actuators;
     private List<Condition> conditions;
 
     public Action(String name, List<AbstractActuator> actuators, List<Condition> conditions){
         this.actuators = actuators;
         this.conditions = conditions;
-        this.name=name;
+        this.actionName=name;
     }
 
     public Action() {
@@ -20,11 +22,11 @@ public class Action implements IAction {
     }
 
     public String getName() {
-        return name;
+        return actionName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.actionName = name;
     }
 
     public void execute(SensorReading sensorReading) {
@@ -72,8 +74,8 @@ public class Action implements IAction {
     @Override
     public String toString() {
         return "Action{" +
-                "name='" + name + '\'' +
-                ", actuators=" + actuators +
+                "name='" + actionName + '\'' +
+                ", actuators=" + actuators.toString() +
                 ", conditions=" + conditions +
                 '}';
     }

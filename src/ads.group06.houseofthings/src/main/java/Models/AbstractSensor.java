@@ -2,9 +2,10 @@ package Models;
 
 import Interface.ISensor;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class AbstractSensor implements ISensor {
+public abstract class AbstractSensor implements Serializable {
     static final AtomicInteger idGen = new AtomicInteger(1);
     private Integer id;
     private String name;
@@ -22,6 +23,8 @@ public abstract class AbstractSensor implements ISensor {
 
 
     public abstract AbstractSensor sense();
+
+    public abstract Double getReading();
 
    public int getId(){
         return this.id;

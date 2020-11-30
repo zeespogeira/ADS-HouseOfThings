@@ -1,6 +1,10 @@
 package infrastructure;
 
-public class Condition {
+import java.io.Serializable;
+
+public class Condition implements Serializable {
+    //private static final long serialVersionUID = 6529685098267757690L;
+
     private int sensorId;
     private double referenceValue;
     private Operator operator;

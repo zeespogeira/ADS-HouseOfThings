@@ -9,6 +9,14 @@ public abstract class VaccumCleaner extends AbstractActuator {
         this.isOn=false;
     }
 
+    public VaccumCleaner(String name, boolean isOn) {
+        super(name);
+        this.isOn = isOn;
+    }
+
+    public VaccumCleaner(boolean isOn) {
+        this.isOn = isOn;
+    }
 
     @Override
     public void act(boolean state) {
