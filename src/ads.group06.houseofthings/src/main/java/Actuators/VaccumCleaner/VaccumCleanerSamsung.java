@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class VaccumCleanerSamsung extends VaccumCleaner implements Serializable {
     Integer velocity;
-    //private static final long serialVersionUID = 6529685098267757690L;
+
     public VaccumCleanerSamsung() {
         this.setVelocity(0);
     }

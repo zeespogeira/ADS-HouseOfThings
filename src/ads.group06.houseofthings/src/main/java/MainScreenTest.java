@@ -103,12 +103,7 @@ public class MainScreenTest extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 int actionNumber = actionsList.getSelectedIndex();
                 if (actionNumber >= 0){
-
-                    //Falta carregar actions para um ficheiro para guardar ao desligar
                     Action action = actionList.get(actionNumber);
-
-                    //Falta carregar conditions para um ficheiro para guardar ao desligar
-
 
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
@@ -214,9 +209,18 @@ public class MainScreenTest extends JFrame {
 
                     AbstractActuator actuator=action.getActuators().get(0);
                     String method= (String) actActionSelection.getSelectedItem();
+                    System.out.println("set"+method);
+                    System.out.println(Integer.valueOf(acActionOption.getText()));
                     try {
-                        actuator.getClass().getMethod("set"+method).invoke(acActionOption.getText());
-                    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+
+                        actuator.getClass().getDeclaredMethod("set" + method, Integer.class).
+                                invoke(actuator, Integer.valueOf(acActionOption.getText()));
+                    } catch (IllegalAccessException  e) {
+                        System.err.println("Nao aparece");
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
                     }
 
                     //Arrays.stream(Operator.values()).anyMatch((t) -> t.name().equals(controlValueInput.getText()));
@@ -281,7 +285,7 @@ public class MainScreenTest extends JFrame {
         //System.out.println("refreshActionList ");
         actionListModel.removeAllElements();
         for (Action action : actionList) {
-            System.out.println("Adding action to list: " + action.getName());
+            //System.out.println("Adding action to list: " + action.getName());
             actionListModel.addElement(action.getName());
         }
     }
@@ -295,7 +299,7 @@ public class MainScreenTest extends JFrame {
         refreshActuatorsList();
     }
 
-    //public void addSensorToList(AbstractSensor sensor){
+
     public void addSensorToList(List<AbstractSensor> sensor){
         // TODO: Probably not needed (should be part of another component)
         //sensorList.add(sensor);
@@ -388,11 +392,11 @@ public class MainScreenTest extends JFrame {
 
             actionList.addAll(actions);
 
+            //Name isnt' being instantiated. However, the file has a name
             Iterator it=actions.iterator();
             while(it.hasNext()){
                 System.out.println(it.next());
             }
-            System.out.println(actionList.get(0).getActuators().get(0).getName());
 
             ois.close();
         } catch (FileNotFoundException e) {
