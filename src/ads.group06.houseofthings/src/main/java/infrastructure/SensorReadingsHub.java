@@ -11,7 +11,8 @@ public class SensorReadingsHub {
     private List<IAction> actions;
     private Queue<SensorReading> sensorReadings;
 
-    public SensorReadingsHub(List<IAction> actions){
+    //instanciar 1 vez e depois passar como argumento
+    private SensorReadingsHub(List<IAction> actions){
         this.actions = actions;
         sensorReadings = new PriorityQueue(100);
     }
