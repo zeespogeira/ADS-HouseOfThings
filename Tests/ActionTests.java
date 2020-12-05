@@ -16,11 +16,11 @@ public class ActionTests {
     @Test
     public void ActionTest_One() {
         int sensorId = 1;
-        Condition condition01 = new Condition(sensorId, 123, Operator.EQUAL);
+        /*Condition condition01 = new Condition(sensorId, 123, Operator.EQUAL);
         Condition condition02 = new Condition(sensorId, 124, Operator.HIGHER);
         Condition condition03 = new Condition(sensorId, 125, Operator.LOWER);
 
-        /*
+
         Lamp lampBosch = new LampBosch();
         lampBosch.setState(true);
         lampBosch.act(lampBosch.getisOn());
@@ -38,9 +38,9 @@ public class ActionTests {
         conditions.add(condition01);
         conditions.add(condition02);
         conditions.add(condition03);
-*/
+
         SensorReading sensorReading = new SensorReading(sensorId, 100);
-        /*Action action = new Action("test", actuators, conditions);
+        Action action = new Action("test", actuators, conditions);
         action.execute(sensorReading);*/
 
 

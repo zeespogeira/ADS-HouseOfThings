@@ -42,7 +42,7 @@ public class LampBosch extends Lamp implements Serializable {
     @Override
     public void act(boolean state,  ActuatorAction actuatorAction) {
         //if need to turn ON and the actuator is OFF then turn ON
-        if(state && super.getisOn() == false){
+        /*if(state && super.getisOn() == false){
             setState(true);
             RandomValue value=new RandomValue(0, 100);
             setIlumination(value.getRandom());
@@ -52,6 +52,18 @@ public class LampBosch extends Lamp implements Serializable {
         if(state == false && super.getisOn()){
             setState(false);
             setIlumination(0);
+        }*/
+
+        if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
+            if(actuatorAction.getValue().equalsIgnoreCase("on")){ //if is on
+                super.setState(true);
+                System.out.println("On");
+                RandomValue value=new RandomValue(0, 100);
+                setIlumination(value.getRandom());
+            } else if(actuatorAction.getValue().equalsIgnoreCase("off")){ //if is off
+                setState(false);
+                setIlumination(0);
+            }
         }
     }
 

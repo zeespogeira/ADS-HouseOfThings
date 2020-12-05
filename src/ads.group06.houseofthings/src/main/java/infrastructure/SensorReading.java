@@ -1,16 +1,18 @@
 package infrastructure;
 
+import Models.AbstractSensor;
+
 public class SensorReading {
-    private int sensorId;
+    private AbstractSensor sensor;
     private double value;
 
-    public SensorReading(int sensorId, double value){
-        this.sensorId = sensorId;
+    public SensorReading(AbstractSensor sensor, double value){
+        this.sensor = sensor;
         this.value = value;
     }
 
-    public int getSensorId(){
-        return this.sensorId;
+    public AbstractSensor getSensorId(){
+        return this.sensor;
     }
 
     public double getValue(){
@@ -20,7 +22,7 @@ public class SensorReading {
     @Override
     public String toString() {
         return "SensorReading{" +
-                "sensorId=" + sensorId +
+                "sensor=" + sensor +
                 ", value=" + value +
                 '}';
     }

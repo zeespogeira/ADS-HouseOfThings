@@ -9,7 +9,8 @@ public abstract class Humidity extends AbstractSensor {
 
     public Humidity() {
         RandomValue randomValue=new RandomValue(0, 50);
-        this.humidity=Double.valueOf(randomValue.getRandom());
+        //this.humidity=Double.valueOf(randomValue.getRandom());
+        this.humidity=10.0;
     }
 
     /*public Humidity(String humidity) {
@@ -18,8 +19,9 @@ public abstract class Humidity extends AbstractSensor {
 
     @Override
     public AbstractSensor sense() {
-        RandomValue randomValue=new RandomValue(0, 50);
-        this.humidity=Double.valueOf(randomValue.getRandom());
+        //RandomValue randomValue=new RandomValue(0, 50);
+        //this.humidity=Double.valueOf(randomValue.getRandom());
+        this.humidity=10.0;
         return this;
     }
 

@@ -1,6 +1,4 @@
 package Actuators.Curtains;
-import Actuators.ActuatorAction;
-import Actuators.ActuatorActionInteger;
 import Models.AbstractActuator;
 
 import java.io.Serializable;
@@ -52,6 +50,8 @@ public abstract class Curtain extends AbstractActuator implements Serializable {
             setState(false);
             this.percentage=0;
         }
+
+
     }
 
 /*

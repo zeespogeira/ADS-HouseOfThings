@@ -20,6 +20,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+//Quando crio a acao nao esta a ver se esta ser comprida ou nao
 public class MainScreenTest extends JFrame {
     private JPanel panelMain;
     private JList actuatorsList;
@@ -67,7 +68,6 @@ public class MainScreenTest extends JFrame {
 
         load();
 
-
         sensorReading.setEditable(false);
 
         actuatorsList.addListSelectionListener(new ListSelectionListener() {
@@ -75,8 +75,7 @@ public class MainScreenTest extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 int actuatorNumber = actuatorsList.getSelectedIndex();
                 if (actuatorNumber >= 0){
-                    AbstractActuator actuator = actuatorList.get(actuatorNumber);
-                    System.out.println("The selected actuator is: :" + actuator.getName());
+                    System.out.println("The selected actuator is: :" + actuatorList.get(actuatorNumber).getName());
                     //TODO: get list of actions of the actuator
 
                     operatorSelection.removeAllItems();
@@ -91,7 +90,7 @@ public class MainScreenTest extends JFrame {
 
                     actActionSelection.removeAllItems();
 
-                    loadActuatorsMethods(actuator);
+                    loadActuatorsMethods(actuatorList.get(actuatorNumber));
 
                     refreshActionList();
                     refreshActuatorState();
@@ -128,37 +127,27 @@ public class MainScreenTest extends JFrame {
                     controlValueInput.setText("0");
                     actionName.setText("New action");
 
-                    AbstractActuator actuator = actuatorList.get(actuatorNumber);
-
                     int sensorId = sensorSelection.getSelectedIndex();
-                    /*System.out.println("sensorID: " + sensorId);
-                    System.out.println("controlValueInput: "+controlValueInput.getText());
-                    System.out.println("sensorReading: "+sensorList.get(sensorId).getReading());*/
+                    if(sensorId>=0){
+                        AbstractSensor sensor=sensorList.get(sensorId);
+                        //Command Pattern (Verificar porque é só 1 tipo)
+                        //Default value
+                        Condition condition01 = new Condition(sensor, Double.valueOf(controlValueInput.getText()) ,
+                                Operator.LOWER);
+                        List<Condition> conditions = new ArrayList<>();
+                        conditions.add(condition01);
 
-                    //Command Pattern (Verificar porque é só 1 tipo)
-                    //Default value
-                    Condition condition01 = new Condition(sensorId, Double.valueOf(controlValueInput.getText()) ,
-                            Operator.LOWER);
-                    List<Condition> conditions = new ArrayList<>();
-                    conditions.add(condition01);
+                        //Command Pattern
+                        List<AbstractActuator> actuatorsForAction=new ArrayList<>();
+                        actuatorsForAction.add(actuatorList.get(actuatorNumber));
 
-                    /*SensorReading sensorReadingClass =
-                            new SensorReading(sensorId, sensorList.get(sensorId).getReading());*/
+                        ActuatorAction actuatorAction=new ActuatorAction("", "");
 
-                    //System.out.println(sensorReadingClass.toString());
-                    //System.out.println(condition01.toString());
-
-                    //Command Pattern
-                    List<AbstractActuator> actuatorsForAction=new ArrayList<>();
-                    actuatorsForAction.add(actuator);
-
-                    ActuatorAction actuatorAction=new ActuatorAction("", 0.0);
-                    Action action = new Action(actionName.getText(), actuatorsForAction, conditions, actuatorAction);
-
-                    action.execute(sensorList.get(sensorId));
-                    //System.out.println(action.toString());
-                    actionList.add(action);
-
+                        Action action = new Action(actionName.getText(), actuatorsForAction, conditions, actuatorAction);
+                        action.execute(sensorList.get(sensorId));
+                        actionList.add(action);
+                        //updateActuatorListFromActionsFile();
+                    }
                     refreshActionList();
                 }
 
@@ -190,11 +179,6 @@ public class MainScreenTest extends JFrame {
                 int sensorNumber = sensorsList.getSelectedIndex();
                 if (sensorNumber >= 0){
                     AbstractSensor sensor = sensorList.get(sensorNumber);
-                   // int sensorId = sensorSelection.getSelectedIndex();
-
-                    //SensorReading sensorReadingClass = new SensorReading(sensorId, Double.valueOf((Double) sensor.getReading()));
-                    //sensorReading.setText(String.valueOf(sensorReadingClass.getValue() + " " + sensor.getMeasuringUnit()));
-
                     sensorReading.setText(String.valueOf(sensor.getReading() + " " + sensor.getMeasuringUnit()));
                 }
             }
@@ -210,54 +194,37 @@ public class MainScreenTest extends JFrame {
                     Action action=actionList.get(actionNumber);
                     action.setName(actionName.getText());
 
-                    Condition condition01 = new Condition(sensorSelection.getSelectedIndex(),
-                            Double.valueOf(controlValueInput.getText()),
-                            (Operator) operatorSelection.getSelectedItem());
+                    int sensorId = sensorSelection.getSelectedIndex();
+                    System.out.println(sensorId + "\n " + sensorList.get(sensorId).getName());
+                    if(sensorId>=0) {
+                        AbstractSensor sensor = sensorList.get(sensorId);
+                        Condition condition01 = new Condition(sensor,
+                                Double.valueOf(controlValueInput.getText()),
+                                (Operator) operatorSelection.getSelectedItem());
 
-                    AbstractActuator actuator=action.getActuators().get(0);
-                    String method= (String) actActionSelection.getSelectedItem();
-                    //System.out.println("set"+method);
-                    //System.out.println(acActionOption.getText());
+                        AbstractActuator actuator = action.getActuators().get(0);
+                        String method = (String) actActionSelection.getSelectedItem();
+                        //System.out.println("set"+method);
+                        //System.out.println(acActionOption.getText());
 
-                    //If the variable is a integer
-                    //ALTERAR ESTA PARTE
-                    try {
-                        actuator.getClass().getDeclaredMethod("set" + method, Integer.class).
-                                invoke(actuator, Integer.valueOf(acActionOption.getText()));
-                    } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                        //If is not a integer
-                        try {
-                            //if is the state (boolean ->on/off)
-                            if(("set" + method).equalsIgnoreCase("setState")){
-                                if(acActionOption.getText().equalsIgnoreCase("on")){ //if is on
-                                    actuator.getClass().getMethod("set" + method, boolean.class).
-                                            invoke(actuator, true);
-                                } else if(acActionOption.getText().equalsIgnoreCase("off")){ //if is off
-                                    actuator.getClass().getMethod("set" + method, boolean.class).
-                                            invoke(actuator, false);
-                                }
-                            }
-                            // if is a String (need do re-check)
-                            else{
-                                actuator.getClass().getMethod("set" + method, String.class).
-                                        invoke(actuator, acActionOption.getText());
-                            }
-                        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
-                        }
-                    }
+                        action.getConditions().set(0, condition01);
+                        action.getActuators().set(0, action.getActuators().get(0));
+                        action.getActuatorAction().setName(method);
+                        action.getActuatorAction().setValue(acActionOption.getText());
 
-                    //Arrays.stream(Operator.values()).anyMatch((t) -> t.name().equals(controlValueInput.getText()));
-                    action.getConditions().set(0,condition01 );
-                    action.getActuators().set(0, actuator);
+                        //TESTAR ISTO
+                        actuatorList.set(actuatorList.indexOf(actuator), action.getActuators().get(0));
 
-                    refreshActionList();
-                    sensorReadingsHub.addAction(action);
+                        refreshActionList();
+                        sensorReadingsHub.addAction(action);
+                        action.execute(sensorList.get(action.getConditions().get(0).getSensor().getId()));
+                        updateActuatorListFromActionsFile();
 
                     /*Iterator it=actionList.iterator();
                     while (it.hasNext()){
                         System.out.println(it.next());
                     }*/
-
+                    }
                     save();
                 }
             }
@@ -289,7 +256,6 @@ public class MainScreenTest extends JFrame {
     public void refreshActuatorsList(){
         actuatorListModel.removeAllElements();
         for (AbstractActuator actuator : actuatorList) {
-            //System.out.println(actuator.toString());
             actuatorListModel.addElement(actuator.getName());
         }
     }
@@ -315,7 +281,6 @@ public class MainScreenTest extends JFrame {
         synchronized (actuatorList){
             this.actuatorList = actuatorList;
         }
-
         refreshActuatorsList();
     }
 
@@ -337,7 +302,9 @@ public class MainScreenTest extends JFrame {
 
     public void refreshActuatorState(){
         int actuatorNumber = actuatorsList.getSelectedIndex();
+
         if (actuatorNumber >= 0) {
+            System.out.println(getActuatorFromList(actuatorList.get(actuatorNumber)));
             AbstractActuator actuator = actuatorList.get(actuatorNumber);
             actuatorState.setText(actuator.getState());
         }
@@ -349,12 +316,12 @@ public class MainScreenTest extends JFrame {
             fos = new FileOutputStream("actions.txt");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-            System.out.println("Save");
+            /*System.out.println("Save");
             Iterator it=actionList.iterator();
             while(it.hasNext()){
                 System.out.println(it.next());
             }
-
+*/
             oos.writeObject(actionList);
 
             oos.close();
@@ -365,7 +332,6 @@ public class MainScreenTest extends JFrame {
     }
 
     public void load() {
-
         FileInputStream fis = null;
         try {
             fis = new FileInputStream("actions.txt");
@@ -374,17 +340,63 @@ public class MainScreenTest extends JFrame {
 
             actionList.addAll(actions);
 
-            //Name isnt' being instantiated. However, in the file it has a name
-            Iterator it=actions.iterator();
+           /* Iterator it=actions.iterator();
             while(it.hasNext()){
                 System.out.println(it.next());
-            }
-
-            sensorReadingsHub.addActions(actionList);
+            }*/
             ois.close();
-        } catch (IOException | ClassNotFoundException e) {
+            //updateActuatorListFromActionsFile();
+        } catch (IOException e) {
+           e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
+    }
+
+    public void updateActuatorListFromActionsFile(){
+        for (Action action:actionList
+        ) {
+            System.out.println("update: "+action);
+            //actuatorList.stream().anyMatch(act->act.equals(actuator))
+            for(int i=0; i<actuatorList.size(); i++){
+                if(actuatorList.get(i).equals(action.getActuators().get(0))){
+                    actuatorList.set(i, action.getActuators().get(0));
+                }
+            }
+        }
+    }
+
+    public AbstractSensor getSensorFromList(AbstractSensor abstractSensor){
+        for (AbstractSensor sensor:sensorList
+             ) {
+            if(sensor.equals(abstractSensor))
+                return sensor;
+        }
+        return null;
+    }
+
+    public AbstractActuator getActuatorFromList(AbstractActuator abstractActuator){
+        for (AbstractActuator actuator:actuatorList
+        ) {
+            if(actuator.equals(abstractActuator))
+                return actuator;
+        }
+        return null;
+    }
+
+    public void checkActionsFromFile(){
+       //
+        for (Action action: actionList
+        ) {
+            //System.out.println("execute actions");
+            //System.out.println(getSensorFromList(action.getConditions().get(0).getSensor()));
+            action.execute(getSensorFromList(action.getConditions().get(0).getSensor()));
+        }
+        updateActuatorListFromActionsFile();
+        refreshActuatorState();
+
+        sensorReadingsHub.addActions(actionList);
     }
 
     public static void main(String[] args) throws IOException {
@@ -394,19 +406,16 @@ public class MainScreenTest extends JFrame {
         DiscoveryModule discoveryModule=new DiscoveryModule(actuatorList, sensorList, mainscreen.sensorReadingsHub);
         discoveryModule.loadFiles();
 
-
-
+        synchronized (sensorList){
+            mainscreen.addSensorToList(discoveryModule.getSensorList());
+        }
 
         synchronized (actuatorList){
-            //System.out.println(actuatorList.size());
             //Add files actuators to mainscreen
             mainscreen.addActuatorToList(discoveryModule.getActuatorsList());
         }
-        synchronized (sensorList){
-            //System.out.println(sensorList.size());
-            //Add files actuators to mainscreen
-            mainscreen.addSensorToList(discoveryModule.getSensorList());
-        }
+
+        mainscreen.checkActionsFromFile();
 
         ExecutorService service = Executors.newFixedThreadPool(4);
         service.submit(new Runnable() {

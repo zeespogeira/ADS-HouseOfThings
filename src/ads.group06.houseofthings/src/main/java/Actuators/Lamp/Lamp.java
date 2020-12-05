@@ -2,10 +2,11 @@ package Actuators.Lamp;
 import Actuators.ActuatorAction;
 import Models.AbstractActuator;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-public abstract class Lamp extends AbstractActuator {
+public abstract class Lamp extends AbstractActuator implements Serializable {
     private boolean isOn;
 
     public Lamp() {
@@ -41,13 +42,22 @@ public abstract class Lamp extends AbstractActuator {
     @Override
     public void act(boolean state, ActuatorAction actuatorAction) {
         //if need to turn ON and the actuator is OFF then turn ON
-        if(state && isOn == false){
+        /*if(state && isOn == false){
             setState(true);
         }
 
         //if need to turn OFF and the actuator is ON then turn OFF
         if(state == false && isOn){
             setState(false);
+        }
+*/
+        if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
+
+            if(actuatorAction.getValue().equalsIgnoreCase("on")){ //if is on
+                setState(true);
+            } else if(actuatorAction.getValue().equalsIgnoreCase("off")){ //if is off
+               setState(false);
+            }
         }
     }
 
@@ -67,5 +77,9 @@ public abstract class Lamp extends AbstractActuator {
     @Override
     public String getState() {
         return ((this.getisOn()) ? "On" : "Off");
+        /*if(this.getisOn()==true){
+            return "On";
+        }
+        return "Off";*/
     }
 }

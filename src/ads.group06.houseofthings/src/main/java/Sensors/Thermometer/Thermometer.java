@@ -9,8 +9,9 @@ public abstract class Thermometer extends AbstractSensor {
 
 
     public Thermometer() {
-        RandomValue randomValue=new RandomValue(-15, 40);
-        this.temperature=Double.valueOf(randomValue.getRandom());
+        //RandomValue randomValue=new RandomValue(-15, 40);
+        //this.temperature=Double.valueOf(randomValue.getRandom());
+        this.temperature=-2.8;
     }
 
     @Override

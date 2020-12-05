@@ -1,19 +1,21 @@
 package Actuators;
 
-public class ActuatorAction {
-    private String name;
-    private Double value;
+import java.io.Serializable;
 
-    public ActuatorAction(String name, Double value) {
+public class ActuatorAction implements Serializable {
+    private String name;
+    private String value;
+
+    public ActuatorAction(String name, String value) {
         this.name = name;
         this.value = value;
     }
 
-    public Double getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(Double value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
@@ -23,5 +25,13 @@ public class ActuatorAction {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "ActuatorAction{" +
+                "name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                '}';
     }
 }

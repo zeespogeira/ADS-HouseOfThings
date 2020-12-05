@@ -29,8 +29,8 @@ public class VaccumCleanerSamsung extends VaccumCleaner implements Serializable 
         //if need to turn ON and the actuator is OFF then turn ON
         if(state && super.isOn() == false){
             setState(true);
-            RandomValue value=new RandomValue(0, 50);
-            setVelocity(value.getRandom());
+            //RandomValue value=new RandomValue(0, 50);
+            setVelocity(Integer.valueOf(actuatorAction.getValue()));
         }
 
         //if need to turn OFF and the actuator is ON then turn OFF

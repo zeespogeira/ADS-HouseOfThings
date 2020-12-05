@@ -2,8 +2,10 @@ package Actuators.VaccumCleaner;
 import Actuators.ActuatorAction;
 import Models.AbstractActuator;
 
+import java.io.Serializable;
 
-public abstract class VaccumCleaner extends AbstractActuator {
+
+public abstract class VaccumCleaner extends AbstractActuator implements Serializable {
     private boolean isOn;
 
     public VaccumCleaner() {

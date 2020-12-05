@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 //Abstract Factory
-public abstract class AbstractActuator<T extends ActuatorAction> {
+public abstract class AbstractActuator implements Serializable {
 
     static final AtomicInteger idGen = new AtomicInteger(1);
 
@@ -45,5 +45,14 @@ public abstract class AbstractActuator<T extends ActuatorAction> {
     @Override
     public String toString() {
         return "id=" + id + ", name=" + name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        AbstractActuator that = (AbstractActuator) obj;
+        return id.equals(that.getId()) &&
+                name.equals(that.getName());
     }
 }

@@ -43,10 +43,19 @@ public abstract class AbstractSensor implements Serializable, ISensor {
         return "id=" + id +
                 ", name='" + name + '\'' +
                 ", measuringUnit='" + measuringUnit + '\'' +
-                ", whatIsMeasuring='" + whatIsMeasuring;
+                ", whatIsMeasuring='" + whatIsMeasuring+"'";
     }
 
-
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractSensor that = (AbstractSensor) o;
+        return id.equals(that.id) &&
+                name.equals(that.name)&&
+                measuringUnit.equals(that.measuringUnit)&&
+                whatIsMeasuring.equals(that.whatIsMeasuring);
+    }
 
     public String getName() {
         return name;
