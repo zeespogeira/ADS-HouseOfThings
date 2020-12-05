@@ -1,5 +1,6 @@
 package Actuators.VaccumCleaner;
 
+import Actuators.ActuatorAction;
 import infrastructure.RandomValue;
 
 import java.io.Serializable;
@@ -24,7 +25,7 @@ public class VaccumCleanerSamsung extends VaccumCleaner implements Serializable 
     }
 
     @Override
-    public void act(boolean state) {
+    public void act(boolean state,  ActuatorAction actuatorAction) {
         //if need to turn ON and the actuator is OFF then turn ON
         if(state && super.isOn() == false){
             setState(true);

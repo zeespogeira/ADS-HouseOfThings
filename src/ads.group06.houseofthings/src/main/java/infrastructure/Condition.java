@@ -1,5 +1,7 @@
 package infrastructure;
 
+import Models.AbstractSensor;
+
 import java.io.Serializable;
 
 public class Condition implements Serializable {
@@ -20,9 +22,17 @@ public class Condition implements Serializable {
         return sensorId;
     }
 
-    public boolean isMet(SensorReading sensorReading){
+    /*public boolean isMet(SensorReading sensorReading){
          if(this.sensorId == sensorReading.getSensorId()){
             checkCondition(sensorReading.getValue());
+        }
+
+        return  isMet;
+    }*/
+
+    public boolean isMet(AbstractSensor sensorReading){
+        if(this.sensorId == sensorReading.getId()){
+            checkCondition(sensorReading.getReading());
         }
 
         return  isMet;

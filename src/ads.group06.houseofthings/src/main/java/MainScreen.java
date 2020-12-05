@@ -41,7 +41,7 @@ public class MainScreen extends JFrame {
     private DefaultListModel actionListModel;
     private DefaultListModel sensorListModel;
 
-
+/*
     MainScreen() throws IOException {
         super("ADS House Controller");
         this.setContentPane(this.panelMain);
@@ -71,21 +71,7 @@ public class MainScreen extends JFrame {
                     AbstractActuator actuator = actuatorList.get(actuatorNumber);
                     System.out.println("The selected actuator is: :" + actuator.getName());
                     //TODO: get list of actions of the actuator
-                    //To Test
-                    /*int sensorId = 1;
-                    System.out.println(sensorId);
-                    Condition condition01 = new Condition(sensorId, 123, Operator.EQUAL);
-                    Condition condition02 = new Condition(sensorId, 124, Operator.HIGHER);
-                    Condition condition03 = new Condition(sensorId, 125, Operator.LOWER);
-                    List<Condition> conditions = new ArrayList<Condition>();
-                    conditions.add(condition01);
-                    conditions.add(condition02);
-                    conditions.add(condition03);
 
-
-                    SensorReading sensorReading = new SensorReading(sensorId, 100);
-                    Action action = new Action(actuatorList, conditions);
-                    action.execute(sensorReading);*/
 
                     // Populating actions (for testing)
                     ActionT action1 = new ActionT(actuator.getName() + " is cold", Operator.LOWER, 10, actuator);
@@ -121,9 +107,6 @@ public class MainScreen extends JFrame {
                         sensorSelection.addItem(sensor.getName());
                     }
 
-                    /*int sensorId = action.getID();
-                    System.out.println(sensorId);
-                    sensorSelection.setSelectedItem(sensorId);*/
                 }
             }
         });
@@ -136,21 +119,6 @@ public class MainScreen extends JFrame {
                 //System.out.println(actuatorNumber);
                 if (actuatorNumber >= 0) {
                     AbstractActuator actuator = actuatorList.get(actuatorNumber);
-
-                    //To Test
-                   /* int sensorId = sensorList.get(0).getId();
-                    Condition condition01 = new Condition(sensorId, 123, Operator.EQUAL);
-                    Condition condition02 = new Condition(sensorId, 124, Operator.HIGHER);
-                    Condition condition03 = new Condition(sensorId, 125, Operator.LOWER);
-                    List<Condition> conditions = new ArrayList<Condition>();
-                    conditions.add(condition01);
-                    conditions.add(condition02);
-                    conditions.add(condition03);
-
-
-                    SensorReading sensorReading = new SensorReading(sensorId, 100);
-                    Action action = new Action(actuatorList, conditions);
-                    action.execute(sensorReading);*/
 
                     ActionT new_action = new ActionT(actuator.getName() + " new action", Operator.HIGHER, 25, actuator);
                     actionList.add(new_action);
@@ -291,11 +259,6 @@ public class MainScreen extends JFrame {
                 mainscreen.refreshSensorsList();
             }
         }, 0, 5000);
-                   /*System.out.println("******* Actuators List Main *******");
-            Iterator it =actuatorList.iterator();
-            while (it.hasNext()) {
-                System.out.println(it.next());
-            }*/
 
     }
 
@@ -303,6 +266,6 @@ public class MainScreen extends JFrame {
         return actuatorList.size();
     }
 
-
+*/
 }
 

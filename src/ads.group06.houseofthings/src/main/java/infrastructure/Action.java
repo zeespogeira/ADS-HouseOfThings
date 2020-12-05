@@ -1,6 +1,8 @@
 package infrastructure;
+import Actuators.ActuatorAction;
 import Interface.IAction;
 import Models.AbstractActuator;
+import Models.AbstractSensor;
 
 import java.io.Serializable;
 import java.util.List;
@@ -10,13 +12,19 @@ public class Action implements IAction, Serializable {
     private String actionName;
     private List<AbstractActuator> actuators;
     private List<Condition> conditions;
+    private ActuatorAction actuatorAction;
+    //private String value (from the "method" variable in MainTest)
+    //private String? Object? value (from the value from the "method" variable)
+    // TALVEZ uma class ActuatorAction que tem os 2 valores anteriores
 
     //FALTA valor para o act (quando a condição se concretizar) [valores do action do form da parte direita] ?
 
-    public Action(String name, List<AbstractActuator> actuators, List<Condition> conditions){
+
+    public Action(String actionName, List<AbstractActuator> actuators, List<Condition> conditions, ActuatorAction actuatorAction) {
+        this.actionName = actionName;
         this.actuators = actuators;
         this.conditions = conditions;
-        this.actionName=name;
+        this.actuatorAction = actuatorAction;
     }
 
     public Action() {
@@ -31,13 +39,41 @@ public class Action implements IAction, Serializable {
         this.actionName = name;
     }
 
-    public void execute(SensorReading sensorReading) {
+    //TEMOS DE VER. ASSim Nao da com a user interface
+    //No MainTest-> se a action.getValueToAct() for boolean, inicializa ActionBoolean
+                //se a action.getValueToAct() for Inteiro, inicializa Action...
+
+    /*public void execute(SensorReading sensorReading) {
         //check if all the conditions are met
         boolean allConditionsMet = conditions.stream().allMatch(c->c.isMet(sensorReading));
 
+        //Ou talvez verifica Aqui qual acao vai tomar.
+        //Ex: IF
+
         //notify actuators to act
         for(var actuator : actuators){
-            actuator.act(allConditionsMet);
+            //Adiconei if. Assim posso tirar o state dos act()
+            if(allConditionsMet==true){
+                //actuator.act(ActuatorAction.getName(), ActuatorAction.getValue());
+                actuator.act(actuatorAction);
+            }
+        }
+    }*/
+
+    public void execute(AbstractSensor sensorReading) {
+        //check if all the conditions are met
+        boolean allConditionsMet = conditions.stream().allMatch(c->c.isMet(sensorReading));
+
+        //Ou talvez verifica Aqui qual acao vai tomar.
+        //Ex: IF
+
+        //notify actuators to act
+        for(var actuator : actuators){
+            //Adiconei if. Assim posso tirar o state dos act()
+            if(allConditionsMet==true){
+                //actuator.act(ActuatorAction.getName(), ActuatorAction.getValue());
+                actuator.act(allConditionsMet, actuatorAction);
+            }
         }
     }
 
@@ -49,6 +85,10 @@ public class Action implements IAction, Serializable {
     public List<Condition> getConditions() {
         return conditions;
         //s
+    }
+
+    public ActuatorAction getActuatorAction() {
+        return actuatorAction;
     }
 
     @Override

@@ -1,10 +1,8 @@
+import Actuators.ActuatorAction;
 import Models.AbstractActuator;
 import Models.AbstractSensor;
-import infrastructure.ActionT;
-import infrastructure.Condition;
-import infrastructure.Operator;
+import infrastructure.*;
 import infrastructure.Action;
-import infrastructure.SensorReading;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -46,6 +44,8 @@ public class MainScreenTest extends JFrame {
     private DefaultListModel actionListModel;
     private DefaultListModel sensorListModel;
 
+    //Instanciar o hub
+    SensorReadingsHub sensorReadingsHub= HubProvider.getReadingHub();
 
     MainScreenTest() throws IOException {
         super("ADS House Controller");
@@ -142,8 +142,8 @@ public class MainScreenTest extends JFrame {
                     List<Condition> conditions = new ArrayList<>();
                     conditions.add(condition01);
 
-                    SensorReading sensorReadingClass =
-                            new SensorReading(sensorId, sensorList.get(sensorId).getReading());
+                    /*SensorReading sensorReadingClass =
+                            new SensorReading(sensorId, sensorList.get(sensorId).getReading());*/
 
                     //System.out.println(sensorReadingClass.toString());
                     //System.out.println(condition01.toString());
@@ -151,9 +151,11 @@ public class MainScreenTest extends JFrame {
                     //Command Pattern
                     List<AbstractActuator> actuatorsForAction=new ArrayList<>();
                     actuatorsForAction.add(actuator);
-                    Action action = new Action(actionName.getText(), actuatorsForAction, conditions);
 
-                    action.execute(sensorReadingClass);
+                    ActuatorAction actuatorAction=new ActuatorAction("", 0.0);
+                    Action action = new Action(actionName.getText(), actuatorsForAction, conditions, actuatorAction);
+
+                    action.execute(sensorList.get(sensorId));
                     //System.out.println(action.toString());
                     actionList.add(action);
 
@@ -173,6 +175,8 @@ public class MainScreenTest extends JFrame {
                     Action action = actionList.get(actionNumber);
                     actionList.remove(action);
                     action = null;
+
+                    //TEmos de tirar do hub
                     refreshActionList();
                     clearActionDetails();
                     save();
@@ -186,10 +190,12 @@ public class MainScreenTest extends JFrame {
                 int sensorNumber = sensorsList.getSelectedIndex();
                 if (sensorNumber >= 0){
                     AbstractSensor sensor = sensorList.get(sensorNumber);
-                    int sensorId = sensorSelection.getSelectedIndex();
+                   // int sensorId = sensorSelection.getSelectedIndex();
 
-                    SensorReading sensorReadingClass = new SensorReading(sensorId, Double.valueOf((Double) sensor.getReading()));
-                    sensorReading.setText(String.valueOf(sensorReadingClass.getValue() + " " + sensor.getMeasuringUnit()));
+                    //SensorReading sensorReadingClass = new SensorReading(sensorId, Double.valueOf((Double) sensor.getReading()));
+                    //sensorReading.setText(String.valueOf(sensorReadingClass.getValue() + " " + sensor.getMeasuringUnit()));
+
+                    sensorReading.setText(String.valueOf(sensor.getReading() + " " + sensor.getMeasuringUnit()));
                 }
             }
         });
@@ -214,6 +220,7 @@ public class MainScreenTest extends JFrame {
                     //System.out.println(acActionOption.getText());
 
                     //If the variable is a integer
+                    //ALTERAR ESTA PARTE
                     try {
                         actuator.getClass().getDeclaredMethod("set" + method, Integer.class).
                                 invoke(actuator, Integer.valueOf(acActionOption.getText()));
@@ -244,6 +251,7 @@ public class MainScreenTest extends JFrame {
                     action.getActuators().set(0, actuator);
 
                     refreshActionList();
+                    sensorReadingsHub.addAction(action);
 
                     /*Iterator it=actionList.iterator();
                     while (it.hasNext()){
@@ -322,50 +330,6 @@ public class MainScreenTest extends JFrame {
     }
 
 
-    public static void main(String[] args) throws IOException {
-        MainScreenTest mainscreen = new MainScreenTest();
-        mainscreen.setVisible(true);
-
-        DiscoveryModule discoveryModule=new DiscoveryModule(actuatorList, sensorList);
-        discoveryModule.loadFiles();
-        synchronized (actuatorList){
-            //System.out.println(actuatorList.size());
-            //Add files actuators to mainscreen
-            mainscreen.addActuatorToList(discoveryModule.getActuatorsList());
-        }
-        synchronized (sensorList){
-            //System.out.println(sensorList.size());
-            //Add files actuators to mainscreen
-            mainscreen.addSensorToList(discoveryModule.getSensorList());
-        }
-
-        ExecutorService service = Executors.newFixedThreadPool(4);
-        service.submit(new Runnable() {
-            public void run() {
-                try {
-                    discoveryModule.processEvents();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        // Temporario
-        Timer t = new Timer();
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                mainscreen.refreshActuatorsList();
-                mainscreen.refreshSensorsList();
-            }
-        }, 0, 5000);
-                   /*System.out.println("******* Actuators List Main *******");
-            Iterator it =actuatorList.iterator();
-            while (it.hasNext()) {
-                System.out.println(it.next());
-            }*/
-    }
-
 
     public Integer getNumberOfActuators(){
         return actuatorList.size();
@@ -416,9 +380,60 @@ public class MainScreenTest extends JFrame {
                 System.out.println(it.next());
             }
 
+            sensorReadingsHub.addActions(actionList);
             ois.close();
         } catch (IOException | ClassNotFoundException e) {
         }
+
+    }
+
+    public static void main(String[] args) throws IOException {
+        MainScreenTest mainscreen = new MainScreenTest();
+        mainscreen.setVisible(true);
+
+        DiscoveryModule discoveryModule=new DiscoveryModule(actuatorList, sensorList, mainscreen.sensorReadingsHub);
+        discoveryModule.loadFiles();
+
+
+
+
+        synchronized (actuatorList){
+            //System.out.println(actuatorList.size());
+            //Add files actuators to mainscreen
+            mainscreen.addActuatorToList(discoveryModule.getActuatorsList());
+        }
+        synchronized (sensorList){
+            //System.out.println(sensorList.size());
+            //Add files actuators to mainscreen
+            mainscreen.addSensorToList(discoveryModule.getSensorList());
+        }
+
+        ExecutorService service = Executors.newFixedThreadPool(4);
+        service.submit(new Runnable() {
+            public void run() {
+                try {
+                    discoveryModule.processEvents();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        // Temporario
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mainscreen.refreshActuatorsList();
+                mainscreen.refreshSensorsList();
+            }
+        }, 0, 5000);
+                   /*System.out.println("******* Actuators List Main *******");
+            Iterator it =actuatorList.iterator();
+            while (it.hasNext()) {
+                System.out.println(it.next());
+            }*/
 
     }
 

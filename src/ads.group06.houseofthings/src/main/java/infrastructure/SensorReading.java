@@ -5,7 +5,6 @@ public class SensorReading {
     private double value;
 
     public SensorReading(int sensorId, double value){
-
         this.sensorId = sensorId;
         this.value = value;
     }

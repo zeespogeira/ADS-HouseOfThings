@@ -20,6 +20,7 @@ public class ActionTests {
         Condition condition02 = new Condition(sensorId, 124, Operator.HIGHER);
         Condition condition03 = new Condition(sensorId, 125, Operator.LOWER);
 
+        /*
         Lamp lampBosch = new LampBosch();
         lampBosch.setState(true);
         lampBosch.act(lampBosch.getisOn());
@@ -37,10 +38,10 @@ public class ActionTests {
         conditions.add(condition01);
         conditions.add(condition02);
         conditions.add(condition03);
-
+*/
         SensorReading sensorReading = new SensorReading(sensorId, 100);
-        Action action = new Action("test", actuators, conditions);
-        action.execute(sensorReading);
+        /*Action action = new Action("test", actuators, conditions);
+        action.execute(sensorReading);*/
 
 
         /*List<AbstractActuator> actualActuators = action.getActuators();

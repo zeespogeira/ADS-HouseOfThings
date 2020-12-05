@@ -5,7 +5,7 @@ import Interface.ISensor;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class AbstractSensor implements Serializable {
+public abstract class AbstractSensor implements Serializable, ISensor {
     static final AtomicInteger idGen = new AtomicInteger(1);
     private Integer id;
     private String name;
@@ -33,6 +33,11 @@ public abstract class AbstractSensor implements Serializable {
    //public abstract Integer getId();
 
 
+    /*@Override
+    public void addReadingsHub() {
+
+    }
+*/
     @Override
     public String toString() {
         return "id=" + id +
@@ -40,6 +45,8 @@ public abstract class AbstractSensor implements Serializable {
                 ", measuringUnit='" + measuringUnit + '\'' +
                 ", whatIsMeasuring='" + whatIsMeasuring;
     }
+
+
 
     public String getName() {
         return name;

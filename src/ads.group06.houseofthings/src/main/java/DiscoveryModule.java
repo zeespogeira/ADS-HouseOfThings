@@ -1,5 +1,6 @@
 import Models.AbstractActuator;
 import Models.AbstractSensor;
+import infrastructure.SensorReadingsHub;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,6 +24,8 @@ public class DiscoveryModule extends Thread{
     private final WatchService watcher;
     private final Path dir;
 
+    private SensorReadingsHub sensorReadingsHub;
+
     //ArrayList<AbstractActuator> actuatorList;
     List<AbstractActuator> actuatorList = Collections.synchronizedList(new ArrayList<AbstractActuator>());
     List<AbstractSensor> sensorList= Collections.synchronizedList(new ArrayList<AbstractSensor>());;
@@ -30,10 +33,12 @@ public class DiscoveryModule extends Thread{
     /**
      * Creates a WatchService and registers the given directory
      */
-    DiscoveryModule(List<AbstractActuator> actuatorList, List<AbstractSensor> sensorList) throws IOException {
+    DiscoveryModule(List<AbstractActuator> actuatorList, List<AbstractSensor> sensorList, SensorReadingsHub sensorReadingsHub) throws IOException {
 
         this.actuatorList = actuatorList;
         this.sensorList=sensorList;
+
+        this.sensorReadingsHub=sensorReadingsHub;
 
         File directory = new File("./");
         currentPath=directory.getCanonicalPath() + "\\src\\ads.group06.houseofthings\\src\\main\\java\\Devices";
@@ -264,8 +269,8 @@ public class DiscoveryModule extends Thread{
             obj = (AbstractSensor) factoryImpl.newInstance();
             obj.setName(name);
             obj.setWhatIsMeasuring(cols[3]);
+            sensorReadingsHub.addSensor(obj);
             sensorList.add(obj);
-            //System.out.println(factoryImpl);
         } catch (ClassNotFoundException e) {
             System.err.format("This Sensor brand doesn't have a plugin\n");
             return;
@@ -273,77 +278,6 @@ public class DiscoveryModule extends Thread{
             e.printStackTrace();
         }
 
-
-        /*
-        // Desta forma tenho de por todos os sub-metodos especificos de uma classe aqui -> NAO E PERMANENTE
-        // if there is arguments in file
-        synchronized (sensorList) {
-            if(cols.length>3) {
-            Method methodToInsertValue = null;
-            String[] specificMethods = {"setHumidity", "setTemperature", "setRealFeel"};
-            //System.out.println("specificMethods: "+ specificMethods.length);
-
-            try {
-                for (String method2 : specificMethods
-                ) {
-                    methodToInsertValue = factoryImpl.getMethod(method2, java.lang.String.class);
-                    //System.out.println("method2"+ method2);System.out.println("method: "+ method + "\n");
-                    if (methodToInsertValue != null) {
-                        break;
-                    }
-                }
-            } catch (NoSuchMethodException e) {
-
-                try {
-
-                    for (String methodS : specificMethods
-                    ) {
-                        try {
-                            String variableValue = methodS.replaceAll("set", "").toLowerCase();
-                            //System.out.println("**********test: "+variableValue);
-                            //System.out.println("field: "+ factoryImpl.getSuperclass().getField(variableValue));
-
-                            Class pal = factoryImpl.getSuperclass().getField(variableValue).getType();
-                            //method2 = factoryImpl.getSuperclass().getMethod(methodS, par);
-                            methodToInsertValue = factoryImpl.getSuperclass().getMethod(methodS, java.lang.String.class);
-                            if (methodToInsertValue != null) {
-                                break;
-                            }
-                        } catch (NoSuchFieldException ex) {
-                        }
-                    }
-                } catch (NoSuchMethodException ex) {
-                    //Poderia passar isto a frente (Just information to test)
-                    //System.err.format("This Sensor doesn't have this option\n");
-                }
-                //System.err.format("This Sensor doesn't have this option\n");
-            }
-                try {
-                    //Pode vir das regras
-                    String input2 = cols[3]; //if doesn't have the value, it's caught in the exception "ArrayIndexOutOfBoundsException"
-
-                    // If it's different there is an empty actuator instantiated
-                    if (obj != null) {
-                        AbstractSensor es = (AbstractSensor) methodToInsertValue.invoke(obj, input2);
-                        //System.out.println(obj.toString());
-                        //obj.setName(classe);
-                        sensorList.add(obj);
-                    }
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (ArrayIndexOutOfBoundsException ex) {
-                    // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
-                    //System.out.println(obj.toString());
-                    sensorList.add(obj);
-
-                }
-
-            }else //same as catch ArrayIndexOutOfBoundsException
-            {
-                sensorList.add(obj);
-                System.out.println(obj.toString());
-            }
-        }*/
     }
 
     public Integer getNumberOfActuators(){

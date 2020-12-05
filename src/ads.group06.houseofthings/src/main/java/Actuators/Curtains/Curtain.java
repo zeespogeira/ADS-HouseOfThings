@@ -1,4 +1,6 @@
 package Actuators.Curtains;
+import Actuators.ActuatorAction;
+import Actuators.ActuatorActionInteger;
 import Models.AbstractActuator;
 
 import java.io.Serializable;
@@ -37,7 +39,7 @@ public abstract class Curtain extends AbstractActuator implements Serializable {
 
     //ACT para se for mais valores
 
-    @Override
+    //@Override
     public void act(boolean state) {
         //if need to OPEN and the actuator is CLOSED then turn OPEN
         if(state && isOpen == false){
@@ -52,6 +54,34 @@ public abstract class Curtain extends AbstractActuator implements Serializable {
         }
     }
 
+/*
+    public void act(ActuatorActionInteger actuatorAction) {
+        if(actuatorAction.getValue()==0){
+
+        }
+
+
+
+        if(percentage!=0 ){
+            setState(true);
+            this.percentage=percentage;
+        }
+        else{
+            setState(false);
+            this.percentage=0;
+        }
+        if(isOpen == false){
+            setState(true);
+            this.percentage=100;
+        }
+
+        //if need to CLOSE and the actuator is OPEN then CLOSE
+        if(isOpen && actuatorAction.getName().equalsIgnoreCase("percentage")){
+            setState(false);
+            this.percentage=0;
+        }
+    }
+*/
 
     @Override
     public String toString() {

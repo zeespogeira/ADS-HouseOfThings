@@ -4,7 +4,7 @@ import infrastructure.SensorReading;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
-
+/*
 public class ConditionTests {
     @Test
     public void GivenACondition_WithEqualOperator_ShouldBeMet(){
@@ -146,3 +146,4 @@ public class ConditionTests {
         assertEquals(true, condition.isMet(new SensorReading(sensorId, sensorReading)));
     }
 }
+*/
