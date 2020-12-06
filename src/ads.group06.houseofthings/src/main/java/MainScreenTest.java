@@ -20,7 +20,8 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-//Quando crio a acao nao esta a ver se esta ser comprida ou nao
+//TEmos de tirar do hub
+//Ao apagar a action os actuators dela deviam ficar OFF????
 public class MainScreenTest extends JFrame {
     private JPanel panelMain;
     private JList actuatorsList;
@@ -129,10 +130,9 @@ public class MainScreenTest extends JFrame {
 
                     int sensorId = sensorSelection.getSelectedIndex();
                     if(sensorId>=0){
-                        AbstractSensor sensor=sensorList.get(sensorId);
                         //Command Pattern (Verificar porque é só 1 tipo)
                         //Default value
-                        Condition condition01 = new Condition(sensor, Double.valueOf(controlValueInput.getText()) ,
+                        Condition condition01 = new Condition(sensorList.get(sensorId), Double.valueOf(controlValueInput.getText()) ,
                                 Operator.LOWER);
                         List<Condition> conditions = new ArrayList<>();
                         conditions.add(condition01);
@@ -144,7 +144,6 @@ public class MainScreenTest extends JFrame {
                         ActuatorAction actuatorAction=new ActuatorAction("", "");
 
                         Action action = new Action(actionName.getText(), actuatorsForAction, conditions, actuatorAction);
-                        action.execute(sensorList.get(sensorId));
                         actionList.add(action);
                         //updateActuatorListFromActionsFile();
                     }
@@ -178,8 +177,9 @@ public class MainScreenTest extends JFrame {
                 // TODO: This logic is repeated... refactor?
                 int sensorNumber = sensorsList.getSelectedIndex();
                 if (sensorNumber >= 0){
-                    AbstractSensor sensor = sensorList.get(sensorNumber);
-                    sensorReading.setText(String.valueOf(sensor.getReading() + " " + sensor.getMeasuringUnit()));
+                    sensorReading.setText(
+                            String.valueOf(sensorList.get(sensorNumber).getReading() + " " +
+                            sensorList.get(sensorNumber).getMeasuringUnit()));
                 }
             }
         });
@@ -195,10 +195,9 @@ public class MainScreenTest extends JFrame {
                     action.setName(actionName.getText());
 
                     int sensorId = sensorSelection.getSelectedIndex();
-                    System.out.println(sensorId + "\n " + sensorList.get(sensorId).getName());
+                    System.out.println(sensorId + "\n " + sensorList.get(sensorId).getName() + " " + sensorList.get(sensorId).getId());
                     if(sensorId>=0) {
-                        AbstractSensor sensor = sensorList.get(sensorId);
-                        Condition condition01 = new Condition(sensor,
+                        Condition condition01 = new Condition(sensorList.get(sensorId),
                                 Double.valueOf(controlValueInput.getText()),
                                 (Operator) operatorSelection.getSelectedItem());
 
@@ -215,10 +214,12 @@ public class MainScreenTest extends JFrame {
                         //TESTAR ISTO
                         actuatorList.set(actuatorList.indexOf(actuator), action.getActuators().get(0));
 
-                        refreshActionList();
+
                         sensorReadingsHub.addAction(action);
-                        action.execute(sensorList.get(action.getConditions().get(0).getSensor().getId()));
-                        updateActuatorListFromActionsFile();
+                        action.execute(action.getConditions().get(0).getSensor());
+                        refreshActionList();
+                        //updateActuatorListFromActionsFile();
+                        refreshActuatorState();
 
                     /*Iterator it=actionList.iterator();
                     while (it.hasNext()){
@@ -357,7 +358,7 @@ public class MainScreenTest extends JFrame {
     public void updateActuatorListFromActionsFile(){
         for (Action action:actionList
         ) {
-            System.out.println("update: "+action);
+            //System.out.println("update: "+action);
             //actuatorList.stream().anyMatch(act->act.equals(actuator))
             for(int i=0; i<actuatorList.size(); i++){
                 if(actuatorList.get(i).equals(action.getActuators().get(0))){

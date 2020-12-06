@@ -27,7 +27,7 @@ public abstract class Humidity extends AbstractSensor {
 
     @Override
     public String toString() {
-        return super.toString() + "humidity=" + humidity;
+        return super.toString() + ", humidity=" + humidity;
     }
 
     public Double getHumidity() {

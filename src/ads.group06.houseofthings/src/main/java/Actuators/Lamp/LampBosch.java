@@ -9,17 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class LampBosch extends Lamp implements Serializable {
     Integer ilumination;
-    //private static final long serialVersionUID = 6529685098267757690L;
-
-    //Construtores para teste
-    /*public LampBosch(String ilumination) {
-        this.ilumination = ilumination;
-    }
-
-    public LampBosch(boolean isOn, String ilumination) {
-        super(isOn);
-        this.ilumination = ilumination;
-    }*/
 
     public LampBosch() {
         this.setIlumination(0);
@@ -41,18 +30,6 @@ public class LampBosch extends Lamp implements Serializable {
     //Template Method
     @Override
     public void act(boolean state,  ActuatorAction actuatorAction) {
-        //if need to turn ON and the actuator is OFF then turn ON
-        /*if(state && super.getisOn() == false){
-            setState(true);
-            RandomValue value=new RandomValue(0, 100);
-            setIlumination(value.getRandom());
-        }
-
-        //if need to turn OFF and the actuator is ON then turn OFF
-        if(state == false && super.getisOn()){
-            setState(false);
-            setIlumination(0);
-        }*/
 
         if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
             if(actuatorAction.getValue().equalsIgnoreCase("on")){ //if is on
@@ -65,6 +42,16 @@ public class LampBosch extends Lamp implements Serializable {
                 setIlumination(0);
             }
         }
+
+        if(("set" + actuatorAction.getName()).equalsIgnoreCase("setIlumination")){
+            if(Integer.valueOf(actuatorAction.getValue())!=0){
+                super.setState(true);
+                setIlumination(Integer.valueOf(actuatorAction.getValue()));
+            } else {
+                setState(false);
+                setIlumination(0);
+            }
+        }
     }
 
 
@@ -73,5 +60,16 @@ public class LampBosch extends Lamp implements Serializable {
         return "LampBosch{" + super.toString() +
                 ", ilumination='" + ilumination + '\'' +
                 '}';
+    }
+
+    @Override
+    public String getState() {
+        String state;
+        if (super.getisOn()==true) {
+            state = "On, " + this.getIlumination();
+        } else {
+            state = "Off";
+        }
+        return state;
     }
 }

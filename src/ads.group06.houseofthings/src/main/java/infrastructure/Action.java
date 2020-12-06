@@ -40,7 +40,7 @@ public class Action implements IAction, Serializable {
 
         //notify actuators to act
         for(var actuator : actuators){
-            //Adiconei if. Assim posso tirar o state dos act()
+            //Adicionei if. Assim posso tirar o state dos act()
             if(allConditionsMet==true){
                 actuator.act(allConditionsMet, actuatorAction);
             }

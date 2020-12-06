@@ -26,17 +26,28 @@ public class VaccumCleanerSamsung extends VaccumCleaner implements Serializable 
 
     @Override
     public void act(boolean state,  ActuatorAction actuatorAction) {
-        //if need to turn ON and the actuator is OFF then turn ON
-        if(state && super.isOn() == false){
-            setState(true);
-            //RandomValue value=new RandomValue(0, 50);
-            setVelocity(Integer.valueOf(actuatorAction.getValue()));
+        //Check if the value is "setState". If it is enters
+        if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
+            //Checks if the value is "on"
+            if(actuatorAction.getValue().equalsIgnoreCase("on")){ //if is on
+                setState(true);
+                RandomValue value=new RandomValue(0, 50);
+                setVelocity(value.getRandom());
+            } else if(actuatorAction.getValue().equalsIgnoreCase("off")){ //if is off
+                setState(false);
+                setVelocity(0);
+            }
         }
-
-        //if need to turn OFF and the actuator is ON then turn OFF
-        if(state == false && super.isOn()){
-            setState(false);
-            setVelocity(0);
+        //Check if the value is "setVelocity". If it is, enters
+        if(("set" + actuatorAction.getName()).equalsIgnoreCase("setVelocity")){
+            //Checks if the value is different than 0. If it is, the vaccum is on
+            if(Integer.valueOf(actuatorAction.getValue())!=0){
+                setState(true);
+                setVelocity(Integer.valueOf(actuatorAction.getValue()));
+            } else{
+                setState(false);
+                setVelocity(0);
+            }
         }
     }
 

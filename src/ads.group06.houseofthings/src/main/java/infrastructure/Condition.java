@@ -37,14 +37,13 @@ public class Condition implements Serializable {
             checkCondition(sensorReading.getReading());
             //System.out.println("sensorReading.getReading(): " +sensorReading.getReading());
         }
-
         return  isMet;
     }
 
     //TODO: implement state pattern
     private void checkCondition(double value){
         this.isMet = Comparer.compare(referenceValue, operator, value);
-        System.out.println("isMet: "+ isMet);
+        //System.out.println("isMet: "+ isMet);
     }
 
     @Override

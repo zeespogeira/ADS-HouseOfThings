@@ -1,5 +1,7 @@
 package Actuators.Curtains;
+import Actuators.ActuatorAction;
 import Models.AbstractActuator;
+import infrastructure.RandomValue;
 
 import java.io.Serializable;
 
@@ -37,65 +39,61 @@ public abstract class Curtain extends AbstractActuator implements Serializable {
 
     //ACT para se for mais valores
 
-    //@Override
-    public void act(boolean state) {
-        //if need to OPEN and the actuator is CLOSED then turn OPEN
-        if(state && isOpen == false){
-            setState(true);
-            this.percentage=100;
+    @Override
+    public void act(boolean state, ActuatorAction actuatorAction) {
+        //Check if the value is "setState". If it is enters
+        if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
+            //Checks if the value is "on"
+            if(actuatorAction.getValue().equalsIgnoreCase("on")){ //if is on
+                setState(true);
+                RandomValue value=new RandomValue(1, 100);
+                setPercentage(value.getRandom());
+            } else if(actuatorAction.getValue().equalsIgnoreCase("off")){ //if is off
+                setState(false);
+                setPercentage(0);
+            }
         }
-
-        //if need to CLOSE and the actuator is OPEN then CLOSE
-        if(state == false && isOpen){
-            setState(false);
-            this.percentage=0;
-        }
-
-
-    }
-
-/*
-    public void act(ActuatorActionInteger actuatorAction) {
-        if(actuatorAction.getValue()==0){
-
-        }
-
-
-
-        if(percentage!=0 ){
-            setState(true);
-            this.percentage=percentage;
-        }
-        else{
-            setState(false);
-            this.percentage=0;
-        }
-        if(isOpen == false){
-            setState(true);
-            this.percentage=100;
-        }
-
-        //if need to CLOSE and the actuator is OPEN then CLOSE
-        if(isOpen && actuatorAction.getName().equalsIgnoreCase("percentage")){
-            setState(false);
-            this.percentage=0;
+        //Check if the value is "setVelocity". If it is, enters
+        if(("set" + actuatorAction.getName()).equalsIgnoreCase("setPercentage")){
+            //Checks if the value is different than 0. If it is, the vaccum is on
+            if(Integer.valueOf(actuatorAction.getValue())!=0){
+                setState(true);
+                setPercentage(Integer.valueOf(actuatorAction.getValue()));
+            } else{
+                setState(false);
+                setPercentage(0);
+            }
         }
     }
-*/
 
     @Override
     public String toString() {
-        return super.toString() + ", isOpen=" + isOpen;
+        return super.toString() +
+                "isOpen=" + isOpen +
+                ", percentage=" + percentage;
     }
-
 
     public void setState(boolean state) {
         isOpen = state;
     }
 
+    public Integer getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(Integer percentage) {
+        this.percentage = percentage;
+    }
+
     @Override
     public String getState() {
-        return ((this.isOpen()) ? "Open" : "Closed");
+        String state;
+        if (this.isOpen()) {
+            state = "On, " + this.getPercentage() + "%";
+        } else {
+            state = "Off";
+        }
+        return state;
     }
 
     public boolean isOpen() {
