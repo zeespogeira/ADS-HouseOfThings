@@ -20,8 +20,6 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-//TEmos de tirar do hub
-//Ao apagar a action os actuators dela deviam ficar OFF????
 
 public class MainScreenTest extends JFrame {
     private JPanel panelMain;
@@ -106,6 +104,10 @@ public class MainScreenTest extends JFrame {
                 if (actionNumber >= 0){
                     Action action = actionList.get(actionNumber);
 
+                    actionName.setText(action.getName());
+                    controlValueInput.setText(String.valueOf(action.getConditions().get(0).getReferenceValue()));
+                    acActionOption.setText(action.getActuatorAction().getValue());
+
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
                     Operator selectedType = (Operator)operatorSelection.getSelectedItem();
@@ -114,7 +116,9 @@ public class MainScreenTest extends JFrame {
                     for (AbstractSensor sensor : sensorList) {
                         sensorSelection.addItem(sensor.getName());
                     }
-
+                }
+                else{
+                    clearActionDetails();
                 }
             }
         });
@@ -166,8 +170,6 @@ public class MainScreenTest extends JFrame {
                     action = null;
 
                     sensorReadingsHub.removeAction(action);
-
-                    //TEmos de tirar do hub
                     refreshActionList();
                     clearActionDetails();
                     save();
@@ -214,9 +216,7 @@ public class MainScreenTest extends JFrame {
                         action.getActuatorAction().setName(method);
                         action.getActuatorAction().setValue(acActionOption.getText());
 
-                        //TESTAR ISTO
                         actuatorList.set(actuatorList.indexOf(actuator), action.getActuators().get(0));
-
 
                         sensorReadingsHub.addAction(action);
                         action.execute(action.getConditions().get(0).getSensor());
@@ -230,6 +230,7 @@ public class MainScreenTest extends JFrame {
                     }*/
                     }
                     save();
+                    //clearActionDetails();
                 }
             }
         });
@@ -255,6 +256,7 @@ public class MainScreenTest extends JFrame {
         sensorSelection.removeAllItems();
         operatorSelection.removeAllItems();
         controlValueInput.setText("0");
+        acActionOption.setText("");
     }
 
     public void refreshActuatorsList(){
@@ -432,7 +434,6 @@ public class MainScreenTest extends JFrame {
         });
 
 
-        // Temporario
         Timer t = new Timer();
         t.schedule(new TimerTask() {
             Integer actuatorListSize = actuatorList.size();

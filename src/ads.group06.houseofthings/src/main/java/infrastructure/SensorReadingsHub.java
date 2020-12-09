@@ -48,7 +48,7 @@ public class SensorReadingsHub {
                 .collect(Collectors.toList());
 
         for (IAction action : sensorActions){
-            System.out.println("action: "+action.toString());
+            //System.out.println("action: "+action.toString());
             action.execute(sensorReading);
         }
 

@@ -55,4 +55,12 @@ public class Condition implements Serializable {
                 ", isMet=" + isMet +
                 '}';
     }
+
+    public double getReferenceValue() {
+        return referenceValue;
+    }
+
+    public Operator getOperator() {
+        return operator;
+    }
 }
