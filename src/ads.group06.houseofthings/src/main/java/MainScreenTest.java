@@ -471,10 +471,10 @@ public class MainScreenTest extends JFrame {
             public void run() {
                 for (AbstractSensor sensor: sensorList
                      ) {
-                    sensor.sense();
+                    mainscreen.sensorReadingsHub.sense(sensor);
                 }
             }
-        }, 0, 5*1000);
+        }, 0, 10*1000);
 
     }
 

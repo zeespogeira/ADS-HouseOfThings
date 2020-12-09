@@ -30,12 +30,8 @@ public class Condition implements Serializable {
     }*/
 
     public boolean isMet(AbstractSensor sensorReading){
-        /*System.out.println("abstractSensor: "+sensorReading.toString());
-        System.out.println("sensorId da condition: "+this.sensor);
-        System.out.println(this.toString());*/
         if(this.sensor.equals(sensorReading)){
             checkCondition(sensorReading.getReading());
-            //System.out.println("sensorReading.getReading(): " +sensorReading.getReading());
         }
         return  isMet;
     }

@@ -37,13 +37,11 @@ public class Action implements IAction, Serializable {
         //check if all the conditions are met
         boolean allConditionsMet = conditions.stream().allMatch(c->c.isMet(sensorReading));
 
+        System.out.println("allConditionsMet " + allConditionsMet);
         //notify actuators to act
         for(var actuator : actuators){
-            //Adicionei if. Assim posso tirar o state dos act()
-            if(allConditionsMet==true){
                 //command no abstractAct
-                actuator.act(actuatorAction);
-            }
+                actuator.act(allConditionsMet, actuatorAction);
         }
     }
 

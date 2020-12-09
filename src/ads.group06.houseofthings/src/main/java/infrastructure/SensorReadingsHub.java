@@ -36,6 +36,11 @@ public class SensorReadingsHub {
         notifyActions(sensor);
     }
 
+    public void sense(AbstractSensor sensor){
+        sensor.sense();
+        notifyActions(sensor);
+    }
+
     private void notifyActions(AbstractSensor sensorReading) {
 
         //get actions associated with the sensor

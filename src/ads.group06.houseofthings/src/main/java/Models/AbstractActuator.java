@@ -44,7 +44,7 @@ public abstract class AbstractActuator implements Serializable {
 
     public abstract void setState(boolean state);
 
-    public abstract void act(ActuatorAction actuatorAction);
+    public abstract void act(boolean state, ActuatorAction actuatorAction);
 
     @Override
     public String toString() {

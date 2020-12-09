@@ -22,9 +22,9 @@ public abstract class VaccumCleaner extends AbstractActuator implements Serializ
     }
 
     @Override
-    public void act(ActuatorAction actuatorAction) {
+    public void act(boolean state, ActuatorAction actuatorAction) {
         //Check if the value is "setState". If it is enters
-        if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
+        if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState") && state){
             //Checks if the value is "on"
             if(actuatorAction.getValue().equalsIgnoreCase("on")){ //if is on
                 setState(true);
@@ -32,6 +32,8 @@ public abstract class VaccumCleaner extends AbstractActuator implements Serializ
                 setState(false);
             }
         }
+        else
+            setState(false);
     }
 
     @Override

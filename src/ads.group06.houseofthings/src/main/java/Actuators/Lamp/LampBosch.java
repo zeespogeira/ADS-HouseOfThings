@@ -29,28 +29,34 @@ public class LampBosch extends Lamp implements Serializable {
 
     //Template Method
     @Override
-    public void act(ActuatorAction actuatorAction) {
+    public void act(boolean state, ActuatorAction actuatorAction) {
 
-        if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
-            if(actuatorAction.getValue().equalsIgnoreCase("on")){ //if is on
-                super.setState(true);
-                System.out.println("On");
-                RandomValue value=new RandomValue(0, 100);
-                setIlumination(value.getRandom());
-            } else if(actuatorAction.getValue().equalsIgnoreCase("off")){ //if is off
-                setState(false);
-                setIlumination(0);
+        if(state){
+            if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
+                if(actuatorAction.getValue().equalsIgnoreCase("on")){ //if is on
+                    super.setState(true);
+                    System.out.println("On");
+                    RandomValue value=new RandomValue(0, 100);
+                    setIlumination(value.getRandom());
+                } else if(actuatorAction.getValue().equalsIgnoreCase("off")){ //if is off
+                    setState(false);
+                    setIlumination(0);
+                }
+            }
+
+            if(("set" + actuatorAction.getName()).equalsIgnoreCase("setIlumination")){
+                if(Integer.valueOf(actuatorAction.getValue())!=0){
+                    super.setState(true);
+                    setIlumination(Integer.valueOf(actuatorAction.getValue()));
+                } else {
+                    setState(false);
+                    setIlumination(0);
+                }
             }
         }
-
-        if(("set" + actuatorAction.getName()).equalsIgnoreCase("setIlumination")){
-            if(Integer.valueOf(actuatorAction.getValue())!=0){
-                super.setState(true);
-                setIlumination(Integer.valueOf(actuatorAction.getValue()));
-            } else {
-                setState(false);
-                setIlumination(0);
-            }
+        else{
+            setState(false);
+            setIlumination(0);
         }
     }
 
