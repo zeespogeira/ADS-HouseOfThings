@@ -1,5 +1,17 @@
 # ADS-HouseOfThings
 
+## Table of Contents
+[Introduction](#Introduction)
+
+[Goals](#Goals)
+
+[Domain model](#Domain model)
+
+[Design](#Design)
+* [Discoverability](#Discoverability) 
+
+<br>
+
 ## 1. Introduction
 
 ADS-HouseOfThings is a software system designed to control 
@@ -11,15 +23,19 @@ ADS-HouseOfThings is a software system designed to control
 ## 2. Goals
 
 The system shall:
-- Support multiple devices, including multiple types of
- sensors, actuators and hubs;
+- Support multiple devices, for instance types of
+ sensors and actuators;
 - Support adding new devices easily;
 - Support adding triggers and actions through a user interface;
 - Allow monitorization of the system (sensors and 
-actuators)  through the user interface;
+actuators) through the user interface;
 - Work in simulated mode with simulated (software) devices;
 - Be easy to integrate with well-known systems, such as, SMS,
  Slack, WhatsApp, and other communication systems.
+
+
+## 3. Domain model
+
 
 ## 3. Design 
 This section explains the design choices of the various
@@ -67,14 +83,15 @@ and create the corresponding device object.
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/Devices%20Discovery.png?raw=true)
 
 #### 3.1.1.1. Microkernel
-**Problem in Context**
- Our problem was how to instantiate actuators and sensors in run-time without having a timer cheking the folder x in x seconds.
-**The Pattern**, 
-**Implementation**
-For this implementation we decided to use a class called "Discovery Module". This class has a method called processEvents() that is always running in bachground to see if new files (actuators or sensors) are instantiated.
+- **Problem in Context**
+    - Our problem was how to instantiate actuators and sensors in run-time without having a timer cheking the folder x in x seconds.
+- **The Pattern**
 
-**Consequences**
-We're using this pattern to help with the plug & play
+- **Implementation**
+    - For this implementation we decided to use a class called "Discovery Module". This class has a method called processEvents() that is always running in bachground to see if new files (actuators or sensors) are instantiated.
+
+- **Consequences**
+    - We're using this pattern to help with the plug & play
 https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/src/ads.group06.houseofthings/src/main/java/DiscoveryModule.java
 
 ### 3.2. Sensor Infrastructure
@@ -87,7 +104,8 @@ place would then be responsible for notifying all the interested entities.
 
 #### 3.2.1. Used patterns
 #### 3.2.1.1. Singleton
-- Problem
+- **Problem in Context**
+    - We identified a problem related to how would the sensors communicate to the "rest of the world" when a new reading was produced. To tackle the problem, we chose to include a component, SensorReadingHub, that would be responsible to aggregate all sensor readings. Once a reading is produced by the sensor, it should be stored in a single common "place". This place would then be responsible for notifying all the interested entities
     - How can we make sure that when a Sensor publishes a reading, the reading is stored in an common object to all sensors?
 - Pattern description
     - The pattern enforces the existence of a single instance of a class.
@@ -116,8 +134,32 @@ Actuators are entities that need to be triggered once a condition or set of cond
 - Usage
     - The Action object serves as the mediator between Conditions and Actuators. When an Action is notified to execute, then checks the state of all of its conditions and signals the actuators to act.
 
-#### 3.3.1.1. Factory Method
-- Problem
+#### 3.3.1.2. Factory Method
+- **Problem in Context**
+    - How can we remove the complex chainning of "if conditions" needed to compare the sensor value with the Condition value?
+- Pattern
+    - The patter provides an object responsible for deciding the instantiation of the correct implementation.
+- Usage
+    - We introduced the interface IComparer that is implemented by any class responsible for performing comparisons. A ComparerFactory was added, with the responsibility to decide which of of the IComparer implementation should be instantiated. 
+
+#### 3.3.1.3. Command Pattern
+- **Problem in Context**
+  - For our actuators to act, we needed some way for our method to be called without the class that calls it knowing what was within the method it was calling.
+  
+- **The Pattern**
+    - This pattern allows the Action class to call the method act, from the actuators class, without knowing what the act truly does.
+    
+- **Implementation**
+    - To implement this pattern we create an abstract method, act, in abstract class AbstractActuators. The actuator subclasses then implement this method as they see fit.
+ Then, the class Action calls the act method.
+  
+- **Consequences**
+    - As a consequence of this pattern, in the very least, all the types of actuators need to implement the act method.
+    
+    
+### 3.2. Sensor Infrastructure
+#### 3.3.1.2. Factory Method
+- **Problem in Context**
     - How can we remove the complex chainning of "if conditions" needed to compare the sensor value with the Condition value?
 - Pattern
     - The patter provides an object responsible for deciding the instantiation of the correct implementation.
