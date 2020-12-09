@@ -22,6 +22,7 @@ import java.util.concurrent.Executors;
 
 //TEmos de tirar do hub
 //Ao apagar a action os actuators dela deviam ficar OFF????
+
 public class MainScreenTest extends JFrame {
     private JPanel panelMain;
     private JList actuatorsList;
@@ -163,6 +164,8 @@ public class MainScreenTest extends JFrame {
                     Action action = actionList.get(actionNumber);
                     actionList.remove(action);
                     action = null;
+
+                    sensorReadingsHub.removeAction(action);
 
                     //TEmos de tirar do hub
                     refreshActionList();
@@ -387,7 +390,6 @@ public class MainScreenTest extends JFrame {
     }
 
     public void checkActionsFromFile(){
-       //
         for (Action action: actionList
         ) {
             //System.out.println("execute actions");
@@ -433,17 +435,20 @@ public class MainScreenTest extends JFrame {
         // Temporario
         Timer t = new Timer();
         t.schedule(new TimerTask() {
+            Integer actuatorListSize = actuatorList.size();
+            Integer sensorListSize = sensorList.size();
             @Override
             public void run() {
-                mainscreen.refreshActuatorsList();
-                mainscreen.refreshSensorsList();
+                if(actuatorListSize !=actuatorList.size()){
+                    mainscreen.refreshActuatorsList();
+                    actuatorListSize=actuatorList.size();
+                }
+                if(sensorListSize !=sensorList.size()){
+                    mainscreen.refreshSensorsList();
+                    sensorListSize =sensorList.size();
+                }
             }
         }, 0, 5000);
-                   /*System.out.println("******* Actuators List Main *******");
-            Iterator it =actuatorList.iterator();
-            while (it.hasNext()) {
-                System.out.println(it.next());
-            }*/
 
     }
 

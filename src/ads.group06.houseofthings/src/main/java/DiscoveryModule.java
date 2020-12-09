@@ -187,6 +187,7 @@ public class DiscoveryModule extends Thread{
             //System.out.println(obj);
         } catch (ClassNotFoundException e) {
             System.err.format("This Actuator brand doesn't have a plugin\n");
+            //System.out.println("Actuators." + cols[1].replaceAll("\\s+","") + "." +  classe);
             return;
         } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();

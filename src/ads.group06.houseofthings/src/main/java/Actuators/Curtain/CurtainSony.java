@@ -1,12 +1,15 @@
-package Actuators.Curtains;
+package Actuators.Curtain;
 import Actuators.ActuatorAction;
-import Models.AbstractActuator;
 import infrastructure.RandomValue;
 
 import java.io.Serializable;
 
 
 public class CurtainSony extends Curtain implements Serializable {
+
+    public CurtainSony() {
+    }
+
     @Override
     public void act(boolean state, ActuatorAction actuatorAction) {
         //Check if the value is "setState". If it is enters

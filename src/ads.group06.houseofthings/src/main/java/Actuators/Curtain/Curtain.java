@@ -1,4 +1,4 @@
-package Actuators.Curtains;
+package Actuators.Curtain;
 import Actuators.ActuatorAction;
 import Models.AbstractActuator;
 import infrastructure.RandomValue;

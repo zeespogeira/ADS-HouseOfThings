@@ -23,6 +23,12 @@ public class SensorReadingsHub {
         //System.out.println(actions.get(actions.size()-1));
     }
 
+    public void removeAction(IAction action){
+        this.actions.remove(action);
+        //System.out.println("Ultima Action");
+        //System.out.println(actions.get(actions.size()-1));
+    }
+
     public void addActions(List<Action> actions){
         this.actions.addAll(actions);
         //System.out.println("Actions in Hub");
