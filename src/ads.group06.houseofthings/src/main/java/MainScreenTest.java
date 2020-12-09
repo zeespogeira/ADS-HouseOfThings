@@ -113,11 +113,10 @@ public class MainScreenTest extends JFrame {
 
                     ActuatorName.setText(action.getActuators().get(0).getName());
 
-                    System.out.println(action.getActuators().get(0).getName());
-                    //actActionSelection.setSelectedItem(action.getActuatorAction().getName());
-
-                    actActionSelection.setSelectedItem(action.getActuatorAction().getName());
-                    System.out.println(action.getActuatorAction().getName());
+                    String method=action.getActuatorAction().getName();
+                    //VERIFY THIS
+                    actActionSelection.setSelectedItem(method);
+                    System.out.println(method);
 
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
@@ -129,9 +128,6 @@ public class MainScreenTest extends JFrame {
                         sensorSelection.addItem(sensor.getName());
                     }
                     sensorSelection.setSelectedItem(action.getConditions().get(0).getSensor().getName());
-
-
-
                 }
                 else{
                     clearActionDetails();
@@ -227,8 +223,6 @@ public class MainScreenTest extends JFrame {
                         ActuatorName.setText(action.getActuators().get(0).getName());
                         //actActionSelection.setSelectedItem(action.getActuatorAction().getName());
                         String method = (String) actActionSelection.getSelectedItem();
-                        //System.out.println("set"+method);
-                        //System.out.println(acActionOption.getText());
 
                         action.getConditions().set(0, condition01);
                         action.getActuators().set(0, action.getActuators().get(0));

@@ -37,11 +37,23 @@ Considering the system works in simulated mode, sensors and
 actuators available for discovery are listed in a .csv file
 with the following structure:
 
-    device_type, device_subtype, device_brand
+For Actuators:
 
-For exemple: 
+    device_type, device_subtype, device_brand, space
 
-    sensor, temperature, bosch
+For example: 
+
+    Actuator, Curtain, Sony, Bedroom
+    
+    
+    
+For Sensors:
+
+    device_type, device_subtype, device_brand, what_is_mesuring, space
+
+For example: 
+
+    Sensor, Thermometer, Bosch, Realfeel, Bedroom
 
 
 Each .csv file corresponds to a single device. The .csv 
@@ -53,6 +65,17 @@ and create the corresponding device object.
 #### 3.1.1. Used patterns
 
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/Devices%20Discovery.png?raw=true)
+
+#### 3.1.1.1. Microkernel
+**Problem in Context**
+ Our problem was how to instantiate actuators and sensors in run-time without having a timer cheking the folder x in x seconds.
+**The Pattern**, 
+**Implementation**
+For this implementation we decided to use a class called "Discovery Module". This class has a method called processEvents() that is always running in bachground to see if new files (actuators or sensors) are instantiated.
+
+**Consequences**
+We're using this pattern to help with the plug & play
+https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/src/ads.group06.houseofthings/src/main/java/DiscoveryModule.java
 
 ### 3.2. Sensor Infrastructure
 #### 3.2.1. Domain model
