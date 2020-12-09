@@ -40,7 +40,7 @@ public abstract class Curtain extends AbstractActuator implements Serializable {
     //ACT para se for mais valores
 
     @Override
-    public void act(boolean state, ActuatorAction actuatorAction) {
+    public void act(ActuatorAction actuatorAction) {
         //Check if the value is "setState". If it is enters
         if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
             //Checks if the value is "on"
@@ -73,6 +73,7 @@ public abstract class Curtain extends AbstractActuator implements Serializable {
                 ", percentage=" + percentage;
     }
 
+    @Override
     public void setState(boolean state) {
         isOpen = state;
     }

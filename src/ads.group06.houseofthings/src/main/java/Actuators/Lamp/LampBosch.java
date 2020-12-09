@@ -29,7 +29,7 @@ public class LampBosch extends Lamp implements Serializable {
 
     //Template Method
     @Override
-    public void act(boolean state,  ActuatorAction actuatorAction) {
+    public void act(ActuatorAction actuatorAction) {
 
         if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
             if(actuatorAction.getValue().equalsIgnoreCase("on")){ //if is on

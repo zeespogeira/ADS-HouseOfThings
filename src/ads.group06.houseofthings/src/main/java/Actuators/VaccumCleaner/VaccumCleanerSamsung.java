@@ -25,7 +25,7 @@ public class VaccumCleanerSamsung extends VaccumCleaner implements Serializable 
     }
 
     @Override
-    public void act(boolean state,  ActuatorAction actuatorAction) {
+    public void act(ActuatorAction actuatorAction) {
         //Check if the value is "setState". If it is enters
         if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
             //Checks if the value is "on"

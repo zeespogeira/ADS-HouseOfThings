@@ -4,14 +4,14 @@ import infrastructure.RandomValue;
 
 import java.io.Serializable;
 
-
+//Concrete Command
 public class CurtainSony extends Curtain implements Serializable {
 
     public CurtainSony() {
     }
 
     @Override
-    public void act(boolean state, ActuatorAction actuatorAction) {
+    public void act(ActuatorAction actuatorAction) {
         //Check if the value is "setState". If it is enters
         if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
             //Checks if the value is "on"

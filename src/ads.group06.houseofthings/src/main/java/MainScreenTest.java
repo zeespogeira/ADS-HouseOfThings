@@ -4,6 +4,7 @@ import Models.AbstractSensor;
 import infrastructure.*;
 import infrastructure.Action;
 
+import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -108,14 +109,19 @@ public class MainScreenTest extends JFrame {
                     controlValueInput.setText(String.valueOf(action.getConditions().get(0).getReferenceValue()));
                     acActionOption.setText(action.getActuatorAction().getValue());
 
+                    actActionSelection.setSelectedItem(action.getActuatorAction().getName());
+
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
                     Operator selectedType = (Operator)operatorSelection.getSelectedItem();
+                    operatorSelection.setSelectedItem(action.getConditions().get(0).getOperator());
 
                     sensorSelection.removeAllItems();
                     for (AbstractSensor sensor : sensorList) {
                         sensorSelection.addItem(sensor.getName());
                     }
+                    sensorSelection.setSelectedItem(action.getConditions().get(0).getSensor().getName());
+                    System.out.println(action.getActuatorAction().getName());
                 }
                 else{
                     clearActionDetails();
@@ -200,7 +206,7 @@ public class MainScreenTest extends JFrame {
                     action.setName(actionName.getText());
 
                     int sensorId = sensorSelection.getSelectedIndex();
-                    System.out.println(sensorId + "\n " + sensorList.get(sensorId).getName() + " " + sensorList.get(sensorId).getId());
+                    //System.out.println(sensorId + "\n " + sensorList.get(sensorId).getName() + " " + sensorList.get(sensorId).getId());
                     if(sensorId>=0) {
                         Condition condition01 = new Condition(sensorList.get(sensorId),
                                 Double.valueOf(controlValueInput.getText()),
@@ -450,6 +456,17 @@ public class MainScreenTest extends JFrame {
                 }
             }
         }, 0, 5000);
+
+        Timer timerSensor = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                for (AbstractSensor sensor: sensorList
+                     ) {
+                    sensor.sense();
+                }
+            }
+        }, 0, 5*1000);
 
     }
 

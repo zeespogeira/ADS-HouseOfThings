@@ -40,17 +40,7 @@ public abstract class Lamp extends AbstractActuator implements Serializable {
     //public abstract Integer getIlumination();
 
     @Override
-    public void act(boolean state, ActuatorAction actuatorAction) {
-        //if need to turn ON and the actuator is OFF then turn ON
-        /*if(state && isOn == false){
-            setState(true);
-        }
-
-        //if need to turn OFF and the actuator is ON then turn OFF
-        if(state == false && isOn){
-            setState(false);
-        }
-*/
+    public void act(ActuatorAction actuatorAction) {
         if(("set" + actuatorAction.getName()).equalsIgnoreCase("setState")){
 
             if(actuatorAction.getValue().equalsIgnoreCase("on")){ //if is on
@@ -61,6 +51,7 @@ public abstract class Lamp extends AbstractActuator implements Serializable {
         }
     }
 
+    @Override
     public void setState(boolean state) {
         isOn = state;
     }

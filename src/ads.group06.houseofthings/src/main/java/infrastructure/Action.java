@@ -36,13 +36,13 @@ public class Action implements IAction, Serializable {
     public void execute(AbstractSensor sensorReading) {
         //check if all the conditions are met
         boolean allConditionsMet = conditions.stream().allMatch(c->c.isMet(sensorReading));
-        //System.out.println(allConditionsMet);
 
         //notify actuators to act
         for(var actuator : actuators){
             //Adicionei if. Assim posso tirar o state dos act()
             if(allConditionsMet==true){
-                actuator.act(allConditionsMet, actuatorAction);
+                //command no abstractAct
+                actuator.act(actuatorAction);
             }
         }
     }

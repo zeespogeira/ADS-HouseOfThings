@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 //Abstract Factory
+//Abstract Command
 public abstract class AbstractActuator implements Serializable {
 
     static final AtomicInteger idGen = new AtomicInteger(1);
@@ -41,7 +42,10 @@ public abstract class AbstractActuator implements Serializable {
 
     public abstract String getState();
 
-    public abstract void act(boolean state,  ActuatorAction actuatorAction);
+    public abstract void setState(boolean state);
+
+    public abstract void act(ActuatorAction actuatorAction);
+
     @Override
     public String toString() {
         return "id=" + id + ", name=" + name;
