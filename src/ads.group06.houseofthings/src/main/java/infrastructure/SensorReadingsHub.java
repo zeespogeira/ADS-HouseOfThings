@@ -9,18 +9,15 @@ import java.util.stream.Collectors;
 
 public class SensorReadingsHub {
     private List<IAction> actions;
-    //private Queue<SensorReading> sensorReadings;
     private List<AbstractSensor> sensorReadings;
 
     public SensorReadingsHub(){
         this.actions = new ArrayList<>();
-        sensorReadings = new ArrayList<>();//(100);
+        sensorReadings = new ArrayList<>();
     }
 
     public void addAction(IAction action){
         this.actions.add(action);
-        //System.out.println("Ultima Action");
-        //System.out.println(actions.get(actions.size()-1));
     }
 
     public void removeAction(IAction action){

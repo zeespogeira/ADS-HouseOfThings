@@ -147,7 +147,7 @@ Actuators are entities that need to be triggered once a condition or set of cond
 #### 3.3.1.3. Command Pattern
 - **Problem in Context**
   - For our actuators to act, we needed some way for our method to be called without the class that calls it knowing what was within the method it was calling.
-  
+  -
 - **The Pattern**
     - This pattern allows the Action class to call the method act, from the actuators class, without knowing what the act truly does.
     
