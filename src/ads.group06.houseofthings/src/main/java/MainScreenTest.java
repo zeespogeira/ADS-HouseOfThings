@@ -474,7 +474,7 @@ public class MainScreenTest extends JFrame {
                     mainscreen.sensorReadingsHub.sense(sensor);
                 }
             }
-        }, 0, 10*1000);
+        }, 0, 20*1000);
 
     }
 

@@ -107,11 +107,16 @@ place would then be responsible for notifying all the interested entities.
 - **Problem in Context**
     - We identified a problem related to how would the sensors communicate to the "rest of the world" when a new reading was produced. To tackle the problem, we chose to include a component, SensorReadingHub, that would be responsible to aggregate all sensor readings. Once a reading is produced by the sensor, it should be stored in a single common "place". This place would then be responsible for notifying all the interested entities
     - How can we make sure that when a Sensor publishes a reading, the reading is stored in an common object to all sensors?
-- Pattern description
-    - The pattern enforces the existence of a single instance of a class.
-- Usage
-    - By using this pattern that all the readings are stored in a single object and we can react to the "new reading" by notifying all the "sensor reading dependants". The Hub class is a singleton class.
+- **The Pattern**
+    - By using this pattern we enforce that all the readings are stored in a single object and we can react to the "new reading" by notifying all the "sensor reading dependants".
+    
+- **Implementation**
+    - To implement this pattern we created a class HubProvider, that has a static SensorReadingsHub that can only be instantiated once. To garanteed that that's true we have a methos getReadingHub() that checks if the hub was already instantiated, and if it was returns it.
+     - Then in our main class we instantiate a SensorReadingsHub that calls the HubProvider method getReadingHub().
 
+- **Consequences**
+    - As a consequence of the use of this pattern, we can only have a hub for sensor readings.
+    
 #### 3.2.1.1. Observer
 - Problem
     - How can we make sure that when a Sensor publishes a reading all the "sensor dependants" act accordingly?
@@ -127,20 +132,17 @@ Actuators are entities that need to be triggered once a condition or set of cond
 
 #### 3.3.1. Used patterns
 #### 3.3.1.1. Mediator
-. Problem 
-    - How can an actuator be triggered when a set of conditions are met?
-- Pattern description
-    - The pattern reduces dependencies between objects. It restricts direct communication of the objects and enforces the communication only via the mediator object. 
-- Usage
-    - The Action object serves as the mediator between Conditions and Actuators. When an Action is notified to execute, then checks the state of all of its conditions and signals the actuators to act.
-
-#### 3.3.1.2. Factory Method
 - **Problem in Context**
-    - How can we remove the complex chainning of "if conditions" needed to compare the sensor value with the Condition value?
-- Pattern
-    - The patter provides an object responsible for deciding the instantiation of the correct implementation.
-- Usage
-    - We introduced the interface IComparer that is implemented by any class responsible for performing comparisons. A ComparerFactory was added, with the responsibility to decide which of of the IComparer implementation should be instantiated. 
+    - How can an actuator be triggered when a set of conditions are met?
+    - One problem we had was how to trigger an actuator after its conditions were met.
+    - We have the classes to implement the actuators and the class to implement the conditions, but we needed another class to handel their communication.
+- **The Pattern**
+    - This pattern reduces dependencies between objects. It restricts direct communication of the objects and enforces the communication only via the mediator object.
+    - In this case, we created the Action class that is instantiated with, between other things, a list of actions and a list of conditions. This class will then be responsable for making the actuators act when the conditions are true.  
+- **Implementation**
+    - The Action object serves as the mediator between Conditions and Actuators. When an Action is notified to execute, it checks the state of all of its conditions and signals the actuators to act.
+- **Consequences**
+    - This way we can make the actuators to act . 
 
 #### 3.3.1.3. Command Pattern
 - **Problem in Context**
@@ -157,11 +159,30 @@ Actuators are entities that need to be triggered once a condition or set of cond
     - As a consequence of this pattern, in the very least, all the types of actuators need to implement the act method.
     
     
-### 3.2. Sensor Infrastructure
+### 3.2. Comparer Infrastructure
 #### 3.3.1.2. Factory Method
 - **Problem in Context**
-    - How can we remove the complex chainning of "if conditions" needed to compare the sensor value with the Condition value?
-- Pattern
-    - The patter provides an object responsible for deciding the instantiation of the correct implementation.
-- Usage
+    - To compare the sensor value with the condition value we have various options. The conditions can be, for instance, lower than or equal to. Our problem was how to remove the complex chainning of "if conditions" in our class to create a more efficient, organized and easy to read code.
+    - We need to compare the sensor value with the condition value  
+- **The Pattern**
+    - The Factory Method pattern provides an object (Comparar Factory) responsible for deciding the instantiation of the correct implementation.
+- **Implementation**
     - We introduced the interface IComparer that is implemented by any class responsible for performing comparisons. A ComparerFactory was added, with the responsibility to decide which of of the IComparer implementation should be instantiated. 
+- **Consequences**
+    - As a consequence of the use of this pattern we have a more organized and easy to understand code. 
+    - Right now we only need to call the Comparar class and send the values we want to compare and the class decides which one to implement.
+    
+#### 3.3.1.2. Template Method
+- **Problem in Context**
+    - We needed to be able to have various types of the "same" actuator/sensor. An example is the Lamp and Lamp Bosch and Lamp Philips. 
+    - More specifically, a basic type actuator (Example: Lamp) only has a state (on/off) and if the lamp from the brand Bosch also has a feature for intensity, it can override the act method and change the intensity value.
+    - The sensors are implemented in a similar fashion.
+    - **The Pattern**
+    - The pattern provides a way for the actuators and sensors to have an option to specify its implementation, if necessary.
+    - Using the hook method act a subclass can override the act method if it has more options.
+- **Implementation**
+    - We create an abstract class that implements the act method (overriding it from its also abstract superclass). It's subclasses can then override it if they need to.
+    - For the sensors, we have the AbstractSensor class that has the abstract method sense, that will be implemented in the abstract type class (Ex: Humidity) and override in it's subclasses.
+- **Consequences**
+    - As a consequence of the use of this pattern we're able to specify the actuator/sensor behaviour if needed.
+
