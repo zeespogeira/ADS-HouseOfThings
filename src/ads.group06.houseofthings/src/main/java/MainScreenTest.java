@@ -39,6 +39,7 @@ public class MainScreenTest extends JFrame {
     private JComboBox actActionSelection;
     private JPanel actuatorsOptions;
     private JTextField acActionOption;
+    private JLabel ActuatorName;
     private static List<AbstractActuator> actuatorList= Collections.synchronizedList(new ArrayList<AbstractActuator>());
     private static List<AbstractSensor> sensorList= Collections.synchronizedList(new ArrayList<AbstractSensor>());
     private ArrayList<Action> actionList;
@@ -108,8 +109,15 @@ public class MainScreenTest extends JFrame {
                     actionName.setText(action.getName());
                     controlValueInput.setText(String.valueOf(action.getConditions().get(0).getReferenceValue()));
                     acActionOption.setText(action.getActuatorAction().getValue());
+                    //ActuatorName.setText(actuatorList.get(actuatorNumber).getName());
+
+                    ActuatorName.setText(action.getActuators().get(0).getName());
+
+                    System.out.println(action.getActuators().get(0).getName());
+                    //actActionSelection.setSelectedItem(action.getActuatorAction().getName());
 
                     actActionSelection.setSelectedItem(action.getActuatorAction().getName());
+                    System.out.println(action.getActuatorAction().getName());
 
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
@@ -121,7 +129,9 @@ public class MainScreenTest extends JFrame {
                         sensorSelection.addItem(sensor.getName());
                     }
                     sensorSelection.setSelectedItem(action.getConditions().get(0).getSensor().getName());
-                    System.out.println(action.getActuatorAction().getName());
+
+
+
                 }
                 else{
                     clearActionDetails();
@@ -139,16 +149,17 @@ public class MainScreenTest extends JFrame {
                     controlValueInput.setText("0");
                     actionName.setText("New action");
 
+                    ActuatorName.setText(actuatorList.get(actuatorNumber).getName());
+
                     int sensorId = sensorSelection.getSelectedIndex();
                     if(sensorId>=0){
-                        //Command Pattern (Verificar porque é só 1 tipo)
                         //Default value
                         Condition condition01 = new Condition(sensorList.get(sensorId), Double.valueOf(controlValueInput.getText()) ,
                                 Operator.LOWER);
                         List<Condition> conditions = new ArrayList<>();
                         conditions.add(condition01);
 
-                        //Command Pattern
+                        //Command Pattern (Actuators)
                         List<AbstractActuator> actuatorsForAction=new ArrayList<>();
                         actuatorsForAction.add(actuatorList.get(actuatorNumber));
 
@@ -213,6 +224,8 @@ public class MainScreenTest extends JFrame {
                                 (Operator) operatorSelection.getSelectedItem());
 
                         AbstractActuator actuator = action.getActuators().get(0);
+                        ActuatorName.setText(action.getActuators().get(0).getName());
+                        //actActionSelection.setSelectedItem(action.getActuatorAction().getName());
                         String method = (String) actActionSelection.getSelectedItem();
                         //System.out.println("set"+method);
                         //System.out.println(acActionOption.getText());
@@ -263,6 +276,7 @@ public class MainScreenTest extends JFrame {
         operatorSelection.removeAllItems();
         controlValueInput.setText("0");
         acActionOption.setText("");
+        ActuatorName.setText("");
     }
 
     public void refreshActuatorsList(){
