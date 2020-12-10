@@ -103,12 +103,10 @@ public class MainScreenTest extends JFrame {
                     actionName.setText(action.getName());
                     controlValueInput.setText(String.valueOf(action.getConditions().get(0).getReferenceValue()));
                     acActionOption.setText(action.getActuatorAction().getValue());
-                    //ActuatorName.setText(actuatorList.get(actuatorNumber).getName());
 
                     ActuatorName.setText(action.getActuators().get(0).getName());
 
                     actActionSelection.setSelectedItem(action.getActuatorAction().getName());
-                    //System.out.println(method);
 
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
@@ -185,7 +183,6 @@ public class MainScreenTest extends JFrame {
         sensorsList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                // TODO: This logic is repeated... refactor?
                 int sensorNumber = sensorsList.getSelectedIndex();
                 if (sensorNumber >= 0){
                     sensorReading.setText(
@@ -227,14 +224,8 @@ public class MainScreenTest extends JFrame {
                         action.execute(action.getConditions().get(0).getSensor());
                         refreshActionList();
                         refreshActuatorState();
-
-                    /*Iterator it=actionList.iterator();
-                    while (it.hasNext()){
-                        System.out.println(it.next());
-                    }*/
                     }
                     save();
-                    //clearActionDetails();
                 }
             }
         });
