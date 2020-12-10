@@ -169,7 +169,7 @@ public class DiscoveryModule extends Thread{
             cols[i]=cols[i].replaceAll("\\s+","");
         }
         String classe=(cols[1].substring(0, 1).toUpperCase() + cols[1].substring(1))
-                .concat(cols[2].substring(0, 1).toUpperCase() + cols[2].substring(1).toLowerCase());
+                .concat(cols[2].substring(0, 1).toUpperCase() + cols[2].substring(1));
         classe=classe.replaceAll("\\s+","");
 
         String name=(cols[1].substring(0, 1).toUpperCase() + cols[1].substring(1).toLowerCase())
@@ -192,62 +192,6 @@ public class DiscoveryModule extends Thread{
         } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
-
-
-        /*
-        // Desta forma tenho de por todos os sub-metodos especificos de uma classe aqui -> NAO E PERMANENTE
-        Class par=java.lang.String.class;
-        Method methodToInsertValue = null;
-        String[] specificMethods={"setIlumination"};
-
-        try {
-            for (String method2:specificMethods
-            ) {
-                methodToInsertValue = factoryClsImpl.getMethod(method2,par);
-                if(methodToInsertValue!=null){
-                    break;
-                }
-            }
-        } catch (NoSuchMethodException  e) { //To search in the superClass
-            try {
-                for (String methodS:specificMethods
-                ) {
-                    String variableValue=methodS.replaceAll("set","").toLowerCase();
-                    //Class pal= factoryClsImpl.getSuperclass().getField(variableValue).getType();
-                    //method2 = factoryImpl.getSuperclass().getMethod(methodS, par);
-                    methodToInsertValue = factoryClsImpl.getSuperclass().getMethod(methodS, par);
-                    if(methodToInsertValue!=null){
-                        break;
-                    }
-                }
-            } catch (NoSuchMethodException ex) {
-                //Poderia passar isto a frente (Just information to test)
-                //System.err.format("This Actuator doesn't have this option\n");
-            }
-            //System.err.format("This Sensor doesn't have this option\n");
-        }
-       // System.out.println(method2);
-
-        synchronized (actuatorList){
-            try {
-                //Vai ser aleatorio
-                String input2=cols[3]; //if doesn't have the value, it's caught in the exception "ArrayIndexOutOfBoundsException"
-
-                // If it's different there is a actuator instantiated
-                if (obj != null) {
-                    AbstractActuator es = (AbstractActuator)methodToInsertValue.invoke(obj, input2);
-                    //System.out.println(obj.toString());
-                    actuatorList.add(obj);
-                }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-            catch (ArrayIndexOutOfBoundsException | NullPointerException ex){
-                // If catches this error (there isn't any more arguments in cols) there isn't a field to instantiate
-                actuatorList.add(obj);
-                //System.out.println(obj.toString());
-            }
-        }*/
     }
 
     public synchronized void instantiateModuleSensor(String[] cols){
@@ -255,7 +199,7 @@ public class DiscoveryModule extends Thread{
             cols[i]=cols[i].replaceAll("\\s+","");
         }
         String classe=(cols[1].substring(0, 1).toUpperCase() + cols[1].substring(1))
-                .concat(cols[2].substring(0, 1).toUpperCase() + cols[2].substring(1).toLowerCase());
+                .concat(cols[2].substring(0, 1).toUpperCase() + cols[2].substring(1));
         classe=classe.replaceAll("\\s+","");
 
 

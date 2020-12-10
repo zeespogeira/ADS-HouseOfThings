@@ -47,7 +47,7 @@ public class MainScreenTest extends JFrame {
     private DefaultListModel actionListModel;
     private DefaultListModel sensorListModel;
 
-    //Instanciar o hub
+
     SensorReadingsHub sensorReadingsHub= HubProvider.getReadingHub();
 
     MainScreenTest() throws IOException {
@@ -67,8 +67,6 @@ public class MainScreenTest extends JFrame {
         actionList = new ArrayList<>();
         actionListModel = new DefaultListModel();
         actionsList.setModel(actionListModel);
-
-        load();
 
         sensorReading.setEditable(false);
 
@@ -90,9 +88,7 @@ public class MainScreenTest extends JFrame {
                         sensorSelection.addItem(sensor.getName());
                     }
 
-                    actActionSelection.removeAllItems();
 
-                    loadActuatorsMethods(actuatorList.get(actuatorNumber));
 
                     refreshActionList();
                     refreshActuatorState();
@@ -113,10 +109,8 @@ public class MainScreenTest extends JFrame {
 
                     ActuatorName.setText(action.getActuators().get(0).getName());
 
-                    String method=action.getActuatorAction().getName();
-                    //VERIFY THIS
-                    actActionSelection.setSelectedItem(method);
-                    System.out.println(method);
+                    actActionSelection.setSelectedItem(action.getActuatorAction().getName());
+                    //System.out.println(method);
 
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
@@ -128,6 +122,9 @@ public class MainScreenTest extends JFrame {
                         sensorSelection.addItem(sensor.getName());
                     }
                     sensorSelection.setSelectedItem(action.getConditions().get(0).getSensor().getName());
+
+                    actActionSelection.removeAllItems();
+                    loadActuatorsMethods(action.getActuators().get(0));
                 }
                 else{
                     clearActionDetails();
@@ -176,8 +173,6 @@ public class MainScreenTest extends JFrame {
                 // TODO: This logic is repeated... refactor?
                 int actionNumber = actionsList.getSelectedIndex();
                 if (actionNumber >= 0) {
-                    /*ActionT action = actionList.get(actionNumber);
-                    actionList.remove(action);*/
                     Action action = actionList.get(actionNumber);
                     actionList.remove(action);
                     action = null;
@@ -213,7 +208,6 @@ public class MainScreenTest extends JFrame {
                     action.setName(actionName.getText());
 
                     int sensorId = sensorSelection.getSelectedIndex();
-                    //System.out.println(sensorId + "\n " + sensorList.get(sensorId).getName() + " " + sensorList.get(sensorId).getId());
                     if(sensorId>=0) {
                         Condition condition01 = new Condition(sensorList.get(sensorId),
                                 Double.valueOf(controlValueInput.getText()),
@@ -221,7 +215,7 @@ public class MainScreenTest extends JFrame {
 
                         AbstractActuator actuator = action.getActuators().get(0);
                         ActuatorName.setText(action.getActuators().get(0).getName());
-                        //actActionSelection.setSelectedItem(action.getActuatorAction().getName());
+
                         String method = (String) actActionSelection.getSelectedItem();
 
                         action.getConditions().set(0, condition01);
@@ -234,7 +228,6 @@ public class MainScreenTest extends JFrame {
                         sensorReadingsHub.addAction(action);
                         action.execute(action.getConditions().get(0).getSensor());
                         refreshActionList();
-                        //updateActuatorListFromActionsFile();
                         refreshActuatorState();
 
                     /*Iterator it=actionList.iterator();
@@ -268,6 +261,7 @@ public class MainScreenTest extends JFrame {
         actionName.setText("");
         sensorSelection.removeAllItems();
         operatorSelection.removeAllItems();
+        actActionSelection.removeAllItems();
         controlValueInput.setText("0");
         acActionOption.setText("");
         ActuatorName.setText("");
@@ -408,8 +402,6 @@ public class MainScreenTest extends JFrame {
     public void checkActionsFromFile(){
         for (Action action: actionList
         ) {
-            //System.out.println("execute actions");
-            //System.out.println(getSensorFromList(action.getConditions().get(0).getSensor()));
             action.execute(getSensorFromList(action.getConditions().get(0).getSensor()));
         }
         updateActuatorListFromActionsFile();
@@ -433,7 +425,7 @@ public class MainScreenTest extends JFrame {
             //Add files actuators to mainscreen
             mainscreen.addActuatorToList(discoveryModule.getActuatorsList());
         }
-
+        mainscreen.load();
         mainscreen.checkActionsFromFile();
 
         ExecutorService service = Executors.newFixedThreadPool(4);
