@@ -88,8 +88,6 @@ public class MainScreenTest extends JFrame {
                         sensorSelection.addItem(sensor.getName());
                     }
 
-
-
                     refreshActionList();
                     refreshActuatorState();
                 }
@@ -282,7 +280,6 @@ public class MainScreenTest extends JFrame {
     }
 
     public void refreshActionList(){
-        //System.out.println("refreshActionList ");
         actionListModel.removeAllElements();
         for (Action action : actionList) {
             //System.out.println("Adding action to list: " + action.getName());
@@ -354,12 +351,7 @@ public class MainScreenTest extends JFrame {
 
             actionList.addAll(actions);
 
-           /* Iterator it=actions.iterator();
-            while(it.hasNext()){
-                System.out.println(it.next());
-            }*/
             ois.close();
-            //updateActuatorListFromActionsFile();
         } catch (IOException e) {
            e.printStackTrace();
         } catch (ClassNotFoundException e) {
