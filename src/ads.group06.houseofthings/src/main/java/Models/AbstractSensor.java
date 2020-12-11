@@ -30,14 +30,6 @@ public abstract class AbstractSensor implements Serializable, ISensor {
         return this.id;
     }
 
-   //public abstract Integer getId();
-
-
-    /*@Override
-    public void addReadingsHub() {
-
-    }
-*/
     @Override
     public String toString() {
         return "id=" + id +

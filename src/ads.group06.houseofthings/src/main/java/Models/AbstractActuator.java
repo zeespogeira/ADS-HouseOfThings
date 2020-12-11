@@ -6,7 +6,7 @@ import Interface.IActuators;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-//Abstract Factory
+
 //Abstract Command
 public abstract class AbstractActuator implements Serializable {
 

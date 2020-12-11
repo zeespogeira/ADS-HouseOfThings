@@ -53,21 +53,21 @@ Considering the system works in simulated mode, sensors and
 actuators available for discovery are listed in a .csv file
 with the following structure:
 
-For Actuators:
+**For Actuators:**
 
     device_type, device_subtype, device_brand, space
 
-For example: 
+Example: 
 
     Actuator, Curtain, Sony, Bedroom
     
+<br>
     
-    
-For Sensors:
+**For Sensors**:
 
     device_type, device_subtype, device_brand, what_is_mesuring, space
 
-For example: 
+Example: 
 
     Sensor, Thermometer, Bosch, Realfeel, Bedroom
 
@@ -78,21 +78,21 @@ The system will automatically detect if there are changes
 to the Devices folder (e.g. when adding a new .csv file)
 and create the corresponding device object.
 
-#### 3.1.1. Used patterns
-
-![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/Devices%20Discovery.png?raw=true)
-
-#### 3.1.1.1. Microkernel
 - **Problem in Context**
     - Our problem was how to instantiate actuators and sensors in run-time without having a timer cheking the folder x in x seconds.
-- **The Pattern**
 
 - **Implementation**
-    - For this implementation we decided to use a class called "Discovery Module". This class has a method called processEvents() that is always running in bachground to see if new files (actuators or sensors) are instantiated.
+    - For this implementation we decided to use a class called "Discovery Module". This class has a method called processEvents() that is always running in background to see if new files (actuators or sensors) are instantiated.
 
 - **Consequences**
     - We're using this pattern to help with the plug & play
 https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/src/ads.group06.houseofthings/src/main/java/DiscoveryModule.java
+
+
+#### 3.1.1. Used patterns
+
+![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/Devices%20Discovery.png?raw=true)
+
 
 ### 3.2. Sensor Infrastructure
 #### 3.2.1. Domain model
@@ -111,14 +111,14 @@ place would then be responsible for notifying all the interested entities.
     - By using this pattern we enforce that all the readings are stored in a single object and we can react to the "new reading" by notifying all the "sensor reading dependants".
     
 - **Implementation**
-    - To implement this pattern we created a class HubProvider, that has a static SensorReadingsHub that can only be instantiated once. To garanteed that that's true we have a methos getReadingHub() that checks if the hub was already instantiated, and if it was returns it.
+    - To implement this pattern we created a class HubProvider, that has a static SensorReadingsHub that can only be instantiated once. To garanteed that that's true we have a method getReadingHub() that checks if the hub was already instantiated, and if it was returns it.
      - Then in our main class we instantiate a SensorReadingsHub that calls the HubProvider method getReadingHub().
 
 - **Consequences**
-    - As a consequence of the use of this pattern, we can only have a hub for sensor readings.
+    - As a consequence of the use of this pattern, we can only have one hub for sensor readings.
     
 #### 3.2.1.1. Observer
-- Problem
+- **Problem in Context**
     - How can we make sure that when a Sensor publishes a reading all the "sensor dependants" act accordingly?
 - Pattern description
     - The pattern defines a mechanism to notify multiple objects about events that happen on the observed object.
@@ -174,15 +174,27 @@ Actuators are entities that need to be triggered once a condition or set of cond
     
 #### 3.3.1.2. Template Method
 - **Problem in Context**
-    - We needed to be able to have various types of the "same" actuator/sensor. An example is the Lamp and Lamp Bosch and Lamp Philips. 
-    - More specifically, a basic type actuator (Example: Lamp) only has a state (on/off) and if the lamp from the brand Bosch also has a feature for intensity, it can override the act method and change the intensity value.
-    - The sensors are implemented in a similar fashion.
+    - Problem 1
+        - We needed to be able to have various types of the "same" actuator/sensor. An example is the Lamp and Lamp Bosch and Lamp Philips. 
+        - More specifically, a basic type actuator (Example: Lamp) only has a state (on/off) and if the lamp from the brand Bosch also has a feature for intensity, it can override the act method and change the intensity value.
+        - The sensors are implemented in a similar fashion.
+    
+    - Problem 2 
+        - We needed to force the concrete sensors/actuators to follow a basic structure.
+        - For the sensors we needed them to follow the structure from the **AbstractSensor** class and to specify it's fields in the subclasses.
+        - The actuators the same thing, but with the class **AbstractActuator**.
+       
 - **The Pattern**
-    - The pattern provides a way for the actuators and sensors to have an option to specify its implementation, if necessary.
-    - Using the hook method act a subclass can override the act method if it has more options.
+    - Problem 1
+        - The pattern provides a way for the actuators and sensors to have an option to specify its implementation, if necessary.
+        - For instance, using the hook method **act** a subclass can override the act method if it has more options.
+    - Problem 2
+          - We're defining the methods for the ID in the abstract class, so they are the template method. The hook methods would be the getReadings, por example.
+        - That getReadings then would be a template method in the Humidity class, for example.
 - **Implementation**
-    - We create an abstract class that implements the act method (overriding it from its also abstract superclass). It's subclasses can then override it if they need to.
+    - We create an abstract class (general actuator) that implements the act method (overriding it from its also abstract superclass). It's subclasses can then override it if they need to.
     - For the sensors, we have the AbstractSensor class that has the abstract method sense, that will be implemented in the abstract type class (Ex: Humidity) and override in it's subclasses.
+    - Another example is the getID from the classes. It is defined in AbstractSensor/AbstractActuator.
 - **Consequences**
     - As a consequence of the use of this pattern we're able to specify the actuator/sensor behaviour if needed.
 
