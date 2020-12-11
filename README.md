@@ -189,10 +189,10 @@ Actuators are entities that need to be triggered once a condition or set of cond
         - The pattern provides a way for the actuators and sensors to have an option to specify its implementation, if necessary.
         - For instance, using the hook method **act** a subclass can override the act method if it has more options.
     - Problem 2
-          - We're defining the methods for the ID in the abstract class, so they are the template method. The hook methods would be the getReadings, por example.
+        - We're defining the methods for the ID in the abstract class, so they are the template method. The hook methods would be the getReadings, por example.
         - That getReadings then would be a template method in the Humidity class, for example.
 - **Implementation**
-    - We create an abstract class (general actuator) that implements the act method (overriding it from its also abstract superclass). It's subclasses can then override it if they need to.
+    - We create an abstract class (general actuator) that implements the act method (overriding it from its also abstract superclass(AbstractActuator)). It's subclasses can then override it if they need to.
     - For the sensors, we have the AbstractSensor class that has the abstract method sense, that will be implemented in the abstract type class (Ex: Humidity) and override in it's subclasses.
     - Another example is the getID from the classes. It is defined in AbstractSensor/AbstractActuator.
 - **Consequences**
