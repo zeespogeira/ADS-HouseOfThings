@@ -100,13 +100,19 @@ public class MainScreenTest extends JFrame {
                 if (actionNumber >= 0){
                     Action action = actionList.get(actionNumber);
 
+                    //actActionSelection.removeAllItems();
+
                     actionName.setText(action.getName());
                     controlValueInput.setText(String.valueOf(action.getConditions().get(0).getReferenceValue()));
                     acActionOption.setText(action.getActuatorAction().getValue());
 
                     ActuatorName.setText(action.getActuators().get(0).getName());
 
-                    actActionSelection.setSelectedItem(action.getActuatorAction().getName());
+                    String method=action.getActuatorAction().getName();
+                    System.out.println(method);
+
+                    actActionSelection.setSelectedItem(method);
+                    //System.out.println(actActionSelection.getSelectedIndex());
 
                     operatorSelection.removeAllItems();
                     operatorSelection.setModel(new DefaultComboBoxModel<>(Operator.values()));
@@ -119,7 +125,7 @@ public class MainScreenTest extends JFrame {
                     }
                     sensorSelection.setSelectedItem(action.getConditions().get(0).getSensor().getName());
 
-                    actActionSelection.removeAllItems();
+                    //actActionSelection.removeAllItems();
                     loadActuatorsMethods(action.getActuators().get(0));
                 }
                 else{

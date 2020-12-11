@@ -18,7 +18,6 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 public class DiscoveryModule extends Thread{
-    Integer numberOfModulesConnected;
 
     private final String currentPath;
     private final WatchService watcher;
@@ -86,9 +85,6 @@ public class DiscoveryModule extends Thread{
                     System.err.println(x);
                     continue;
                 }
-
-                //Is a CSV file. Need to instantiate class
-                //System.out.format("Instantiate Class from file %s%n", filename);
 
                 //using threads
                 synchronized(DiscoveryModule.class){
@@ -187,7 +183,6 @@ public class DiscoveryModule extends Thread{
             //System.out.println(obj);
         } catch (ClassNotFoundException e) {
             System.err.format("This Actuator brand doesn't have a plugin\n");
-            //System.out.println("Actuators." + cols[1].replaceAll("\\s+","") + "." +  classe);
             return;
         } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();

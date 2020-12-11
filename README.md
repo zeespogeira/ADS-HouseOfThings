@@ -177,7 +177,7 @@ Actuators are entities that need to be triggered once a condition or set of cond
     - We needed to be able to have various types of the "same" actuator/sensor. An example is the Lamp and Lamp Bosch and Lamp Philips. 
     - More specifically, a basic type actuator (Example: Lamp) only has a state (on/off) and if the lamp from the brand Bosch also has a feature for intensity, it can override the act method and change the intensity value.
     - The sensors are implemented in a similar fashion.
-    - **The Pattern**
+- **The Pattern**
     - The pattern provides a way for the actuators and sensors to have an option to specify its implementation, if necessary.
     - Using the hook method act a subclass can override the act method if it has more options.
 - **Implementation**

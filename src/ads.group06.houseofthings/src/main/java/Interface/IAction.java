@@ -11,4 +11,5 @@ public interface IAction {
     void removeActuator(Integer actuatorId);
     void execute(AbstractSensor sensorReading);
     boolean hasConditionWithSensor(int sensorId);
+    void executeRemove();
 }

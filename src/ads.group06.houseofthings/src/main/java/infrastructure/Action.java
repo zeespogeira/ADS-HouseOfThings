@@ -44,6 +44,13 @@ public class Action implements IAction, Serializable {
         }
     }
 
+    public void executeRemove() {
+        for(var actuator : actuators){
+            //command no abstractAct
+            actuator.act(false, actuatorAction);
+        }
+    }
+
     public List<AbstractActuator> getActuators() {
         return actuators;
         //s
