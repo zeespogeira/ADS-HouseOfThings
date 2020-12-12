@@ -5,8 +5,6 @@
 
 [Goals](#Goals)
 
-[Domain model](#Domain model)
-
 [Design](#Design)
 * [Discoverability](#Discoverability) 
 
