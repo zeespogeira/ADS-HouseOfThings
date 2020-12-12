@@ -105,10 +105,13 @@ and create the corresponding device(s) object(s).
     system. 
 https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/src/ads.group06.houseofthings/src/main/java/DiscoveryModule.java
 
+#### 3.1.1. Devices domain 
 
-#### 3.1.1. Used patterns
+The two base types of devices our controller supports (sensors and actuators) are 
+implementations of two abstract classes: *AbstractSensor* and *AbstractActuator*, 
+respectively. This is illustrated by the following diagram:  
 
-![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/Devices%20Discovery.png?raw=true)
+![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/diagrams-SensorsActuators.png?raw=true)
 
 
 ### 3.2. Sensor Infrastructure
