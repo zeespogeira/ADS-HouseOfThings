@@ -120,11 +120,17 @@ place would then be responsible for notifying all the interested entities.
 #### 3.2.1.1. Observer
 - **Problem in Context**
     - How can we make sure that when a Sensor publishes a reading all the "sensor dependants" act accordingly?
-- Pattern description
-    - The pattern defines a mechanism to notify multiple objects about events that happen on the observed object.
-- Usage
+    - When a sensor publishes a reading we need to make sure that all actuators that depend from that sensor act accordingly to the action defined.
+- **The Pattern**
+    - The pattern observer defines a mechanism to notify multiple objects about events that happen on the observed object.
+    - Specifically, when a new reading is defined, the actuators dependants from that reading are warned to act.
+- **Implementation**
     - Using this pattern allowed us to implement a mechanism in a single component that notifies all the objects that need to act after a sensor emits a reading. The pattern is implemented in the Hub class.
-
+    - In that class, we have a method **notifyActions** that sees the actions that are dependent of that sensor and tells them to execute it's behavior (in this case, call the method act from the actuators).
+- **Consequences**
+    - As a consequence of the use of this pattern we know are capable to say to the actuators to act when necessary, with a minimal amount of code.
+    
+    
 ### 3.3. Actuator Infrastructure
 ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/infra-diagrams-infra-actuators.png?raw=true)
 
@@ -183,6 +189,9 @@ Actuators are entities that need to be triggered once a condition or set of cond
         - We needed to force the concrete sensors/actuators to follow a basic structure.
         - For the sensors we needed them to follow the structure from the **AbstractSensor** class and to specify it's fields in the subclasses.
         - The actuators the same thing, but with the class **AbstractActuator**.
+    
+    - Problem 3
+        - We also needed to have unique ID for all actuators/sensors. For that we implemented our template method, **setID()**,  in classes  AbstractSensor and AbstractActuators. This way all their subclasses have a unique id, that cannot be changed and can be referenced from other classes.
        
 - **The Pattern**
     - Problem 1
@@ -191,6 +200,8 @@ Actuators are entities that need to be triggered once a condition or set of cond
     - Problem 2
         - We're defining the methods for the ID in the abstract class, so they are the template method. The hook methods would be the getReadings, por example.
         - That getReadings then would be a template method in the Humidity class, for example.
+    - Problem 3
+        - We implemented the setID() in the abstractActuator and AbstractSensor and when its subclasses are instantiated, the ID is set and incremented.
 - **Implementation**
     - We create an abstract class (general actuator) that implements the act method (overriding it from its also abstract superclass(AbstractActuator)). It's subclasses can then override it if they need to.
     - For the sensors, we have the AbstractSensor class that has the abstract method sense, that will be implemented in the abstract type class (Ex: Humidity) and override in it's subclasses.
