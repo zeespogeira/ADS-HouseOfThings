@@ -85,7 +85,7 @@ Example:
     
 **For Sensors**:
 
-    device_type, device_subtype, device_brand, what_is_mesuring, space
+    device_type, device_subtype, device_brand, what_is_measuring, space
 
 Example: 
 
