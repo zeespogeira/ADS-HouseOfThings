@@ -100,12 +100,12 @@ and create the corresponding device(s) object(s).
 
 - **Problem in Context**
     - How to instantiate actuators and sensors
-    in run-time without having a timer cheking the folder periodically?
+    in run-time without having a timer checking the folder periodically?
 
 - **Implementation**
     - We decided to use a class *DiscoveryModule*. This class 
-    has a method nammed *processEvents()* that runs in the background 
-    that evaluates if new .csv files are added to the Devices folder, and 
+    has a method named *processEvents()* that runs in the background 
+    and evaluates if new .csv files are added to the Devices folder, and 
     instantiates the corresponding devices listed in each .csv file.
 
 - **Consequences**
@@ -160,7 +160,7 @@ and consequences.
     - Using this pattern allowed us to implement a mechanism in a single component that notifies all the objects that need to act after a sensor emits a reading. The pattern is implemented in the Hub class.
     - In that class, we have a method **notifyActions** that sees the actions that are dependent of that sensor and tells them to execute it's behavior (in this case, call the method act from the actuators).
 - **Consequences**
-    - As a consequence of the use of this pattern we know are capable to say to the actuators to act when necessary, with a minimal amount of code.
+    - As a consequence of the use of this pattern we are now capable to say to the actuators to act when necessary, with a minimal amount of code.
  
      ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/diagrams-Observer.png?raw=true)
    
@@ -168,15 +168,14 @@ and consequences.
 #### 3.3.3. Mediator
 - **Problem in Context**
     - How can an actuator be triggered when a set of conditions are met?
-    - One problem we had was how to trigger an actuator after its conditions were met.
-    - We have the classes to implement the actuators and the class to implement the conditions, but we needed another class to handel their communication.
+    - One problem we had was how to trigger an actuator after its conditions were met. We had the classes to implement the actuators and the class to implement the conditions, but we needed another class to handel their communication.
 - **The Pattern**
     - This pattern reduces dependencies between objects. It restricts direct communication of the objects and enforces the communication only via the mediator object.
     - In this case, we created the Action class that is instantiated with, between other things, a list of actions and a list of conditions. This class will then be responsable for making the actuators act when the conditions are true.  
 - **Implementation**
     - The Action object serves as the mediator between Conditions and Actuators. When an Action is notified to execute, it checks the state of all of its conditions and signals the actuators to act.
 - **Consequences**
-    - This way we can make the actuators to act . 
+    - This way we can make the actuators act. 
 
     ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/diagrams-Mediator.png?raw=true)
  
@@ -202,7 +201,6 @@ and consequences.
 #### 3.3.5. Factory Method
 - **Problem in Context**
     - To compare the sensor value with the condition value we have various options. The conditions can be, for instance, lower than or equal to. Our problem was how to remove the complex chainning of "if conditions" in our class to create a more efficient, organized and easy to read code.
-    - We need to compare the sensor value with the condition value  
 - **The Pattern**
     - The Factory Method pattern provides an object (*ComparerFactory*) responsible for deciding the instantiation of the correct implementation.
 - **Implementation**
