@@ -22,7 +22,7 @@ ADS-HouseOfThings is a software system designed to control
 
 ## 2. Goals
 
-The system shall:
+The system should:
 - Support multiple devices, for instance types of
  sensors and actuators;
 - Support adding new devices easily;
@@ -33,25 +33,48 @@ actuators) through the user interface;
 - Be easy to integrate with well-known systems, such as, SMS,
  Slack, WhatsApp, and other communication systems.
 
-
-## 3. Domain model
-
-
 ## 3. Design 
 This section explains the design choices of the various
  features developed in this project.
+ 
+### 3.1. Domain
 
-### 3.1. Discoverability 
+The main components of our system are described in the image below.
+- The Sensor represents a device that is able to measure some
+quantifiable quality. 
+- The Actuator represents a device that is able to perform 
+some action.
+- The Condition component represents the rules that should trigger an action.
+- The DiscoveryModule component represents the ability of the system
+to automatically identify new devices (plug-n-play).
+- The Hub component represents a central location that aggregates
+ sensor information and triggers notifications based on that information.    
 
-To control sensors and actuators, we first need to have such
-devices available. This is achieved through a process we 
-named Discoverability, which enables the system to identify
-sensors and actuators that it can use.
+![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/diagrams-Domain.png?raw=true)
 
 
-Considering the system works in simulated mode, sensors and
-actuators available for discovery are listed in a .csv file
-with the following structure:
+### 3.2. The first design problem: Plug-n-Play and Discoverability
+
+To control sensors and actuators, we first need to have such devices available. 
+This is achieved through a process we named Discoverability, which enables 
+the system to identify devices that it can use, such as sensors and actuators.
+
+We defined two base types of devices: sensors and actuators. These two base
+types can be combined to achieve more complex configurations of devices that
+include one or more sensors or actuators – these are named modules. 
+
+An example of a module would be a combi-refrigerator with a water dispensing system,
+which can be described as 3 actuators (the refrigerator, the freezer, and the 
+water dispensing system) and 4 sensors (a temperature sensor in the refrigerator,
+a temperature sensor in the freezer, a temperature sensor in the water dispending
+system, and a proximity sensor used to light the HMI). 
+
+Considering the system works in simulated mode, sensors and actuators available for
+discovery are listed in a .csv file. Each .csv file represents a module, with 
+each line of the .csv representing a device in that module. In the limit, a 
+module with only one device corresponds to the device itself. 
+
+The .csv structure is the following:
 
 **For Actuators:**
 
@@ -72,54 +95,66 @@ Example:
     Sensor, Thermometer, Bosch, Realfeel, Bedroom
 
 
-Each .csv file corresponds to a single device. The .csv 
-files are stored in a folder named Devices. 
-The system will automatically detect if there are changes
-to the Devices folder (e.g. when adding a new .csv file)
-and create the corresponding device object.
+Each .csv file corresponds to a module. 
+The .csv files are stored in a folder named Devices. 
+The system will automatically detect if there are changes to the Devices
+folder (e.g. when adding a new .csv file) 
+and create the corresponding device(s) object(s).
 
 - **Problem in Context**
-    - Our problem was how to instantiate actuators and sensors in run-time without having a timer cheking the folder x in x seconds.
+    - How to instantiate actuators and sensors
+    in run-time without having a timer cheking the folder periodically?
 
 - **Implementation**
-    - For this implementation we decided to use a class called "Discovery Module". This class has a method called processEvents() that is always running in background to see if new files (actuators or sensors) are instantiated.
+    - We decided to use a class *DiscoveryModule*. This class 
+    has a method nammed *processEvents()* that runs in the background 
+    that evaluates if new .csv files are added to the Devices folder, and 
+    instantiates the corresponding devices listed in each .csv file.
 
 - **Consequences**
-    - We're using this pattern to help with the plug & play
-https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/src/ads.group06.houseofthings/src/main/java/DiscoveryModule.java
+    - This design decision enables the "plug & play" ability of our system, 
+    since it becomes able to automatically detect new devices.
+    
+    
+    
+- *DiscoveryModule* class: https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/src/ads.group06.houseofthings/src/main/java/DiscoveryModule.java
+
+    
+
+#### 3.2.1. Devices domain 
+
+The two base types of devices our controller supports (sensors and actuators) are 
+implementations of two abstract classes: *AbstractSensor* and *AbstractActuator*, 
+respectively. This is illustrated in the following diagram:  
+
+![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/diagrams-SensorsActuators.png?raw=true)
 
 
-#### 3.1.1. Used patterns
+### 3.3. Patterns
 
-![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/Devices%20Discovery.png?raw=true)
+This section presents the patterns used in this project, including a description
+of the problem that led to the use of the pattern, details about its implementation,
+and consequences.
 
-
-### 3.2. Sensor Infrastructure
-#### 3.2.1. Domain model
-![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/infra-diagrams-infra-sensors.png?raw=true)
-
-We built a model to support the "sensor domain". This domain represents the real world interactions of sensors within the systems. In this model we identified a problem related to how would the sensors communicate to the "rest of the world"
-that a new reading was produced. To tackle the problem, we chose to include a component that would be responsible to aggregate all sensor readings. Once a reading is produced by the sensor, it should be stored in a single common "place". This
-place would then be responsible for notifying all the interested entities.
-
-#### 3.2.1. Used patterns
-#### 3.2.1.1. Singleton
+#### 3.3.1. Singleton
 - **Problem in Context**
-    - We identified a problem related to how would the sensors communicate to the "rest of the world" when a new reading was produced. To tackle the problem, we chose to include a component, SensorReadingHub, that would be responsible to aggregate all sensor readings. Once a reading is produced by the sensor, it should be stored in a single common "place". This place would then be responsible for notifying all the interested entities
+    - We identified a problem related to how would the sensors communicate to the "rest of the world" when a new reading was produced. To tackle the problem, we chose to include a component, SensorReadingHub, that would be responsible to aggregate all sensor readings. Once a reading is produced by the sensor, it should be stored in a single common component. This component would then be responsible for notifying all the entities interested in sensor information.
     - How can we make sure that when a Sensor publishes a reading, the reading is stored in an common object to all sensors?
 - **The Pattern**
-    - By using this pattern we enforce that all the readings are stored in a single object and we can react to the "new reading" by notifying all the "sensor reading dependants".
+    - By using the Singleton pattern we enforce that all the readings are stored in a single object and we can react to the "new reading" by notifying all the entities that depend on a sensor reading.
     
 - **Implementation**
-    - To implement this pattern we created a class HubProvider, that has a static SensorReadingsHub that can only be instantiated once. To garanteed that that's true we have a method getReadingHub() that checks if the hub was already instantiated, and if it was returns it.
-     - Then in our main class we instantiate a SensorReadingsHub that calls the HubProvider method getReadingHub().
-
+    - To implement this pattern we created a class HubProvider, that has a static SensorReadingsHub that can only be instantiated once. To garanteed that that is true we have a method getReadingHub() that checks if the hub was already instantiated, and if it was returns it.
+    Then, in our main class we instantiate a SensorReadingsHub that calls the HubProvider method getReadingHub().
 - **Consequences**
-    - As a consequence of the use of this pattern, we can only have one hub for sensor readings.
+    - As a consequence of the use of this pattern, we have at most one hub for sensor readings.
     
-#### 3.2.1.1. Observer
+    ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/diagrams-Singleton.png?raw=true)
+
+    
+#### 3.3.2. Observer
 - **Problem in Context**
-    - How can we make sure that when a Sensor publishes a reading all the "sensor dependants" act accordingly?
+    - How can we make sure that when a Sensor publishes a reading all entities that depend on that reading act accordingly?
     - When a sensor publishes a reading we need to make sure that all actuators that depend from that sensor act accordingly to the action defined.
 - **The Pattern**
     - The pattern observer defines a mechanism to notify multiple objects about events that happen on the observed object.
@@ -129,15 +164,11 @@ place would then be responsible for notifying all the interested entities.
     - In that class, we have a method **notifyActions** that sees the actions that are dependent of that sensor and tells them to execute it's behavior (in this case, call the method act from the actuators).
 - **Consequences**
     - As a consequence of the use of this pattern we know are capable to say to the actuators to act when necessary, with a minimal amount of code.
-    
-    
-### 3.3. Actuator Infrastructure
-![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/infra-diagrams-infra-actuators.png?raw=true)
+ 
+     ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/diagrams-Observer.png?raw=true)
+   
 
-Actuators are entities that need to be triggered once a condition or set of conditions are met. Both actuators and conditions are independent entities that should not know each other. Following this principle, we should create a mechanism that mediates the action of an actuator given some condition(s). We came up with the concept os an Action which is the entity responsible to check if a set of conditions are met and triggers (on/off) a set of actuator(s).
-
-#### 3.3.1. Used patterns
-#### 3.3.1.1. Mediator
+#### 3.3.3. Mediator
 - **Problem in Context**
     - How can an actuator be triggered when a set of conditions are met?
     - One problem we had was how to trigger an actuator after its conditions were met.
@@ -150,10 +181,13 @@ Actuators are entities that need to be triggered once a condition or set of cond
 - **Consequences**
     - This way we can make the actuators to act . 
 
-#### 3.3.1.3. Command Pattern
+    ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/diagrams-Mediator.png?raw=true)
+ 
+
+#### 3.3.4. Command
 - **Problem in Context**
   - For our actuators to act, we needed some way for our method to be called without the class that calls it knowing what was within the method it was calling.
-  -
+  
 - **The Pattern**
     - This pattern allows the Action class to call the method act, from the actuators class, without knowing what the act truly does.
     
@@ -164,48 +198,54 @@ Actuators are entities that need to be triggered once a condition or set of cond
 - **Consequences**
     - As a consequence of this pattern, in the very least, all the types of actuators need to implement the act method.
     
-    
-### 3.2. Comparer Infrastructure
-#### 3.3.1.2. Factory Method
+    ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/diagrams-Command.png?raw=true)
+
+
+
+#### 3.3.5. Factory Method
 - **Problem in Context**
     - To compare the sensor value with the condition value we have various options. The conditions can be, for instance, lower than or equal to. Our problem was how to remove the complex chainning of "if conditions" in our class to create a more efficient, organized and easy to read code.
     - We need to compare the sensor value with the condition value  
 - **The Pattern**
-    - The Factory Method pattern provides an object (Comparar Factory) responsible for deciding the instantiation of the correct implementation.
+    - The Factory Method pattern provides an object (*ComparerFactory*) responsible for deciding the instantiation of the correct implementation.
 - **Implementation**
-    - We introduced the interface IComparer that is implemented by any class responsible for performing comparisons. A ComparerFactory was added, with the responsibility to decide which of of the IComparer implementation should be instantiated. 
+    - We introduced the interface *IComparer* that is implemented by any class responsible for performing comparisons. A *ComparerFactory* was added, with the responsibility to decide which of of the *IComparer* implementation should be instantiated. 
 - **Consequences**
     - As a consequence of the use of this pattern we have a more organized and easy to understand code. 
-    - Right now we only need to call the Comparar class and send the values we want to compare and the class decides which one to implement.
+    - Right now we only need to call the *Comparer* class and send the values we want to compare and the class decides which one to implement.
     
-#### 3.3.1.2. Template Method
+    ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/diagrams-Factory%20Method.png?raw=true)
+
+    
+#### 3.3.6. Template Method
 - **Problem in Context**
     - Problem 1
-        - We needed to be able to have various types of the "same" actuator/sensor. An example is the Lamp and Lamp Bosch and Lamp Philips. 
-        - More specifically, a basic type actuator (Example: Lamp) only has a state (on/off) and if the lamp from the brand Bosch also has a feature for intensity, it can override the act method and change the intensity value.
+        - We needed to be able to have various types of the "same" actuator/sensor. An example is the *Lamp* and *LampBosch* and *LampPhilips*, which represent a generic lamp, and two specific lamps that may have different logic. 
+        - More specifically, a basic type actuator (Example: *Lamp*) only has a state (on/off) and if the lamp from the brand Bosch also has a feature for intensity, it can override the act method and change the intensity value.
         - The sensors are implemented in a similar fashion.
     
     - Problem 2 
         - We needed to force the concrete sensors/actuators to follow a basic structure.
-        - For the sensors we needed them to follow the structure from the **AbstractSensor** class and to specify it's fields in the subclasses.
-        - The actuators the same thing, but with the class **AbstractActuator**.
+        - For the sensors we needed them to follow the structure from the *AbstractSensor* class and to specify it's fields in the subclasses.
+        - The actuators the same thing, but with the class *AbstractActuator*.
     
     - Problem 3
-        - We also needed to have unique ID for all actuators/sensors. For that we implemented our template method, **setID()**,  in classes  AbstractSensor and AbstractActuators. This way all their subclasses have a unique id, that cannot be changed and can be referenced from other classes.
+        - We also needed to have unique ID for all actuators/sensors. For that we implemented our template method, *setID()*,  in classes  *AbstractSensor* and *AbstractActuators*. This way all their subclasses have a unique id, that cannot be changed and can be referenced from other classes.
        
 - **The Pattern**
     - Problem 1
         - The pattern provides a way for the actuators and sensors to have an option to specify its implementation, if necessary.
-        - For instance, using the hook method **act** a subclass can override the act method if it has more options.
+        - For instance, using the hook method *act* a subclass can override the act method if it has more options.
     - Problem 2
         - We're defining the methods for the ID in the abstract class, so they are the template method. The hook methods would be the getReadings, por example.
         - That getReadings then would be a template method in the Humidity class, for example.
     - Problem 3
         - We implemented the setID() in the abstractActuator and AbstractSensor and when its subclasses are instantiated, the ID is set and incremented.
 - **Implementation**
-    - We create an abstract class (general actuator) that implements the act method (overriding it from its also abstract superclass(AbstractActuator)). It's subclasses can then override it if they need to.
-    - For the sensors, we have the AbstractSensor class that has the abstract method sense, that will be implemented in the abstract type class (Ex: Humidity) and override in it's subclasses.
-    - Another example is the getID from the classes. It is defined in AbstractSensor/AbstractActuator.
+    - We create an abstract class (general actuator) that implements the act method (overriding it from its also abstract superclass(*AbstractActuator*)). It's subclasses can then override it if they need to.
+    - For the sensors, we have the *AbstractSensor* class that has the abstract method *sense*, that will be implemented in the abstract type class (Ex: *Humidity*) and override it in the subclasses.
+    - Another example is the *getID* from the classes. It is defined in *AbstractSensor/AbstractActuator*.
 - **Consequences**
-    - As a consequence of the use of this pattern we're able to specify the actuator/sensor behaviour if needed.
+    - As a consequence of the use of this pattern we are able to specify the actuator/sensor behaviour if needed.
 
+    ![alt text](https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/documentation/images-exports/diagrams-Template.png?raw=true)
