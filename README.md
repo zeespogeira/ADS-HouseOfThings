@@ -43,15 +43,26 @@ This section explains the design choices of the various
 
 ### 3.1. Discoverability 
 
-To control sensors and actuators, we first need to have such
-devices available. This is achieved through a process we 
-named Discoverability, which enables the system to identify
-sensors and actuators that it can use.
+To control sensors and actuators, we first need to have such devices available. 
+This is achieved through a process we named Discoverability, which enables 
+the system to identify devices that it can use, such as sensors and actuators.
 
+We defined two base types of devices: sensors and actuators. These two base
+types can be combined to achieve more complex configurations of devices that
+include one or more sensors or actuators – these are named modules. 
 
-Considering the system works in simulated mode, sensors and
-actuators available for discovery are listed in a .csv file
-with the following structure:
+An example of a module is a combi-refrigerator with a water dispensing system,
+which can be described as 3 actuators (the refrigerator, the freezer, and the 
+water dispensing system) and 4 sensors (a temperature sensor in the refrigerator,
+a temperature sensor in the freezer, a temperature sensor in the water dispending
+system, and a combi-door closed/open sensor). 
+
+Considering the system works in simulated mode, sensors and actuators available for
+discovery are listed in a .csv file. Each .csv file represents a module, with 
+each line of the .csv representing a device in that module. In the limit, a 
+module with only one device corresponds to the device itself. 
+
+The .csv structure is the following:
 
 **For Actuators:**
 
@@ -72,20 +83,26 @@ Example:
     Sensor, Thermometer, Bosch, Realfeel, Bedroom
 
 
-Each .csv file corresponds to a single device. The .csv 
-files are stored in a folder named Devices. 
-The system will automatically detect if there are changes
-to the Devices folder (e.g. when adding a new .csv file)
-and create the corresponding device object.
+Each .csv file corresponds to a module. 
+The .csv files are stored in a folder named Devices. 
+The system will automatically detect if there are changes to the Devices
+folder (e.g. when adding a new .csv file) 
+and create the corresponding device(s) object(s).
 
 - **Problem in Context**
-    - Our problem was how to instantiate actuators and sensors in run-time without having a timer cheking the folder x in x seconds.
+    - Our problem was how to instantiate actuators and sensors
+    in run-time without having a timer cheking the folder periodically.
 
 - **Implementation**
-    - For this implementation we decided to use a class called "Discovery Module". This class has a method called processEvents() that is always running in background to see if new files (actuators or sensors) are instantiated.
+    - We decided to use a class nammed "DiscoveryModule". This class 
+    has a method nammed processEvents() that runs in the background 
+    that evaluates if new .csv files are added to the Devices folder, and 
+    instantiates the corresponding devices listed in each .csv file.
 
 - **Consequences**
-    - We're using this pattern to help with the plug & play
+    - This design decision enables the "plug & play" ability of our controller, 
+    since it becomes able to automatically detect new devices added to the
+    system. 
 https://github.com/zeespogeira/ADS-HouseOfThings/blob/main/src/ads.group06.houseofthings/src/main/java/DiscoveryModule.java
 
 
