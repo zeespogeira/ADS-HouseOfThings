@@ -6,7 +6,6 @@
 [Goals](#Goals)
 
 [Design](#Design)
-* [Discoverability](#Discoverability) 
 
 <br>
 
