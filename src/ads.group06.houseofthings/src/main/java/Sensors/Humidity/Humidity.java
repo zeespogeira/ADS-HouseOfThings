@@ -13,10 +13,6 @@ public abstract class Humidity extends AbstractSensor {
         //this.humidity=10.0;
     }
 
-    /*public Humidity(String humidity) {
-        this.humidity = humidity;
-    }*/
-
     @Override
     public AbstractSensor sense() {
         RandomValue randomValue=new RandomValue(0, 50);
